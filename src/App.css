@@ -1,0 +1,5 @@
+/* App Styles - Primarily styled with Tailwind CSS */
+.App {
+  min-height: 100vh;
+  background-color: #f9fafb;
+}
