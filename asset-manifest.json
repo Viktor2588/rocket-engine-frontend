@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/rocket-engine-frontend/static/css/main.d196a7d6.css",
-    "main.js": "/rocket-engine-frontend/static/js/main.1ed0fd6f.js",
+    "main.css": "/rocket-engine-frontend/static/css/main.2f26df3c.css",
+    "main.js": "/rocket-engine-frontend/static/js/main.0cdc6af1.js",
     "static/js/835.100b8648.chunk.js": "/rocket-engine-frontend/static/js/835.100b8648.chunk.js",
     "index.html": "/rocket-engine-frontend/index.html",
-    "main.d196a7d6.css.map": "/rocket-engine-frontend/static/css/main.d196a7d6.css.map",
-    "main.1ed0fd6f.js.map": "/rocket-engine-frontend/static/js/main.1ed0fd6f.js.map",
+    "main.2f26df3c.css.map": "/rocket-engine-frontend/static/css/main.2f26df3c.css.map",
+    "main.0cdc6af1.js.map": "/rocket-engine-frontend/static/js/main.0cdc6af1.js.map",
     "835.100b8648.chunk.js.map": "/rocket-engine-frontend/static/js/835.100b8648.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.d196a7d6.css",
-    "static/js/main.1ed0fd6f.js"
+    "static/css/main.2f26df3c.css",
+    "static/js/main.0cdc6af1.js"
   ]
 }
