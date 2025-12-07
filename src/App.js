@@ -12,6 +12,10 @@ import LaunchVehicleListPage from './pages/LaunchVehicleListPage';
 import LaunchVehicleDetailPage from './pages/LaunchVehicleDetailPage';
 import MissionListPage from './pages/MissionListPage';
 import MissionDetailPage from './pages/MissionDetailPage';
+import SatelliteListPage from './pages/SatelliteListPage';
+import SatelliteDetailPage from './pages/SatelliteDetailPage';
+import LaunchSiteListPage from './pages/LaunchSiteListPage';
+import LaunchSiteDetailPage from './pages/LaunchSiteDetailPage';
 import RankingsPage from './pages/RankingsPage';
 import AnalyticsPage from './pages/AnalyticsPage';
 import './App.css';
@@ -44,6 +48,14 @@ function App() {
           {/* Mission Routes */}
           <Route path="/missions" element={<MissionListPage />} />
           <Route path="/missions/:id" element={<MissionDetailPage />} />
+
+          {/* Satellite Routes */}
+          <Route path="/satellites" element={<SatelliteListPage />} />
+          <Route path="/satellites/:id" element={<SatelliteDetailPage />} />
+
+          {/* Launch Site Routes */}
+          <Route path="/launch-sites" element={<LaunchSiteListPage />} />
+          <Route path="/launch-sites/:id" element={<LaunchSiteDetailPage />} />
 
           {/* Comparison Routes */}
           <Route path="/compare" element={<ComparisonPage />} />

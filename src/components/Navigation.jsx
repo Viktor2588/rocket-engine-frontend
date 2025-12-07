@@ -47,6 +47,12 @@ export default function Navigation() {
           <Link to="/vehicles" className={linkClass('/vehicles')}>
             Vehicles
           </Link>
+          <Link to="/satellites" className={linkClass('/satellites')}>
+            Satellites
+          </Link>
+          <Link to="/launch-sites" className={linkClass('/launch-sites')}>
+            Sites
+          </Link>
           <Link to="/missions" className={linkClass('/missions')}>
             Missions
           </Link>
