@@ -1,16 +1,74 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useCountries } from '../hooks/useCountries';
 import { useEngines } from '../hooks/useEngines';
 import { useStatisticsOverview } from '../hooks/useStatistics';
+import { useWorldRecords, useTechnologyTrends, useEmergingNations, useLaunchesPerYear } from '../hooks/useAnalytics';
 import LaunchFrequencyChart from '../components/charts/LaunchFrequencyChart';
 import EngineBubbleChart from '../components/charts/EngineBubbleChart';
-import BudgetTrendChart from '../components/charts/BudgetTrendChart';
 import CapabilityRadarChart from '../components/charts/CapabilityRadarChart';
+
+// Record Card Component
+function RecordCard({ title, value, subtitle, icon, link, color = 'indigo' }) {
+  const colorClasses = {
+    indigo: 'bg-indigo-50 border-indigo-200 text-indigo-700',
+    green: 'bg-green-50 border-green-200 text-green-700',
+    blue: 'bg-blue-50 border-blue-200 text-blue-700',
+    purple: 'bg-purple-50 border-purple-200 text-purple-700',
+    orange: 'bg-orange-50 border-orange-200 text-orange-700',
+    yellow: 'bg-yellow-50 border-yellow-200 text-yellow-700',
+  };
+
+  const content = (
+    <div className={`${colorClasses[color]} rounded-lg border-2 p-4 transition hover:shadow-md`}>
+      <div className="flex items-center gap-2 mb-2">
+        <span className="text-2xl">{icon}</span>
+        <span className="text-sm font-medium text-gray-600">{title}</span>
+      </div>
+      <div className="text-xl font-bold">{value || 'N/A'}</div>
+      {subtitle && <div className="text-sm text-gray-500 mt-1">{subtitle}</div>}
+    </div>
+  );
+
+  return link ? (
+    <Link to={link}>{content}</Link>
+  ) : content;
+}
+
+// Trend Bar Component
+function TrendBar({ label, value, maxValue, color = 'indigo' }) {
+  const percentage = maxValue > 0 ? (value / maxValue) * 100 : 0;
+  const colorClasses = {
+    indigo: 'bg-indigo-500',
+    green: 'bg-green-500',
+    blue: 'bg-blue-500',
+    purple: 'bg-purple-500',
+    orange: 'bg-orange-500',
+    cyan: 'bg-cyan-500',
+  };
+
+  return (
+    <div className="flex items-center gap-3">
+      <span className="w-32 text-sm text-gray-600 truncate">{label}</span>
+      <div className="flex-1 bg-gray-200 rounded-full h-4">
+        <div
+          className={`${colorClasses[color]} h-4 rounded-full transition-all duration-500`}
+          style={{ width: `${percentage}%` }}
+        ></div>
+      </div>
+      <span className="w-10 text-sm font-medium text-gray-700 text-right">{value}</span>
+    </div>
+  );
+}
 
 export default function AnalyticsPage() {
   const { countries, loading: countriesLoading } = useCountries();
   const { engines, loading: enginesLoading } = useEngines();
   const { data: statsOverview, loading: statsLoading } = useStatisticsOverview();
+  const { records } = useWorldRecords();
+  const { trends } = useTechnologyTrends();
+  const { analysis } = useEmergingNations();
+  const { data: launchData } = useLaunchesPerYear();
   const [activeTab, setActiveTab] = useState('launches');
 
   const loading = countriesLoading || enginesLoading || statsLoading;
@@ -39,14 +97,14 @@ export default function AnalyticsPage() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            📊 Space Analytics Dashboard
+            Space Analytics Dashboard
           </h1>
           <p className="text-gray-600">
-            Explore trends, comparisons, and insights across global space programs
+            Explore trends, records, and insights across global space programs
           </p>
         </div>
 
-        {/* Quick Stats - Use API data if available, fallback to local data */}
+        {/* Quick Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <div className="bg-white rounded-lg shadow p-4 text-center">
             <div className="text-3xl font-bold text-indigo-600">
@@ -74,7 +132,7 @@ export default function AnalyticsPage() {
           </div>
         </div>
 
-        {/* Additional Stats Row - from Statistics API */}
+        {/* Additional Stats Row */}
         {statsOverview && (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             <div className="bg-white rounded-lg shadow p-4 text-center">
@@ -109,9 +167,11 @@ export default function AnalyticsPage() {
           <div className="flex overflow-x-auto border-b">
             {[
               { id: 'launches', label: 'Launch Activity', icon: '🚀' },
-              { id: 'budgets', label: 'Budget Trends', icon: '💰' },
+              { id: 'records', label: 'World Records', icon: '🏆' },
+              { id: 'trends', label: 'Technology Trends', icon: '📈' },
+              { id: 'emerging', label: 'Emerging Nations', icon: '🌍' },
               { id: 'engines', label: 'Engine Analysis', icon: '🔥' },
-              { id: 'capabilities', label: 'Capability Comparison', icon: '📈' },
+              { id: 'capabilities', label: 'Capabilities', icon: '⭐' },
             ].map(tab => (
               <button
                 key={tab.id}
@@ -136,64 +196,404 @@ export default function AnalyticsPage() {
               title="Global Launch Frequency by Country (2019-2024)"
               stacked={true}
             />
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">Key Insights</h3>
-              <ul className="space-y-2 text-gray-600">
-                <li className="flex items-start gap-2">
-                  <span className="text-green-500">↑</span>
-                  USA has seen dramatic growth in launch cadence, largely driven by SpaceX
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-yellow-500">↑</span>
-                  China has steadily increased launches, now competing for second place globally
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-red-500">↓</span>
-                  Russia's launch frequency has declined due to various factors
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-blue-500">→</span>
-                  India and Japan maintain steady but lower launch rates
-                </li>
-              </ul>
+
+            {/* Launch Summary Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-white rounded-lg shadow-md p-6">
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">2024 Launch Leaders</h3>
+                <div className="space-y-3">
+                  {Object.entries(launchData.byCountry)
+                    .map(([country, values]) => ({ country, launches: values[values.length - 1] }))
+                    .sort((a, b) => b.launches - a.launches)
+                    .slice(0, 5)
+                    .map((item, idx) => (
+                      <div key={item.country} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white ${
+                            idx === 0 ? 'bg-yellow-500' : idx === 1 ? 'bg-gray-400' : idx === 2 ? 'bg-orange-400' : 'bg-indigo-400'
+                          }`}>{idx + 1}</span>
+                          <span className="font-medium">{item.country}</span>
+                        </div>
+                        <span className="font-bold text-indigo-600">{item.launches}</span>
+                      </div>
+                    ))}
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg shadow-md p-6">
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">Year-over-Year Growth</h3>
+                <div className="space-y-3">
+                  {Object.entries(launchData.byCountry)
+                    .map(([country, values]) => {
+                      const current = values[values.length - 1];
+                      const previous = values[values.length - 2];
+                      const growth = previous > 0 ? ((current - previous) / previous * 100).toFixed(0) : 0;
+                      return { country, growth: Number(growth), current };
+                    })
+                    .sort((a, b) => b.growth - a.growth)
+                    .slice(0, 5)
+                    .map(item => (
+                      <div key={item.country} className="flex items-center justify-between">
+                        <span className="font-medium">{item.country}</span>
+                        <span className={`font-bold ${item.growth > 0 ? 'text-green-600' : item.growth < 0 ? 'text-red-600' : 'text-gray-600'}`}>
+                          {item.growth > 0 ? '+' : ''}{item.growth}%
+                        </span>
+                      </div>
+                    ))}
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg shadow-md p-6">
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">Key Insights</h3>
+                <ul className="space-y-2 text-sm text-gray-600">
+                  <li className="flex items-start gap-2">
+                    <span className="text-green-500">↑</span>
+                    USA dominates with SpaceX's high cadence
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-yellow-500">↑</span>
+                    China maintains steady growth trajectory
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-red-500">↓</span>
+                    Russia's launches declining due to sanctions
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-blue-500">→</span>
+                    India & Japan growing steadily
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         )}
 
-        {activeTab === 'budgets' && (
+        {activeTab === 'records' && (
           <div className="space-y-6">
-            <BudgetTrendChart
-              title="Space Agency Budget Trends (2015-2024)"
-              countries={['USA', 'CHN', 'EUR', 'RUS']}
-              filled={true}
-            />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <h2 className="text-2xl font-bold text-gray-800">World Records & Achievements</h2>
+
+            {/* Engine Records */}
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">Engine Records</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <RecordCard
+                  title="Most Powerful Engine"
+                  value={records.mostPowerfulEngine?.name}
+                  subtitle={records.mostPowerfulEngine?.thrustKn ? `${records.mostPowerfulEngine.thrustKn.toLocaleString()} kN` : undefined}
+                  icon="💪"
+                  color="orange"
+                  link={records.mostPowerfulEngine ? `/engines/${records.mostPowerfulEngine.id}` : undefined}
+                />
+                <RecordCard
+                  title="Most Efficient Engine"
+                  value={records.mostEfficientEngine?.name}
+                  subtitle={records.mostEfficientEngine?.specificImpulseS ? `${records.mostEfficientEngine.specificImpulseS} s ISP` : undefined}
+                  icon="⚡"
+                  color="green"
+                  link={records.mostEfficientEngine ? `/engines/${records.mostEfficientEngine.id}` : undefined}
+                />
+                <RecordCard
+                  title="Highest Chamber Pressure"
+                  value={records.highestPressureEngine?.name}
+                  subtitle={records.highestPressureEngine?.chamberPressureBar ? `${records.highestPressureEngine.chamberPressureBar} bar` : undefined}
+                  icon="🔥"
+                  color="purple"
+                  link={records.highestPressureEngine ? `/engines/${records.highestPressureEngine.id}` : undefined}
+                />
+              </div>
+            </div>
+
+            {/* Country Records */}
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">Country Records</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <RecordCard
+                  title="Most Capable Space Program"
+                  value={records.mostCapableCountry?.name}
+                  subtitle={records.mostCapableCountry?.overallCapabilityScore ? `SCI: ${records.mostCapableCountry.overallCapabilityScore.toFixed(1)}` : undefined}
+                  icon="🏆"
+                  color="yellow"
+                  link={records.mostCapableCountry ? `/countries/${records.mostCapableCountry.isoCode}` : undefined}
+                />
+                <RecordCard
+                  title="Most Launches"
+                  value={records.mostLaunchesCountry?.name}
+                  subtitle={records.mostLaunchesCountry?.totalLaunches ? `${records.mostLaunchesCountry.totalLaunches.toLocaleString()} total` : undefined}
+                  icon="🚀"
+                  color="indigo"
+                  link={records.mostLaunchesCountry ? `/countries/${records.mostLaunchesCountry.isoCode}` : undefined}
+                />
+                <RecordCard
+                  title="Highest Success Rate"
+                  value={records.highestSuccessRate?.name}
+                  subtitle={records.highestSuccessRate?.launchSuccessRate ? `${records.highestSuccessRate.launchSuccessRate.toFixed(1)}%` : undefined}
+                  icon="✅"
+                  color="green"
+                  link={records.highestSuccessRate ? `/countries/${records.highestSuccessRate.isoCode}` : undefined}
+                />
+              </div>
+            </div>
+
+            {/* Vehicle & Infrastructure Records */}
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">Vehicle & Infrastructure Records</h3>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <RecordCard
+                  title="Largest Payload to LEO"
+                  value={records.largestPayload?.name}
+                  subtitle={records.largestPayload?.payloadToLeoKg ? `${(records.largestPayload.payloadToLeoKg / 1000).toFixed(0)} tons` : undefined}
+                  icon="📦"
+                  color="blue"
+                  link={records.largestPayload ? `/vehicles/${records.largestPayload.id}` : undefined}
+                />
+                <RecordCard
+                  title="Most Reusable Vehicle"
+                  value={records.mostReusable?.name}
+                  subtitle={records.mostReusable?.totalLaunches ? `${records.mostReusable.totalLaunches} flights` : undefined}
+                  icon="♻️"
+                  color="green"
+                  link={records.mostReusable ? `/vehicles/${records.mostReusable.id}` : undefined}
+                />
+                <RecordCard
+                  title="Busiest Launch Site"
+                  value={records.busiestSite?.name}
+                  subtitle={records.busiestSite?.totalLaunches ? `${records.busiestSite.totalLaunches.toLocaleString()} launches` : undefined}
+                  icon="🏗️"
+                  color="orange"
+                  link={records.busiestSite ? `/launch-sites/${records.busiestSite.id}` : undefined}
+                />
+                <RecordCard
+                  title="Oldest Active Site"
+                  value={records.oldestSite?.name}
+                  subtitle={records.oldestSite?.established ? `Since ${records.oldestSite.established}` : undefined}
+                  icon="🏛️"
+                  color="purple"
+                  link={records.oldestSite ? `/launch-sites/${records.oldestSite.id}` : undefined}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'trends' && (
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold text-gray-800">Technology Trends</h2>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Propellant Trends */}
               <div className="bg-white rounded-lg shadow-md p-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">Budget Leaders</h3>
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">Propellant Distribution</h3>
+                <div className="space-y-4">
+                  <TrendBar
+                    label="Kerosene/LOX"
+                    value={trends.propellantTrend.traditional}
+                    maxValue={Math.max(...Object.values(trends.propellantTrend))}
+                    color="orange"
+                  />
+                  <TrendBar
+                    label="Hydrogen/LOX"
+                    value={trends.propellantTrend.hydrogen}
+                    maxValue={Math.max(...Object.values(trends.propellantTrend))}
+                    color="blue"
+                  />
+                  <TrendBar
+                    label="Methane/LOX"
+                    value={trends.propellantTrend.methane}
+                    maxValue={Math.max(...Object.values(trends.propellantTrend))}
+                    color="green"
+                  />
+                  <TrendBar
+                    label="Solid"
+                    value={trends.propellantTrend.solid}
+                    maxValue={Math.max(...Object.values(trends.propellantTrend))}
+                    color="purple"
+                  />
+                </div>
+                <p className="text-sm text-gray-500 mt-4">
+                  Methane engines are the future - cleaner, reusable-friendly, and can be produced on Mars.
+                </p>
+              </div>
+
+              {/* Engine Cycle Trends */}
+              <div className="bg-white rounded-lg shadow-md p-6">
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">Engine Cycle Distribution</h3>
+                <div className="space-y-4">
+                  <TrendBar
+                    label="Gas Generator"
+                    value={trends.cycleTrend.gasGenerator}
+                    maxValue={Math.max(...Object.values(trends.cycleTrend))}
+                    color="indigo"
+                  />
+                  <TrendBar
+                    label="Staged Combustion"
+                    value={trends.cycleTrend.stagedCombustion}
+                    maxValue={Math.max(...Object.values(trends.cycleTrend))}
+                    color="purple"
+                  />
+                  <TrendBar
+                    label="Full-Flow"
+                    value={trends.cycleTrend.fullFlow}
+                    maxValue={Math.max(...Object.values(trends.cycleTrend))}
+                    color="green"
+                  />
+                  <TrendBar
+                    label="Expander"
+                    value={trends.cycleTrend.expander}
+                    maxValue={Math.max(...Object.values(trends.cycleTrend))}
+                    color="cyan"
+                  />
+                </div>
+                <p className="text-sm text-gray-500 mt-4">
+                  Full-flow staged combustion represents the pinnacle of engine efficiency.
+                </p>
+              </div>
+
+              {/* Reusability Trends */}
+              <div className="bg-white rounded-lg shadow-md p-6 lg:col-span-2">
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">Reusability Revolution</h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="text-center p-4 bg-green-50 rounded-lg">
+                    <div className="text-3xl font-bold text-green-600">{trends.reusabilityTrend.reusableVehicles}</div>
+                    <div className="text-sm text-gray-600">Reusable Vehicles</div>
+                  </div>
+                  <div className="text-center p-4 bg-gray-50 rounded-lg">
+                    <div className="text-3xl font-bold text-gray-600">{trends.reusabilityTrend.expendableVehicles}</div>
+                    <div className="text-sm text-gray-600">Expendable Vehicles</div>
+                  </div>
+                  <div className="text-center p-4 bg-green-50 rounded-lg">
+                    <div className="text-3xl font-bold text-green-600">{trends.reusabilityTrend.reusableEngines}</div>
+                    <div className="text-sm text-gray-600">Reusable Engines</div>
+                  </div>
+                  <div className="text-center p-4 bg-gray-50 rounded-lg">
+                    <div className="text-3xl font-bold text-gray-600">{trends.reusabilityTrend.expendableEngines}</div>
+                    <div className="text-sm text-gray-600">Expendable Engines</div>
+                  </div>
+                </div>
+                <div className="mt-4 p-4 bg-indigo-50 rounded-lg">
+                  <p className="text-sm text-indigo-800">
+                    <strong>The Reusability Shift:</strong> SpaceX pioneered routine reusability, dropping launch costs by ~90%.
+                    Now China, Europe, and others are racing to develop their own reusable systems.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'emerging' && (
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold text-gray-800">Emerging Space Nations</h2>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Established Powers */}
+              <div className="bg-white rounded-lg shadow-md p-6">
+                <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                  <span className="text-2xl">🏆</span> Established Powers
+                </h3>
                 <div className="space-y-3">
-                  {topCountries.slice(0, 5).map((country, idx) => (
-                    <div key={country.id} className="flex items-center justify-between">
+                  {analysis.established.map((country, idx) => (
+                    <Link
+                      key={country.id}
+                      to={`/countries/${country.isoCode}`}
+                      className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 transition"
+                    >
                       <div className="flex items-center gap-2">
-                        <span className="text-lg font-bold text-gray-400 w-6">#{idx + 1}</span>
+                        {country.flagUrl && (
+                          <img src={country.flagUrl} alt="" className="w-6 h-4 object-cover rounded" />
+                        )}
                         <span className="font-medium">{country.spaceAgencyAcronym || country.name}</span>
                       </div>
-                      <span className="font-semibold text-indigo-600">
-                        ${((country.annualBudgetUsd || 0) / 1e9).toFixed(1)}B
+                      <span className="text-indigo-600 font-bold">
+                        {(country.overallCapabilityScore || 0).toFixed(0)}
                       </span>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               </div>
+
+              {/* Emerging Powers */}
               <div className="bg-white rounded-lg shadow-md p-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">Budget per Capita Insight</h3>
-                <p className="text-gray-600 text-sm mb-4">
-                  While the USA leads in absolute budget, some smaller nations invest more per capita
-                  in their space programs, indicating strong national commitment to space exploration.
-                </p>
-                <div className="p-4 bg-indigo-50 rounded-lg">
-                  <div className="text-2xl font-bold text-indigo-600">$85.5</div>
-                  <div className="text-sm text-gray-500">USA per capita (approx.)</div>
+                <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                  <span className="text-2xl">🚀</span> Emerging Powers
+                </h3>
+                <div className="space-y-3">
+                  {analysis.emerging.length > 0 ? analysis.emerging.slice(0, 5).map(country => (
+                    <Link
+                      key={country.id}
+                      to={`/countries/${country.isoCode}`}
+                      className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 transition"
+                    >
+                      <div className="flex items-center gap-2">
+                        {country.flagUrl && (
+                          <img src={country.flagUrl} alt="" className="w-6 h-4 object-cover rounded" />
+                        )}
+                        <span className="font-medium">{country.spaceAgencyAcronym || country.name}</span>
+                      </div>
+                      <span className="text-green-600 font-bold">
+                        {(country.overallCapabilityScore || 0).toFixed(0)}
+                      </span>
+                    </Link>
+                  )) : (
+                    <p className="text-gray-500 text-sm">No emerging powers in current data</p>
+                  )}
                 </div>
+                <p className="text-xs text-gray-500 mt-3">
+                  Nations with launch capability developing advanced capabilities
+                </p>
+              </div>
+
+              {/* Rising Contenders */}
+              <div className="bg-white rounded-lg shadow-md p-6">
+                <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                  <span className="text-2xl">⭐</span> Rising Contenders
+                </h3>
+                <div className="space-y-3">
+                  {analysis.rising.length > 0 ? analysis.rising.slice(0, 5).map(country => (
+                    <Link
+                      key={country.id}
+                      to={`/countries/${country.isoCode}`}
+                      className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 transition"
+                    >
+                      <div className="flex items-center gap-2">
+                        {country.flagUrl && (
+                          <img src={country.flagUrl} alt="" className="w-6 h-4 object-cover rounded" />
+                        )}
+                        <span className="font-medium">{country.spaceAgencyAcronym || country.name}</span>
+                      </div>
+                      <span className="text-orange-600 font-bold">
+                        {(country.overallCapabilityScore || 0).toFixed(0)}
+                      </span>
+                    </Link>
+                  )) : (
+                    <p className="text-gray-500 text-sm">No rising contenders in current data</p>
+                  )}
+                </div>
+                <p className="text-xs text-gray-500 mt-3">
+                  Nations building space capabilities
+                </p>
+              </div>
+            </div>
+
+            {/* Achievement Distribution */}
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">Capability Achievement Distribution</h3>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                {[
+                  { key: 'crewedSpaceflight', label: 'Human Spaceflight', icon: '👨‍🚀', color: 'purple' },
+                  { key: 'reusableRockets', label: 'Reusable Rockets', icon: '♻️', color: 'green' },
+                  { key: 'deepSpaceProbes', label: 'Deep Space', icon: '🌙', color: 'indigo' },
+                  { key: 'spaceStations', label: 'Space Station', icon: '🛰️', color: 'blue' },
+                  { key: 'lunarLanding', label: 'Lunar Landing', icon: '🌕', color: 'yellow' },
+                  { key: 'marsLanding', label: 'Mars Landing', icon: '🔴', color: 'orange' },
+                ].map(item => (
+                  <div key={item.key} className="text-center p-4 bg-gray-50 rounded-lg">
+                    <div className="text-3xl mb-2">{item.icon}</div>
+                    <div className={`text-2xl font-bold text-${item.color}-600`}>
+                      {analysis.achievements[item.key]?.length || 0}
+                    </div>
+                    <div className="text-xs text-gray-500">{item.label}</div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -216,10 +616,14 @@ export default function AnalyticsPage() {
                     .sort((a, b) => (b.thrustKn || 0) - (a.thrustKn || 0))
                     .slice(0, 5)
                     .map(engine => (
-                      <div key={engine.id} className="flex justify-between text-sm">
+                      <Link
+                        key={engine.id}
+                        to={`/engines/${engine.id}`}
+                        className="flex justify-between text-sm hover:text-indigo-600"
+                      >
                         <span className="text-gray-600">{engine.name}</span>
                         <span className="font-semibold">{engine.thrustKn?.toLocaleString()} kN</span>
-                      </div>
+                      </Link>
                     ))}
                 </div>
               </div>
@@ -230,10 +634,14 @@ export default function AnalyticsPage() {
                     .sort((a, b) => (b.specificImpulseS || 0) - (a.specificImpulseS || 0))
                     .slice(0, 5)
                     .map(engine => (
-                      <div key={engine.id} className="flex justify-between text-sm">
+                      <Link
+                        key={engine.id}
+                        to={`/engines/${engine.id}`}
+                        className="flex justify-between text-sm hover:text-indigo-600"
+                      >
                         <span className="text-gray-600">{engine.name}</span>
                         <span className="font-semibold">{engine.specificImpulseS} s</span>
-                      </div>
+                      </Link>
                     ))}
                 </div>
               </div>
@@ -276,7 +684,11 @@ export default function AnalyticsPage() {
                 <h3 className="text-lg font-semibold text-gray-800 mb-4">Capability Rankings</h3>
                 <div className="space-y-4">
                   {topCountries.map((country, idx) => (
-                    <div key={country.id} className="flex items-center gap-4">
+                    <Link
+                      key={country.id}
+                      to={`/countries/${country.isoCode}`}
+                      className="flex items-center gap-4 hover:bg-gray-50 p-2 rounded-lg transition"
+                    >
                       <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-white ${
                         idx === 0 ? 'bg-yellow-500' :
                         idx === 1 ? 'bg-gray-400' :
@@ -305,7 +717,7 @@ export default function AnalyticsPage() {
                         </div>
                         <div className="text-xs text-gray-500">SCI Score</div>
                       </div>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               </div>
