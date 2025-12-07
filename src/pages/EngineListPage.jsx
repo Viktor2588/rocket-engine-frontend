@@ -49,19 +49,26 @@ export default function EngineListPage() {
       result = result.filter(e => e.status === filterStatus);
     }
 
-    // Filter by country
+    // Filter by country (check both countryId and origin)
     if (filterCountry !== 'all') {
-      result = result.filter(e => e.countryId === filterCountry);
+      result = result.filter(e =>
+        e.countryId === filterCountry ||
+        e.origin?.toLowerCase().includes(filterCountry.toLowerCase())
+      );
     }
 
-    // Filter by propellant
+    // Filter by propellant (case-insensitive partial match)
     if (filterPropellant !== 'all') {
-      result = result.filter(e => e.propellant === filterPropellant);
+      result = result.filter(e =>
+        e.propellant?.toLowerCase().includes(filterPropellant.toLowerCase())
+      );
     }
 
-    // Filter by power cycle
+    // Filter by power cycle (case-insensitive partial match)
     if (filterCycle !== 'all') {
-      result = result.filter(e => e.powerCycle === filterCycle);
+      result = result.filter(e =>
+        e.powerCycle?.toLowerCase().includes(filterCycle.toLowerCase())
+      );
     }
 
     // Filter by capability

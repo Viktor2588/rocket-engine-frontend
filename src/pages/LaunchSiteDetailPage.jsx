@@ -1,5 +1,15 @@
 import { useParams, Link } from 'react-router-dom';
 import { useLaunchSite } from '../hooks/useLaunchSites';
+import {
+  ComposableMap,
+  Geographies,
+  Geography,
+  Marker,
+  ZoomableGroup,
+} from 'react-simple-maps';
+
+// World TopoJSON URL
+const GEO_URL = 'https://unpkg.com/world-atlas@2.0.2/countries-110m.json';
 
 // Status colors
 const STATUS_COLORS = {
@@ -183,48 +193,86 @@ export default function LaunchSiteDetailPage() {
             {/* Location Map */}
             <div className="bg-white rounded-lg shadow-md p-6">
               <h2 className="text-xl font-bold text-gray-800 mb-4">Location</h2>
-              <div className="bg-gray-900 rounded-lg p-4 h-64 relative overflow-hidden">
-                {/* Simple location indicator */}
-                <svg viewBox="0 0 100 50" className="w-full h-full">
-                  {/* Ocean */}
-                  <rect width="100" height="50" fill="#1E3A5F" />
+              <div className="bg-gray-900 rounded-lg overflow-hidden relative" style={{ height: '300px' }}>
+                <ComposableMap
+                  projection="geoMercator"
+                  projectionConfig={{
+                    scale: 150,
+                    center: [
+                      launchSite.longitude || 0,
+                      launchSite.latitude || 20
+                    ],
+                  }}
+                  style={{ width: '100%', height: '100%', backgroundColor: '#1e3a5f' }}
+                >
+                  <ZoomableGroup
+                    center={[launchSite.longitude || 0, launchSite.latitude || 20]}
+                    zoom={1}
+                  >
+                    <Geographies geography={GEO_URL}>
+                      {({ geographies }) =>
+                        geographies.map((geo) => (
+                          <Geography
+                            key={geo.rsmKey}
+                            geography={geo}
+                            fill="#374151"
+                            stroke="#1f2937"
+                            strokeWidth={0.5}
+                            style={{
+                              default: { outline: 'none' },
+                              hover: { outline: 'none', fill: '#4b5563' },
+                              pressed: { outline: 'none' },
+                            }}
+                          />
+                        ))
+                      }
+                    </Geographies>
 
-                  {/* Simple world outline */}
-                  <g fill="#2D4A6A" stroke="#3D5A7A" strokeWidth="0.3">
-                    <ellipse cx="50" cy="25" rx="45" ry="22" />
-                  </g>
-
-                  {/* Grid lines */}
-                  <g stroke="#3D5A7A" strokeWidth="0.2" opacity="0.5">
-                    <line x1="0" y1="25" x2="100" y2="25" />
-                    <line x1="50" y1="0" x2="50" y2="50" />
-                  </g>
-
-                  {/* Location marker */}
-                  {launchSite.latitude && launchSite.longitude && (
-                    <g>
-                      <circle
-                        cx={50 + (launchSite.longitude / 180) * 45}
-                        cy={25 - (launchSite.latitude / 90) * 22}
-                        r={3}
-                        fill="#EF4444"
-                        stroke="#fff"
-                        strokeWidth={0.5}
-                      />
-                      <circle
-                        cx={50 + (launchSite.longitude / 180) * 45}
-                        cy={25 - (launchSite.latitude / 90) * 22}
-                        r={5}
-                        fill="#EF4444"
-                        opacity={0.3}
-                      />
-                    </g>
-                  )}
-                </svg>
+                    {/* Launch Site Marker */}
+                    {launchSite.latitude && launchSite.longitude && (
+                      <Marker coordinates={[launchSite.longitude, launchSite.latitude]}>
+                        {/* Outer pulse ring */}
+                        <circle
+                          r={16}
+                          fill="#EF4444"
+                          opacity={0.2}
+                          className="animate-ping"
+                        />
+                        {/* Middle ring */}
+                        <circle
+                          r={10}
+                          fill="#EF4444"
+                          opacity={0.4}
+                        />
+                        {/* Inner marker */}
+                        <circle
+                          r={6}
+                          fill="#EF4444"
+                          stroke="#fff"
+                          strokeWidth={2}
+                        />
+                        {/* Label */}
+                        <text
+                          textAnchor="middle"
+                          y={-20}
+                          style={{
+                            fontFamily: 'system-ui',
+                            fontSize: '10px',
+                            fill: '#fff',
+                            fontWeight: 600,
+                            textShadow: '0 1px 2px rgba(0,0,0,0.5)',
+                          }}
+                        >
+                          {launchSite.name}
+                        </text>
+                      </Marker>
+                    )}
+                  </ZoomableGroup>
+                </ComposableMap>
 
                 {/* Coordinates Display */}
-                <div className="absolute bottom-2 left-2 text-white text-sm">
-                  {launchSite.latitude?.toFixed(4)}° N, {launchSite.longitude?.toFixed(4)}° E
+                <div className="absolute bottom-2 left-2 bg-gray-900/80 text-white text-sm px-2 py-1 rounded">
+                  {launchSite.latitude?.toFixed(4)}° {launchSite.latitude >= 0 ? 'N' : 'S'}, {launchSite.longitude?.toFixed(4)}° {launchSite.longitude >= 0 ? 'E' : 'W'}
                 </div>
               </div>
             </div>
