@@ -194,19 +194,6 @@ export default function WorldMapView({
               onMouseLeave={() => setHoveredCountry(null)}
               onClick={() => onCountrySelect?.(country)}
             >
-              {/* Pulse animation for top countries */}
-              {country.overallCapabilityScore >= 70 && (
-                <circle
-                  cx={country.position.x}
-                  cy={country.position.y}
-                  r={country.size + 6}
-                  fill={country.color}
-                  opacity="0.2"
-                  className="animate-ping"
-                  style={{ animationDuration: '2s' }}
-                />
-              )}
-
               {/* Main marker */}
               <circle
                 cx={country.position.x}
