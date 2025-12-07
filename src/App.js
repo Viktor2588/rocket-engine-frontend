@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ThemeProvider } from './contexts/ThemeContext';
 import Navigation from './components/Navigation';
 import Footer from './components/Footer';
 import EngineListPage from './pages/EngineListPage';
@@ -25,9 +26,10 @@ function App() {
   const basename = process.env.NODE_ENV === 'production' ? '/rocket-engine-frontend' : '';
 
   return (
-    <Router basename={basename}>
-      <div className="App">
-        <Navigation />
+    <ThemeProvider>
+      <Router basename={basename}>
+        <div className="App dark:bg-gray-900 dark:text-white min-h-screen">
+          <Navigation />
         <Routes>
           {/* Main Dashboard - Countries Overview */}
           <Route path="/" element={<CountryListPage />} />
@@ -69,9 +71,10 @@ function App() {
           {/* Analytics Route */}
           <Route path="/analytics" element={<AnalyticsPage />} />
         </Routes>
-        <Footer />
-      </div>
-    </Router>
+          <Footer />
+        </div>
+      </Router>
+    </ThemeProvider>
   );
 }
 

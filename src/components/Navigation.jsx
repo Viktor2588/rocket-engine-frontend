@@ -1,9 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import GlobalSearch from './GlobalSearch';
+import { ThemeToggleButton } from './ThemeToggle';
 
 export default function Navigation() {
   const location = useLocation();
   const [compareMenuOpen, setCompareMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
 
   // Close dropdown when clicking outside
@@ -18,6 +21,11 @@ export default function Navigation() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location]);
+
   // Helper to check if link is active
   const isActive = (path) => {
     if (path === '/') {
@@ -30,74 +38,149 @@ export default function Navigation() {
     `hover:text-indigo-400 transition ${isActive(path) ? 'text-indigo-400 font-semibold' : ''}`;
 
   return (
-    <nav className="bg-gray-900 text-white shadow-lg">
-      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <Link to="/" className="text-2xl font-bold flex items-center gap-2">
-          <span>🌍</span>
-          <span className="hidden sm:inline">Space Capabilities</span>
-          <span className="sm:hidden">Space</span>
-        </Link>
-        <div className="flex gap-4 md:gap-6 text-sm md:text-base">
-          <Link to="/countries" className={linkClass('/')}>
-            Countries
-          </Link>
-          <Link to="/engines" className={linkClass('/engines')}>
-            Engines
-          </Link>
-          <Link to="/vehicles" className={linkClass('/vehicles')}>
-            Vehicles
-          </Link>
-          <Link to="/satellites" className={linkClass('/satellites')}>
-            Satellites
-          </Link>
-          <Link to="/launch-sites" className={linkClass('/launch-sites')}>
-            Sites
-          </Link>
-          <Link to="/missions" className={linkClass('/missions')}>
-            Missions
-          </Link>
-          <Link to="/rankings" className={linkClass('/rankings')}>
-            Rankings
-          </Link>
-          <Link to="/analytics" className={linkClass('/analytics')}>
-            Analytics
+    <nav className="bg-gray-900 text-white shadow-lg sticky top-0 z-40">
+      <div className="container mx-auto px-4">
+        {/* Main Navigation Row */}
+        <div className="flex justify-between items-center py-3">
+          {/* Logo */}
+          <Link to="/" className="text-xl font-bold flex items-center gap-2 flex-shrink-0">
+            <span>🌍</span>
+            <span className="hidden md:inline">Space Capabilities</span>
+            <span className="md:hidden">Space</span>
           </Link>
 
-          {/* Compare dropdown */}
-          <div
-            className="relative"
-            ref={dropdownRef}
-          >
+          {/* Search Bar - Desktop */}
+          <div className="hidden lg:block flex-1 max-w-md mx-4">
+            <GlobalSearch />
+          </div>
+
+          {/* Desktop Navigation Links */}
+          <div className="hidden md:flex items-center gap-4 text-sm">
+            <Link to="/countries" className={linkClass('/')}>
+              Countries
+            </Link>
+            <Link to="/engines" className={linkClass('/engines')}>
+              Engines
+            </Link>
+            <Link to="/vehicles" className={linkClass('/vehicles')}>
+              Vehicles
+            </Link>
+            <Link to="/satellites" className={linkClass('/satellites')}>
+              Satellites
+            </Link>
+            <Link to="/launch-sites" className={linkClass('/launch-sites')}>
+              Sites
+            </Link>
+            <Link to="/missions" className={linkClass('/missions')}>
+              Missions
+            </Link>
+            <Link to="/rankings" className={linkClass('/rankings')}>
+              Rankings
+            </Link>
+            <Link to="/analytics" className={linkClass('/analytics')}>
+              Analytics
+            </Link>
+
+            {/* Compare dropdown */}
+            <div className="relative" ref={dropdownRef}>
+              <button
+                className={`hover:text-indigo-400 transition flex items-center gap-1 ${isActive('/compare') ? 'text-indigo-400 font-semibold' : ''}`}
+                onClick={() => setCompareMenuOpen(!compareMenuOpen)}
+              >
+                Compare
+                <svg className={`w-4 h-4 transition-transform ${compareMenuOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              {compareMenuOpen && (
+                <div className="absolute top-full right-0 mt-1 bg-gray-800 rounded-lg shadow-xl py-2 min-w-[160px] z-50">
+                  <Link
+                    to="/compare/countries"
+                    className="block px-4 py-2 hover:bg-gray-700 transition"
+                    onClick={() => setCompareMenuOpen(false)}
+                  >
+                    Countries
+                  </Link>
+                  <Link
+                    to="/compare/engines"
+                    className="block px-4 py-2 hover:bg-gray-700 transition"
+                    onClick={() => setCompareMenuOpen(false)}
+                  >
+                    Engines
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            {/* Theme Toggle */}
+            <ThemeToggleButton />
+          </div>
+
+          {/* Mobile Menu Button */}
+          <div className="flex items-center gap-2 md:hidden">
+            <ThemeToggleButton />
             <button
-              className={`hover:text-indigo-400 transition flex items-center gap-1 ${isActive('/compare') ? 'text-indigo-400 font-semibold' : ''}`}
-              onClick={() => setCompareMenuOpen(!compareMenuOpen)}
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2 rounded-lg hover:bg-gray-800 transition"
+              aria-label="Toggle menu"
             >
-              Compare
-              <svg className={`w-4 h-4 transition-transform ${compareMenuOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
+              {mobileMenuOpen ? (
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              ) : (
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              )}
             </button>
-
-            {compareMenuOpen && (
-              <div className="absolute top-full left-0 mt-1 bg-gray-800 rounded-lg shadow-xl py-2 min-w-[160px] z-50">
-                <Link
-                  to="/compare/countries"
-                  className="block px-4 py-2 hover:bg-gray-700 transition"
-                  onClick={() => setCompareMenuOpen(false)}
-                >
-                  🌍 Countries
-                </Link>
-                <Link
-                  to="/compare/engines"
-                  className="block px-4 py-2 hover:bg-gray-700 transition"
-                  onClick={() => setCompareMenuOpen(false)}
-                >
-                  🚀 Engines
-                </Link>
-              </div>
-            )}
           </div>
         </div>
+
+        {/* Search Bar - Mobile/Tablet */}
+        <div className="lg:hidden pb-3">
+          <GlobalSearch />
+        </div>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden py-4 border-t border-gray-800">
+            <div className="flex flex-col gap-2">
+              <Link to="/countries" className={`py-2 px-4 rounded-lg hover:bg-gray-800 ${isActive('/') ? 'bg-gray-800 text-indigo-400' : ''}`}>
+                Countries
+              </Link>
+              <Link to="/engines" className={`py-2 px-4 rounded-lg hover:bg-gray-800 ${isActive('/engines') ? 'bg-gray-800 text-indigo-400' : ''}`}>
+                Engines
+              </Link>
+              <Link to="/vehicles" className={`py-2 px-4 rounded-lg hover:bg-gray-800 ${isActive('/vehicles') ? 'bg-gray-800 text-indigo-400' : ''}`}>
+                Vehicles
+              </Link>
+              <Link to="/satellites" className={`py-2 px-4 rounded-lg hover:bg-gray-800 ${isActive('/satellites') ? 'bg-gray-800 text-indigo-400' : ''}`}>
+                Satellites
+              </Link>
+              <Link to="/launch-sites" className={`py-2 px-4 rounded-lg hover:bg-gray-800 ${isActive('/launch-sites') ? 'bg-gray-800 text-indigo-400' : ''}`}>
+                Launch Sites
+              </Link>
+              <Link to="/missions" className={`py-2 px-4 rounded-lg hover:bg-gray-800 ${isActive('/missions') ? 'bg-gray-800 text-indigo-400' : ''}`}>
+                Missions
+              </Link>
+              <Link to="/rankings" className={`py-2 px-4 rounded-lg hover:bg-gray-800 ${isActive('/rankings') ? 'bg-gray-800 text-indigo-400' : ''}`}>
+                Rankings
+              </Link>
+              <Link to="/analytics" className={`py-2 px-4 rounded-lg hover:bg-gray-800 ${isActive('/analytics') ? 'bg-gray-800 text-indigo-400' : ''}`}>
+                Analytics
+              </Link>
+              <div className="border-t border-gray-800 my-2"></div>
+              <Link to="/compare/countries" className={`py-2 px-4 rounded-lg hover:bg-gray-800 ${isActive('/compare/countries') ? 'bg-gray-800 text-indigo-400' : ''}`}>
+                Compare Countries
+              </Link>
+              <Link to="/compare/engines" className={`py-2 px-4 rounded-lg hover:bg-gray-800 ${isActive('/compare/engines') ? 'bg-gray-800 text-indigo-400' : ''}`}>
+                Compare Engines
+              </Link>
+            </div>
+          </div>
+        )}
       </div>
     </nav>
   );
