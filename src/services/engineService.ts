@@ -2,6 +2,15 @@ import axios, { AxiosInstance, AxiosError } from 'axios';
 import { Engine, EngineComparison, EngineStatistics, ApiErrorResponse } from '../types';
 import { API_CONFIG, ERROR_MESSAGES } from '../constants';
 
+// Type for paginated API responses
+interface PaginatedResponse<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;
+}
+
 // Map country codes to IDs for fallback
 const COUNTRY_MAP: Record<string, string> = {
   'United States': 'USA',
@@ -80,10 +89,34 @@ class EngineService {
 
   /**
    * Fetch all engines
+   * Handles paginated API responses - fetches all pages if paginated
    */
   async getAll(): Promise<Engine[]> {
-    const response = await this.axiosInstance.get<Engine[]>('/engines');
-    return response.data.map(e => this.enhanceEngine(e));
+    const response = await this.axiosInstance.get<Engine[] | PaginatedResponse<Engine>>('/engines?size=100');
+    const data = response.data;
+
+    // Handle paginated response
+    if (data && typeof data === 'object' && 'content' in data) {
+      let allEngines = [...data.content];
+
+      // If there are more pages, fetch them all
+      if (data.totalPages > 1) {
+        const promises = [];
+        for (let page = 1; page < data.totalPages; page++) {
+          promises.push(this.axiosInstance.get<PaginatedResponse<Engine>>(`/engines?page=${page}&size=100`));
+        }
+        const responses = await Promise.all(promises);
+        responses.forEach(res => {
+          if (res.data?.content) {
+            allEngines = [...allEngines, ...res.data.content];
+          }
+        });
+      }
+      return allEngines.map(e => this.enhanceEngine(e));
+    }
+
+    // Handle flat array response
+    return Array.isArray(data) ? data.map(e => this.enhanceEngine(e)) : [];
   }
 
   /**

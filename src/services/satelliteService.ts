@@ -2,6 +2,15 @@ import axios, { AxiosInstance, AxiosError } from 'axios';
 import { ApiErrorResponse } from '../types';
 import { API_CONFIG, ERROR_MESSAGES } from '../constants';
 
+// Type for paginated API responses
+interface PaginatedResponse<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;
+}
+
 /**
  * Satellite types
  */
@@ -83,8 +92,31 @@ class SatelliteService {
   // ============================================================================
 
   async getAll(): Promise<Satellite[]> {
-    const response = await this.axiosInstance.get<Satellite[]>('/satellites');
-    return response.data;
+    const response = await this.axiosInstance.get<Satellite[] | PaginatedResponse<Satellite>>('/satellites?size=100');
+    const data = response.data;
+
+    // Handle paginated response
+    if (data && typeof data === 'object' && 'content' in data) {
+      let allSatellites = [...data.content];
+
+      // If there are more pages, fetch them all
+      if (data.totalPages > 1) {
+        const promises = [];
+        for (let page = 1; page < data.totalPages; page++) {
+          promises.push(this.axiosInstance.get<PaginatedResponse<Satellite>>(`/satellites?page=${page}&size=100`));
+        }
+        const responses = await Promise.all(promises);
+        responses.forEach(res => {
+          if (res.data?.content) {
+            allSatellites = [...allSatellites, ...res.data.content];
+          }
+        });
+      }
+      return allSatellites;
+    }
+
+    // Handle flat array response
+    return Array.isArray(data) ? data : [];
   }
 
   async getById(id: number): Promise<Satellite> {

@@ -8,6 +8,15 @@ import {
 } from '../types';
 import { API_CONFIG, ERROR_MESSAGES } from '../constants';
 
+// Type for paginated API responses
+interface PaginatedResponse<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;
+}
+
 /**
  * Country Service - Handles all API communication related to countries and space programs
  */
@@ -24,6 +33,20 @@ class CountryService {
       (response) => response,
       (error) => this.handleError(error)
     );
+  }
+
+  /**
+   * Extract data from potentially paginated response
+   * Handles both paginated ({content: []}) and flat array responses
+   */
+  private extractData<T>(data: T[] | PaginatedResponse<T>): T[] {
+    if (Array.isArray(data)) {
+      return data;
+    }
+    if (data && typeof data === 'object' && 'content' in data) {
+      return data.content;
+    }
+    return [];
   }
 
   private handleError(error: AxiosError<ApiErrorResponse>): Promise<never> {
@@ -51,11 +74,35 @@ class CountryService {
 
   /**
    * Fetch all countries with space programs
+   * Handles paginated API responses - fetches all pages if paginated
    */
   async getAll(): Promise<Country[]> {
     try {
-      const response = await this.axiosInstance.get<Country[]>('/countries');
-      return response.data;
+      const response = await this.axiosInstance.get<Country[] | PaginatedResponse<Country>>('/countries?size=100');
+      const data = response.data;
+
+      // Handle paginated response
+      if (data && typeof data === 'object' && 'content' in data) {
+        let allCountries = [...data.content];
+
+        // If there are more pages, fetch them all
+        if (data.totalPages > 1) {
+          const promises = [];
+          for (let page = 1; page < data.totalPages; page++) {
+            promises.push(this.axiosInstance.get<PaginatedResponse<Country>>(`/countries?page=${page}&size=100`));
+          }
+          const responses = await Promise.all(promises);
+          responses.forEach(res => {
+            if (res.data?.content) {
+              allCountries = [...allCountries, ...res.data.content];
+            }
+          });
+        }
+        return allCountries;
+      }
+
+      // Handle flat array response
+      return Array.isArray(data) ? data : [];
     } catch (error) {
       console.error('Error fetching countries:', error);
       throw new Error(ERROR_MESSAGES.FETCH_COUNTRIES_FAILED);

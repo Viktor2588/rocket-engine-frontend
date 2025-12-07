@@ -11,6 +11,15 @@ import {
 } from '../types';
 import { API_CONFIG, ERROR_MESSAGES } from '../constants';
 
+// Type for paginated API responses
+interface PaginatedResponse<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;
+}
+
 /**
  * Space Mission Service
  *
@@ -73,8 +82,31 @@ class SpaceMissionService {
   // ============================================================================
 
   async getAll(): Promise<SpaceMission[]> {
-    const response = await this.axiosInstance.get<SpaceMission[]>('/missions');
-    return this.sortByLaunchDate(response.data);
+    const response = await this.axiosInstance.get<SpaceMission[] | PaginatedResponse<SpaceMission>>('/missions?size=100');
+    const data = response.data;
+
+    // Handle paginated response
+    if (data && typeof data === 'object' && 'content' in data) {
+      let allMissions = [...data.content];
+
+      // If there are more pages, fetch them all
+      if (data.totalPages > 1) {
+        const promises = [];
+        for (let page = 1; page < data.totalPages; page++) {
+          promises.push(this.axiosInstance.get<PaginatedResponse<SpaceMission>>(`/missions?page=${page}&size=100`));
+        }
+        const responses = await Promise.all(promises);
+        responses.forEach(res => {
+          if (res.data?.content) {
+            allMissions = [...allMissions, ...res.data.content];
+          }
+        });
+      }
+      return this.sortByLaunchDate(allMissions);
+    }
+
+    // Handle flat array response
+    return Array.isArray(data) ? this.sortByLaunchDate(data) : [];
   }
 
   // Legacy method name for compatibility

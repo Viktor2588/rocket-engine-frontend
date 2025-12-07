@@ -2,6 +2,15 @@ import axios, { AxiosInstance, AxiosError } from 'axios';
 import { LaunchVehicle, LaunchVehicleStatus, ApiErrorResponse } from '../types';
 import { API_CONFIG, ERROR_MESSAGES } from '../constants';
 
+// Type for paginated API responses
+interface PaginatedResponse<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;
+}
+
 /**
  * Launch Vehicle Service - Handles all API communication related to launch vehicles
  */
@@ -37,10 +46,34 @@ class LaunchVehicleService {
 
   /**
    * Fetch all launch vehicles
+   * Handles paginated API responses - fetches all pages if paginated
    */
   async getAll(): Promise<LaunchVehicle[]> {
-    const response = await this.axiosInstance.get<LaunchVehicle[]>('/launch-vehicles');
-    return response.data;
+    const response = await this.axiosInstance.get<LaunchVehicle[] | PaginatedResponse<LaunchVehicle>>('/launch-vehicles?size=100');
+    const data = response.data;
+
+    // Handle paginated response
+    if (data && typeof data === 'object' && 'content' in data) {
+      let allVehicles = [...data.content];
+
+      // If there are more pages, fetch them all
+      if (data.totalPages > 1) {
+        const promises = [];
+        for (let page = 1; page < data.totalPages; page++) {
+          promises.push(this.axiosInstance.get<PaginatedResponse<LaunchVehicle>>(`/launch-vehicles?page=${page}&size=100`));
+        }
+        const responses = await Promise.all(promises);
+        responses.forEach(res => {
+          if (res.data?.content) {
+            allVehicles = [...allVehicles, ...res.data.content];
+          }
+        });
+      }
+      return allVehicles;
+    }
+
+    // Handle flat array response
+    return Array.isArray(data) ? data : [];
   }
 
   /**
