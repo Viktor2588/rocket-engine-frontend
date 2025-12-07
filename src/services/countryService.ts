@@ -35,20 +35,6 @@ class CountryService {
     );
   }
 
-  /**
-   * Extract data from potentially paginated response
-   * Handles both paginated ({content: []}) and flat array responses
-   */
-  private extractData<T>(data: T[] | PaginatedResponse<T>): T[] {
-    if (Array.isArray(data)) {
-      return data;
-    }
-    if (data && typeof data === 'object' && 'content' in data) {
-      return data.content;
-    }
-    return [];
-  }
-
   private handleError(error: AxiosError<ApiErrorResponse>): Promise<never> {
     if (error.response) {
       const status = error.response.status;
