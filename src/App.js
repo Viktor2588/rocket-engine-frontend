@@ -6,6 +6,7 @@ import EngineDetailPage from './pages/EngineDetailPage';
 import ComparisonPage from './pages/ComparisonPage';
 import CountryListPage from './pages/CountryListPage';
 import CountryDetailPage from './pages/CountryDetailPage';
+import CountryComparisonPage from './pages/CountryComparisonPage';
 import './App.css';
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
           {/* Comparison Routes */}
           <Route path="/compare" element={<ComparisonPage />} />
           <Route path="/compare/engines" element={<ComparisonPage />} />
+          <Route path="/compare/countries" element={<CountryComparisonPage />} />
         </Routes>
         <Footer />
       </div>

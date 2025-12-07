@@ -3,12 +3,13 @@ import { Link } from 'react-router-dom';
 import { useCountries, useCountryRankings } from '../hooks/useCountries';
 import CountryCard from '../components/CountryCard';
 import { CapabilityScoreBadge } from '../components/CapabilityScoreCard';
+import WorldMapView from '../components/maps/WorldMapView';
 import { REGIONS } from '../constants';
 
 export default function CountryListPage() {
   const { countries, loading, error } = useCountries();
   const { rankings } = useCountryRankings();
-  const [viewMode, setViewMode] = useState('grid');
+  const [viewMode, setViewMode] = useState('map');
   const [sortBy, setSortBy] = useState('score');
   const [filterRegion, setFilterRegion] = useState('all');
   const [filterCapability, setFilterCapability] = useState('all');
@@ -182,6 +183,16 @@ export default function CountryListPage() {
 
             <div className="flex gap-2">
               <button
+                onClick={() => setViewMode('map')}
+                className={`px-4 py-2 rounded-md font-semibold transition text-sm ${
+                  viewMode === 'map'
+                    ? 'bg-indigo-500 text-white'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                Map
+              </button>
+              <button
                 onClick={() => setViewMode('grid')}
                 className={`px-4 py-2 rounded-md font-semibold transition text-sm ${
                   viewMode === 'grid'
@@ -189,7 +200,7 @@ export default function CountryListPage() {
                     : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                 }`}
               >
-                Grid View
+                Grid
               </button>
               <button
                 onClick={() => setViewMode('table')}
@@ -199,7 +210,7 @@ export default function CountryListPage() {
                     : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                 }`}
               >
-                Table View
+                Table
               </button>
               <Link
                 to="/compare/countries"
@@ -212,7 +223,12 @@ export default function CountryListPage() {
         </div>
 
         {/* Results */}
-        {viewMode === 'grid' ? (
+        {viewMode === 'map' ? (
+          <WorldMapView
+            countries={filteredAndSortedCountries}
+            showLabels={true}
+          />
+        ) : viewMode === 'grid' ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredAndSortedCountries.map((country) => (
               <CountryCard
