@@ -26,7 +26,9 @@ export default function CountryListPage() {
   // Create a map of country rankings
   const rankingMap = useMemo(() => {
     const map = {};
-    rankings.forEach((r) => {
+    // Safety check: ensure rankings is an array
+    const safeRankings = Array.isArray(rankings) ? rankings : [];
+    safeRankings.forEach((r) => {
       map[r.id] = r.rank;
     });
     return map;
@@ -34,7 +36,8 @@ export default function CountryListPage() {
 
   // Filter and sort countries
   const filteredAndSortedCountries = useMemo(() => {
-    let result = [...countries];
+    // Safety check: ensure countries is an array before spreading
+    let result = Array.isArray(countries) ? [...countries] : [];
 
     // Filter by region
     if (filterRegion !== 'all') {
@@ -66,15 +69,19 @@ export default function CountryListPage() {
   }, [countries, sortBy, filterRegion, filterCapability]);
 
   // Calculate stats
-  const stats = useMemo(() => ({
-    totalCountries: countries.length,
-    humanSpaceflight: countries.filter(c => c.humanSpaceflightCapable).length,
-    independentLaunch: countries.filter(c => c.independentLaunchCapable).length,
-    reusableRockets: countries.filter(c => c.reusableRocketCapable).length,
-    averageScore: countries.length > 0
-      ? countries.reduce((sum, c) => sum + (c.overallCapabilityScore || 0), 0) / countries.length
-      : 0,
-  }), [countries]);
+  const stats = useMemo(() => {
+    // Safety check: ensure countries is an array
+    const safeCountries = Array.isArray(countries) ? countries : [];
+    return {
+      totalCountries: safeCountries.length,
+      humanSpaceflight: safeCountries.filter(c => c.humanSpaceflightCapable).length,
+      independentLaunch: safeCountries.filter(c => c.independentLaunchCapable).length,
+      reusableRockets: safeCountries.filter(c => c.reusableRocketCapable).length,
+      averageScore: safeCountries.length > 0
+        ? safeCountries.reduce((sum, c) => sum + (c.overallCapabilityScore || 0), 0) / safeCountries.length
+        : 0,
+    };
+  }, [countries]);
 
   if (loading) {
     return (

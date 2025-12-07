@@ -14,7 +14,8 @@ export const useCountries = () => {
       try {
         setLoading(true);
         const data = await countryService.getAll();
-        setCountries(data);
+        // Ensure data is always an array to prevent "e is not iterable" errors
+        setCountries(Array.isArray(data) ? data : []);
         setError(null);
       } catch (err) {
         setError(err.message || 'Failed to fetch countries');
@@ -112,8 +113,10 @@ export const useCountryRankings = () => {
       setLoading(true);
       const data = await countryService.getRankings();
       // Backend returns Country[] sorted by score
+      // Ensure data is always an array
+      const safeData = Array.isArray(data) ? data : [];
       // Map to include rank index
-      const rankedData = data.map((country, index) => ({
+      const rankedData = safeData.map((country, index) => ({
         ...country,
         rank: index + 1
       }));
