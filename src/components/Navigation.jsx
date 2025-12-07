@@ -38,7 +38,7 @@ export default function Navigation() {
     `hover:text-indigo-400 transition ${isActive(path) ? 'text-indigo-400 font-semibold' : ''}`;
 
   return (
-    <nav className="bg-gray-900 text-white shadow-lg sticky top-0 z-40">
+    <nav id="main-navigation" className="bg-gray-900 text-white shadow-lg sticky top-0 z-40" role="navigation" aria-label="Main navigation">
       <div className="container mx-auto px-4">
         {/* Main Navigation Row */}
         <div className="flex justify-between items-center py-3">

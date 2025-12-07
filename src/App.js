@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from './contexts/ThemeContext';
 import Navigation from './components/Navigation';
 import Footer from './components/Footer';
+import SkipLinks from './components/SkipLinks';
 import EngineListPage from './pages/EngineListPage';
 import EngineDetailPage from './pages/EngineDetailPage';
 import ComparisonPage from './pages/ComparisonPage';
@@ -29,7 +30,9 @@ function App() {
     <ThemeProvider>
       <Router basename={basename}>
         <div className="App dark:bg-gray-900 dark:text-white min-h-screen">
+          <SkipLinks />
           <Navigation />
+          <main id="main-content" tabIndex="-1" className="focus:outline-none">
         <Routes>
           {/* Main Dashboard - Countries Overview */}
           <Route path="/" element={<CountryListPage />} />
@@ -71,6 +74,7 @@ function App() {
           {/* Analytics Route */}
           <Route path="/analytics" element={<AnalyticsPage />} />
         </Routes>
+          </main>
           <Footer />
         </div>
       </Router>
