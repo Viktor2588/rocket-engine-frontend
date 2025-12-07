@@ -169,7 +169,7 @@ export default function MissionCard({ mission, showCountry = true, className = '
         </p>
 
         {/* Crew names if crewed */}
-        {mission.crewed && mission.crewNames && mission.crewNames.length > 0 && (
+        {mission.crewed && Array.isArray(mission.crewNames) && mission.crewNames.length > 0 && (
           <div className="mb-3 p-2 bg-gray-50 rounded text-sm">
             <span className="font-medium text-gray-700">Crew: </span>
             <span className="text-gray-600">{mission.crewNames.join(', ')}</span>
@@ -177,14 +177,14 @@ export default function MissionCard({ mission, showCountry = true, className = '
         )}
 
         {/* Objectives preview */}
-        {mission.objectives && mission.objectives.length > 0 && (
+        {Array.isArray(mission.objectives) && mission.objectives.length > 0 && (
           <div className="mb-3">
             <h4 className="text-xs font-semibold text-gray-500 uppercase mb-1">Objectives</h4>
             <ul className="text-sm text-gray-600 space-y-1">
               {mission.objectives.slice(0, 2).map((obj, idx) => (
                 <li key={idx} className="flex items-start gap-1">
                   <span className="text-indigo-500">•</span>
-                  <span className="line-clamp-1">{obj}</span>
+                  <span className="line-clamp-1">{typeof obj === 'string' ? obj : obj?.name || obj?.description || String(obj)}</span>
                 </li>
               ))}
               {mission.objectives.length > 2 && (
