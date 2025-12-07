@@ -319,6 +319,124 @@ class CountryService {
       throw new Error(ERROR_MESSAGES.INTERNAL_ERROR);
     }
   }
+
+  // ============================================================================
+  // ADDITIONAL CAPABILITY FILTERS
+  // ============================================================================
+
+  /**
+   * Get countries with deep space capability
+   */
+  async getDeepSpaceCapable(): Promise<Country[]> {
+    try {
+      const response = await this.axiosInstance.get<Country[]>('/countries/capability/deep-space');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching deep space capable countries:', error);
+      throw new Error(ERROR_MESSAGES.FETCH_COUNTRIES_FAILED);
+    }
+  }
+
+  /**
+   * Get countries with reusable rocket capability
+   */
+  async getReusableRocketCapable(): Promise<Country[]> {
+    try {
+      const response = await this.axiosInstance.get<Country[]>('/countries/capability/reusable-rocket');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching reusable rocket capable countries:', error);
+      throw new Error(ERROR_MESSAGES.FETCH_COUNTRIES_FAILED);
+    }
+  }
+
+  /**
+   * Get countries with space station capability
+   */
+  async getSpaceStationCapable(): Promise<Country[]> {
+    try {
+      const response = await this.axiosInstance.get<Country[]>('/countries/capability/space-station');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching space station capable countries:', error);
+      throw new Error(ERROR_MESSAGES.FETCH_COUNTRIES_FAILED);
+    }
+  }
+
+  // ============================================================================
+  // ADDITIONAL RELATED ENTITIES
+  // ============================================================================
+
+  /**
+   * Get milestones for a country
+   */
+  async getMilestones(countryId: string | number): Promise<any[]> {
+    try {
+      const response = await this.axiosInstance.get(`/countries/${countryId}/milestones`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching milestones for country ${countryId}:`, error);
+      throw new Error(ERROR_MESSAGES.INTERNAL_ERROR);
+    }
+  }
+
+  /**
+   * Get satellites for a country
+   */
+  async getSatellites(countryId: string | number): Promise<any[]> {
+    try {
+      const response = await this.axiosInstance.get(`/countries/${countryId}/satellites`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching satellites for country ${countryId}:`, error);
+      throw new Error(ERROR_MESSAGES.INTERNAL_ERROR);
+    }
+  }
+
+  /**
+   * Get launch sites for a country
+   */
+  async getLaunchSites(countryId: string | number): Promise<any[]> {
+    try {
+      const response = await this.axiosInstance.get(`/countries/${countryId}/launch-sites`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching launch sites for country ${countryId}:`, error);
+      throw new Error(ERROR_MESSAGES.INTERNAL_ERROR);
+    }
+  }
+
+  /**
+   * Get missions for a country
+   */
+  async getMissions(countryId: string | number): Promise<any[]> {
+    try {
+      const response = await this.axiosInstance.get(`/countries/${countryId}/missions`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching missions for country ${countryId}:`, error);
+      throw new Error(ERROR_MESSAGES.INTERNAL_ERROR);
+    }
+  }
+
+  // ============================================================================
+  // SEARCH
+  // ============================================================================
+
+  /**
+   * Search countries
+   */
+  async search(query: string): Promise<Country[]> {
+    try {
+      const response = await this.axiosInstance.get<Country[]>('/countries/search', {
+        params: { q: query }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error searching countries:', error);
+      throw new Error(ERROR_MESSAGES.FETCH_COUNTRIES_FAILED);
+    }
+  }
 }
 
 // Export singleton instance

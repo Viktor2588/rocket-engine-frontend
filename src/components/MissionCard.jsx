@@ -1,0 +1,316 @@
+import { Link } from 'react-router-dom';
+import { MISSION_TYPE_INFO, DESTINATION_INFO } from '../types';
+
+// Status badge colors and labels
+const STATUS_CONFIG = {
+  PLANNED: { color: 'bg-blue-100 text-blue-800', label: 'Planned' },
+  IN_DEVELOPMENT: { color: 'bg-purple-100 text-purple-800', label: 'In Development' },
+  LAUNCHED: { color: 'bg-yellow-100 text-yellow-800', label: 'Launched' },
+  IN_TRANSIT: { color: 'bg-orange-100 text-orange-800', label: 'In Transit' },
+  ACTIVE: { color: 'bg-green-100 text-green-800', label: 'Active' },
+  COMPLETED: { color: 'bg-teal-100 text-teal-800', label: 'Completed' },
+  PARTIAL_SUCCESS: { color: 'bg-amber-100 text-amber-800', label: 'Partial Success' },
+  FAILED: { color: 'bg-red-100 text-red-800', label: 'Failed' },
+  LOST: { color: 'bg-gray-100 text-gray-800', label: 'Lost' }
+};
+
+// Country flags
+const COUNTRY_FLAGS = {
+  USA: '🇺🇸',
+  RUS: '🇷🇺',
+  CHN: '🇨🇳',
+  EUR: '🇪🇺',
+  JPN: '🇯🇵',
+  IND: '🇮🇳',
+  ISR: '🇮🇱',
+  DEU: '🇩🇪',
+  FRA: '🇫🇷',
+  GBR: '🇬🇧',
+  KOR: '🇰🇷',
+  IRN: '🇮🇷',
+  UAE: '🇦🇪'
+};
+
+// Format date
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  });
+}
+
+// Status Badge Component
+export function StatusBadge({ status }) {
+  const config = STATUS_CONFIG[status] || { color: 'bg-gray-100 text-gray-800', label: status };
+  return (
+    <span className={`px-2 py-1 text-xs font-semibold rounded-full ${config.color}`}>
+      {config.label}
+    </span>
+  );
+}
+
+// Destination Badge Component
+export function DestinationBadge({ destination }) {
+  const info = DESTINATION_INFO[destination];
+  if (!info) return null;
+
+  return (
+    <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium bg-indigo-50 text-indigo-700 rounded-full">
+      <span>{info.icon}</span>
+      <span>{info.label}</span>
+    </span>
+  );
+}
+
+// Mission Type Badge Component
+export function MissionTypeBadge({ missionType }) {
+  const info = MISSION_TYPE_INFO[missionType];
+  if (!info) return null;
+
+  return (
+    <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded-full">
+      <span>{info.icon}</span>
+      <span>{info.label}</span>
+    </span>
+  );
+}
+
+// Compact Mission Card
+export function MissionCardCompact({ mission, showCountry = true }) {
+  const typeInfo = MISSION_TYPE_INFO[mission.missionType];
+  const destInfo = DESTINATION_INFO[mission.destination];
+
+  return (
+    <Link
+      to={`/missions/${mission.id}`}
+      className="block p-3 bg-white rounded-lg border border-gray-200 hover:border-indigo-300 hover:shadow-md transition-all"
+    >
+      <div className="flex items-start justify-between gap-2">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-1">
+            {showCountry && (
+              <span className="text-lg">{COUNTRY_FLAGS[mission.countryId] || '🏳️'}</span>
+            )}
+            <h4 className="font-semibold text-gray-900 truncate">{mission.name}</h4>
+          </div>
+          <div className="flex items-center gap-2 text-xs text-gray-500">
+            <span>{formatDate(mission.launchDate)}</span>
+            {destInfo && (
+              <>
+                <span>•</span>
+                <span>{destInfo.icon} {destInfo.label}</span>
+              </>
+            )}
+          </div>
+        </div>
+        <StatusBadge status={mission.status} />
+      </div>
+      {mission.crewed && (
+        <div className="mt-2 text-xs text-indigo-600">
+          👨‍🚀 Crewed ({mission.crewSize} astronauts)
+        </div>
+      )}
+    </Link>
+  );
+}
+
+// Full Mission Card
+export default function MissionCard({ mission, showCountry = true, className = '' }) {
+  const typeInfo = MISSION_TYPE_INFO[mission.missionType];
+  const destInfo = DESTINATION_INFO[mission.destination];
+
+  return (
+    <div className={`bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow ${className}`}>
+      {/* Header with status bar */}
+      <div className={`h-2 ${
+        mission.status === 'ACTIVE' ? 'bg-green-500' :
+        mission.status === 'COMPLETED' ? 'bg-teal-500' :
+        mission.status === 'FAILED' ? 'bg-red-500' :
+        mission.status === 'IN_TRANSIT' ? 'bg-orange-500' :
+        'bg-indigo-500'
+      }`} />
+
+      <div className="p-4">
+        {/* Title row */}
+        <div className="flex items-start justify-between gap-3 mb-3">
+          <div className="flex items-center gap-2">
+            {showCountry && (
+              <span className="text-2xl">{COUNTRY_FLAGS[mission.countryId] || '🏳️'}</span>
+            )}
+            <div>
+              <h3 className="font-bold text-lg text-gray-900">{mission.name}</h3>
+              <p className="text-sm text-gray-500">{formatDate(mission.launchDate)}</p>
+            </div>
+          </div>
+          <StatusBadge status={mission.status} />
+        </div>
+
+        {/* Badges row */}
+        <div className="flex flex-wrap gap-2 mb-3">
+          <MissionTypeBadge missionType={mission.missionType} />
+          <DestinationBadge destination={mission.destination} />
+          {mission.crewed && (
+            <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium bg-purple-50 text-purple-700 rounded-full">
+              👨‍🚀 Crewed ({mission.crewSize})
+            </span>
+          )}
+          {mission.historicFirst && (
+            <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium bg-yellow-50 text-yellow-700 rounded-full">
+              🥇 Historic First
+            </span>
+          )}
+        </div>
+
+        {/* Description */}
+        <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+          {mission.description}
+        </p>
+
+        {/* Crew names if crewed */}
+        {mission.crewed && mission.crewNames && mission.crewNames.length > 0 && (
+          <div className="mb-3 p-2 bg-gray-50 rounded text-sm">
+            <span className="font-medium text-gray-700">Crew: </span>
+            <span className="text-gray-600">{mission.crewNames.join(', ')}</span>
+          </div>
+        )}
+
+        {/* Objectives preview */}
+        {mission.objectives && mission.objectives.length > 0 && (
+          <div className="mb-3">
+            <h4 className="text-xs font-semibold text-gray-500 uppercase mb-1">Objectives</h4>
+            <ul className="text-sm text-gray-600 space-y-1">
+              {mission.objectives.slice(0, 2).map((obj, idx) => (
+                <li key={idx} className="flex items-start gap-1">
+                  <span className="text-indigo-500">•</span>
+                  <span className="line-clamp-1">{obj}</span>
+                </li>
+              ))}
+              {mission.objectives.length > 2 && (
+                <li className="text-indigo-500 text-xs">+{mission.objectives.length - 2} more</li>
+              )}
+            </ul>
+          </div>
+        )}
+
+        {/* Footer */}
+        <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+          {mission.launchVehicle && (
+            <span className="text-xs text-gray-500">
+              🚀 {mission.launchVehicle}
+            </span>
+          )}
+          <Link
+            to={`/missions/${mission.id}`}
+            className="text-sm text-indigo-600 hover:text-indigo-800 font-medium"
+          >
+            View Details →
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Mission Stats Summary Card
+export function MissionStatsCard({ stats }) {
+  if (!stats) return null;
+
+  return (
+    <div className="bg-white rounded-lg shadow-md p-6">
+      <h3 className="text-lg font-bold text-gray-800 mb-4">Mission Statistics</h3>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div className="text-center p-3 bg-indigo-50 rounded-lg">
+          <div className="text-2xl font-bold text-indigo-600">{stats.totalMissions}</div>
+          <div className="text-xs text-gray-500">Total Missions</div>
+        </div>
+        <div className="text-center p-3 bg-green-50 rounded-lg">
+          <div className="text-2xl font-bold text-green-600">{stats.activeMissions}</div>
+          <div className="text-xs text-gray-500">Active</div>
+        </div>
+        <div className="text-center p-3 bg-purple-50 rounded-lg">
+          <div className="text-2xl font-bold text-purple-600">{stats.crewedMissions}</div>
+          <div className="text-xs text-gray-500">Crewed Missions</div>
+        </div>
+        <div className="text-center p-3 bg-teal-50 rounded-lg">
+          <div className="text-2xl font-bold text-teal-600">{stats.successRate}%</div>
+          <div className="text-xs text-gray-500">Success Rate</div>
+        </div>
+      </div>
+
+      {/* Status breakdown */}
+      {stats.byStatus && (
+        <div className="mb-4">
+          <h4 className="text-sm font-semibold text-gray-700 mb-2">By Status</h4>
+          <div className="flex flex-wrap gap-2">
+            {Object.entries(stats.byStatus).map(([status, count]) => (
+              <span key={status} className="text-xs px-2 py-1 bg-gray-100 rounded">
+                {STATUS_CONFIG[status]?.label || status}: {count}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Destination breakdown */}
+      {stats.byDestination && (
+        <div>
+          <h4 className="text-sm font-semibold text-gray-700 mb-2">By Destination</h4>
+          <div className="flex flex-wrap gap-2">
+            {Object.entries(stats.byDestination).map(([dest, count]) => {
+              const info = DESTINATION_INFO[dest];
+              return (
+                <span key={dest} className="text-xs px-2 py-1 bg-gray-100 rounded">
+                  {info?.icon} {info?.label || dest}: {count}
+                </span>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Mission Timeline Item
+export function MissionTimelineItem({ mission, isFirst = false, isLast = false }) {
+  const destInfo = DESTINATION_INFO[mission.destination];
+
+  return (
+    <div className="relative pl-8 pb-6">
+      {/* Timeline line */}
+      {!isLast && (
+        <div className="absolute left-3 top-6 bottom-0 w-0.5 bg-gray-200" />
+      )}
+
+      {/* Timeline dot */}
+      <div className={`absolute left-0 top-1 w-6 h-6 rounded-full flex items-center justify-center text-xs ${
+        mission.status === 'ACTIVE' ? 'bg-green-500 text-white' :
+        mission.status === 'COMPLETED' ? 'bg-teal-500 text-white' :
+        mission.status === 'FAILED' ? 'bg-red-500 text-white' :
+        'bg-indigo-500 text-white'
+      }`}>
+        {destInfo?.icon || '🚀'}
+      </div>
+
+      {/* Content */}
+      <div className="bg-white rounded-lg border border-gray-200 p-3 hover:shadow-md transition-shadow">
+        <div className="flex items-start justify-between gap-2">
+          <div>
+            <Link
+              to={`/missions/${mission.id}`}
+              className="font-semibold text-gray-900 hover:text-indigo-600"
+            >
+              {mission.name}
+            </Link>
+            <p className="text-xs text-gray-500">{formatDate(mission.launchDate)}</p>
+          </div>
+          <StatusBadge status={mission.status} />
+        </div>
+        <p className="text-sm text-gray-600 mt-1 line-clamp-2">{mission.description}</p>
+      </div>
+    </div>
+  );
+}

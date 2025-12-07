@@ -31,6 +31,18 @@ export default function Navigation() {
           <Link to="/engines" className={linkClass('/engines')}>
             Engines
           </Link>
+          <Link to="/vehicles" className={linkClass('/vehicles')}>
+            Vehicles
+          </Link>
+          <Link to="/missions" className={linkClass('/missions')}>
+            Missions
+          </Link>
+          <Link to="/rankings" className={linkClass('/rankings')}>
+            Rankings
+          </Link>
+          <Link to="/analytics" className={linkClass('/analytics')}>
+            Analytics
+          </Link>
 
           {/* Compare dropdown */}
           <div

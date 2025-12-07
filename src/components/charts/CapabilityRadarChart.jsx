@@ -9,6 +9,7 @@ import {
 } from 'chart.js';
 import { Radar } from 'react-chartjs-2';
 import { CAPABILITY_CATEGORIES } from '../../constants';
+import { useRadarCountryData } from '../../hooks/useVisualization';
 
 ChartJS.register(
   RadialLinearScale,
@@ -61,12 +62,58 @@ function generateCategoryScores(country) {
  * @param {Array} props.countries - Array of country objects to compare
  * @param {boolean} props.showLegend - Whether to show the legend
  * @param {string} props.size - Chart size: 'small', 'medium', 'large'
+ * @param {boolean} props.useApi - Whether to fetch data from API
+ * @param {Array} props.countryIds - Country IDs for API fetch (when useApi is true)
  */
 export default function CapabilityRadarChart({
-  countries = [],
+  countries: propCountries = [],
   showLegend = true,
-  size = 'medium'
+  size = 'medium',
+  useApi = false,
+  countryIds = null,
 }) {
+  // Fetch from API if useApi is true
+  const { data: apiData, loading, error } = useRadarCountryData(useApi ? countryIds : null);
+
+  // Transform API data to match expected format
+  const countries = useApi && apiData?.length > 0
+    ? apiData.map(item => ({
+        id: item.countryCode,
+        name: item.countryName,
+        overallCapabilityScore: item.overallScore,
+        capabilityScores: {
+          launchCapability: item.launchCapability,
+          propulsionTechnology: item.propulsionTechnology,
+          humanSpaceflight: item.humanSpaceflight,
+          deepSpaceExploration: item.deepSpaceExploration,
+          satelliteInfrastructure: item.satelliteInfrastructure,
+          groundInfrastructure: item.groundInfrastructure,
+          technologicalIndependence: item.overallScore * 0.8, // Approximation
+        },
+      }))
+    : propCountries;
+
+  // Show loading state if using API
+  if (useApi && loading) {
+    return (
+      <div className="bg-white p-4 rounded-lg shadow-md flex items-center justify-center" style={{ height: size === 'small' ? '192px' : size === 'medium' ? '320px' : '384px' }}>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500 mx-auto mb-2"></div>
+          <p className="text-sm text-gray-600">Loading radar data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state if using API
+  if (useApi && error) {
+    return (
+      <div className="bg-white p-4 rounded-lg shadow-md flex items-center justify-center" style={{ height: size === 'small' ? '192px' : size === 'medium' ? '320px' : '384px' }}>
+        <p className="text-sm text-red-600">Error: {error}</p>
+      </div>
+    );
+  }
+
   if (!countries || countries.length === 0) {
     return (
       <div className="bg-gray-100 p-8 rounded-lg text-center text-gray-500">

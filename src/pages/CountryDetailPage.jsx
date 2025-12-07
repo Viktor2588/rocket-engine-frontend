@@ -1,6 +1,11 @@
 import { useParams, Link } from 'react-router-dom';
 import { useCountryByCode, useCountryEngines, useCountryLaunchVehicles } from '../hooks/useCountries';
-import CapabilityScoreCard from '../components/CapabilityScoreCard';
+import { useSCIBreakdown } from '../hooks/useCapabilityScores';
+import { useCountryMilestones } from '../hooks/useMilestones';
+import { useCountryMissionSummary } from '../hooks/useMissions';
+import CapabilityScoreCard, { CategoryMetricsDetail } from '../components/CapabilityScoreCard';
+import { MilestoneCard } from '../components/Timeline';
+import { MissionCardCompact } from '../components/MissionCard';
 import EngineCard from '../components/EngineCard';
 
 export default function CountryDetailPage() {
@@ -8,6 +13,9 @@ export default function CountryDetailPage() {
   const { country, loading, error } = useCountryByCode(code);
   const { engines, loading: enginesLoading } = useCountryEngines(country?.id);
   const { vehicles, loading: vehiclesLoading } = useCountryLaunchVehicles(country?.id);
+  const { breakdown: sciBreakdown, loading: sciLoading } = useSCIBreakdown(code);
+  const { milestones, loading: milestonesLoading } = useCountryMilestones(code);
+  const { summary: missionSummary, missions, loading: missionsLoading } = useCountryMissionSummary(code);
 
   if (loading) {
     return (
@@ -167,7 +175,16 @@ export default function CountryDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column - Capability Score */}
           <div className="lg:col-span-2">
-            <CapabilityScoreCard country={country} scores={country.capabilityScores} />
+            {sciLoading ? (
+              <div className="bg-white rounded-lg shadow-md p-8 text-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500 mx-auto mb-4"></div>
+                <p className="text-gray-500">Loading capability analysis...</p>
+              </div>
+            ) : sciBreakdown ? (
+              <CapabilityScoreCard breakdown={sciBreakdown} />
+            ) : (
+              <CapabilityScoreCard country={country} scores={country.capabilityScores} />
+            )}
           </div>
 
           {/* Right Column - Quick Actions */}
@@ -226,6 +243,16 @@ export default function CountryDetailPage() {
             </div>
           </div>
         </div>
+
+        {/* SCI Category Details */}
+        {sciBreakdown && (
+          <div className="mt-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+              📊 Space Capability Index Breakdown
+            </h2>
+            <CategoryMetricsDetail breakdown={sciBreakdown} />
+          </div>
+        )}
 
         {/* Engines Section */}
         <div className="mt-8">
@@ -330,6 +357,144 @@ export default function CountryDetailPage() {
           ) : (
             <div className="bg-white rounded-lg shadow p-8 text-center text-gray-500">
               No launch vehicles found for this country
+            </div>
+          )}
+        </div>
+
+        {/* Space Milestones Section */}
+        <div className="mt-8">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-2xl font-bold text-gray-900">
+              🏆 Space Milestones ({milestones?.length || 0})
+            </h2>
+            {milestones && milestones.length > 0 && (
+              <Link
+                to={`/countries/${country.isoCode}/timeline`}
+                className="text-indigo-600 hover:text-indigo-800 font-semibold text-sm"
+              >
+                View Full Timeline →
+              </Link>
+            )}
+          </div>
+          {milestonesLoading ? (
+            <div className="text-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500 mx-auto"></div>
+            </div>
+          ) : milestones && milestones.length > 0 ? (
+            <>
+              {/* World Firsts */}
+              {milestones.filter(m => m.isFirst).length > 0 && (
+                <div className="mb-4">
+                  <h3 className="text-lg font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                    <span>🥇</span> World First Achievements
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {milestones.filter(m => m.isFirst).slice(0, 6).map(milestone => (
+                      <MilestoneCard key={milestone.id} milestone={milestone} showCountry={false} compact />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Other Milestones */}
+              {milestones.filter(m => !m.isFirst).length > 0 && (
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-700 mb-3">Other Achievements</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {milestones.filter(m => !m.isFirst).slice(0, 6).map(milestone => (
+                      <MilestoneCard key={milestone.id} milestone={milestone} showCountry={false} compact />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {milestones.length > 6 && (
+                <div className="text-center mt-4">
+                  <Link
+                    to={`/countries/${country.isoCode}/timeline`}
+                    className="text-indigo-600 hover:text-indigo-800 font-semibold"
+                  >
+                    View all {milestones.length} milestones →
+                  </Link>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="bg-white rounded-lg shadow p-8 text-center text-gray-500">
+              No milestones recorded for this country
+            </div>
+          )}
+        </div>
+
+        {/* Space Missions Section */}
+        <div className="mt-8">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-2xl font-bold text-gray-900">
+              🛸 Space Missions ({missions?.length || 0})
+            </h2>
+            {missions && missions.length > 0 && (
+              <Link
+                to={`/missions?country=${country.isoCode}`}
+                className="text-indigo-600 hover:text-indigo-800 font-semibold text-sm"
+              >
+                View All Missions →
+              </Link>
+            )}
+          </div>
+
+          {missionsLoading ? (
+            <div className="text-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500 mx-auto"></div>
+            </div>
+          ) : missionSummary && missions && missions.length > 0 ? (
+            <>
+              {/* Mission Stats Summary */}
+              <div className="bg-white rounded-lg shadow-md p-4 mb-4">
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
+                  <div className="p-2 bg-indigo-50 rounded-lg">
+                    <div className="text-xl font-bold text-indigo-600">{missionSummary.totalMissions}</div>
+                    <div className="text-xs text-gray-500">Total</div>
+                  </div>
+                  <div className="p-2 bg-green-50 rounded-lg">
+                    <div className="text-xl font-bold text-green-600">{missionSummary.activeMissions}</div>
+                    <div className="text-xs text-gray-500">Active</div>
+                  </div>
+                  <div className="p-2 bg-purple-50 rounded-lg">
+                    <div className="text-xl font-bold text-purple-600">{missionSummary.crewedMissions}</div>
+                    <div className="text-xs text-gray-500">Crewed</div>
+                  </div>
+                  <div className="p-2 bg-teal-50 rounded-lg">
+                    <div className="text-xl font-bold text-teal-600">{missionSummary.successRate}%</div>
+                    <div className="text-xs text-gray-500">Success</div>
+                  </div>
+                  <div className="p-2 bg-orange-50 rounded-lg">
+                    <div className="text-xl font-bold text-orange-600">{missionSummary.totalCrewMembers}</div>
+                    <div className="text-xs text-gray-500">Astronauts</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Mission List */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {missions.slice(0, 6).map(mission => (
+                  <MissionCardCompact key={mission.id} mission={mission} showCountry={false} />
+                ))}
+              </div>
+
+              {missions.length > 6 && (
+                <div className="text-center mt-4">
+                  <Link
+                    to={`/missions?country=${country.isoCode}`}
+                    className="text-indigo-600 hover:text-indigo-800 font-semibold"
+                  >
+                    View all {missions.length} missions →
+                  </Link>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="bg-white rounded-lg shadow p-8 text-center text-gray-500">
+              No missions recorded for this country
             </div>
           )}
         </div>

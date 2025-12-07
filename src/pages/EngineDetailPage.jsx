@@ -1,179 +1,520 @@
 import { useParams, Link } from 'react-router-dom';
-import { useEngine } from '../hooks/useEngines';
+import { useEngine, useEngineEvolution } from '../hooks/useEngines';
+
+/**
+ * Get country flag emoji
+ */
+function getCountryFlag(countryId) {
+  const flags = {
+    USA: '🇺🇸',
+    CHN: '🇨🇳',
+    RUS: '🇷🇺',
+    FRA: '🇫🇷',
+    JPN: '🇯🇵',
+    IND: '🇮🇳',
+    DEU: '🇩🇪',
+    GBR: '🇬🇧',
+  };
+  return flags[countryId] || '🏳️';
+}
+
+/**
+ * Get country name
+ */
+function getCountryName(countryId) {
+  const names = {
+    USA: 'United States',
+    CHN: 'China',
+    RUS: 'Russia',
+    FRA: 'France / ESA',
+    JPN: 'Japan',
+    IND: 'India',
+    DEU: 'Germany',
+    GBR: 'United Kingdom',
+  };
+  return names[countryId] || countryId;
+}
+
+/**
+ * Format large numbers
+ */
+function formatNumber(num) {
+  if (num === null || num === undefined) return '—';
+  return num.toLocaleString();
+}
+
+/**
+ * Stat Box Component
+ */
+function StatBox({ label, value, unit, color = 'indigo' }) {
+  const colorClasses = {
+    indigo: 'text-indigo-600',
+    green: 'text-green-600',
+    blue: 'text-blue-600',
+    orange: 'text-orange-600',
+    purple: 'text-purple-600',
+    red: 'text-red-600',
+  };
+
+  return (
+    <div className="bg-white rounded-lg shadow p-4 text-center">
+      <div className={`text-2xl font-bold ${colorClasses[color]}`}>
+        {value}
+        {unit && <span className="text-sm text-gray-500 ml-1">{unit}</span>}
+      </div>
+      <div className="text-sm text-gray-500">{label}</div>
+    </div>
+  );
+}
 
 export default function EngineDetailPage() {
   const { id } = useParams();
   const { engine, loading, error } = useEngine(id);
+  const { engines: familyEngines } = useEngineEvolution(id);
 
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto mb-4"></div>
           <p className="text-gray-600">Loading engine details...</p>
         </div>
       </div>
     );
   }
 
-  if (error) {
+  if (error || !engine) {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-          <h2 className="text-lg font-semibold text-red-800 mb-2">Error Loading Engine</h2>
-          <p className="text-red-600">{error}</p>
-          <Link to="/" className="mt-4 inline-block text-blue-500 hover:text-blue-700 font-semibold">
-            ← Back to Engines
+          <h2 className="text-lg font-semibold text-red-800 mb-2">Engine Not Found</h2>
+          <p className="text-red-600">{error || 'The requested engine could not be found.'}</p>
+          <Link
+            to="/engines"
+            className="inline-block mt-4 px-4 py-2 bg-indigo-500 text-white rounded hover:bg-indigo-600"
+          >
+            Back to Engines
           </Link>
         </div>
       </div>
     );
   }
 
-  if (!engine) {
-    return (
-      <div className="container mx-auto px-4 py-12">
-        <div className="text-center">
-          <p className="text-gray-500 text-lg">Engine not found</p>
-          <Link to="/" className="mt-4 inline-block text-blue-500 hover:text-blue-700 font-semibold">
-            ← Back to Engines
-          </Link>
-        </div>
-      </div>
-    );
-  }
+  const isp = engine.ispVacuum || engine.isp_s || engine.isp;
+  const ispSL = engine.ispSeaLevel || engine.isp;
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="container mx-auto px-4">
-        {/* Back Button */}
-        <Link to="/" className="text-blue-500 hover:text-blue-700 font-semibold mb-6 inline-block">
-          ← Back to Engines
+        {/* Back Link */}
+        <Link
+          to="/engines"
+          className="inline-flex items-center text-indigo-600 hover:text-indigo-800 mb-6"
+        >
+          <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          Back to Engines
         </Link>
 
-        {/* Engine Header */}
-        <div className="bg-white rounded-lg shadow-md p-8 mb-8">
-          <div className="flex items-start justify-between mb-6">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-indigo-700 to-indigo-900 rounded-lg shadow-lg p-6 mb-8 text-white">
+          <div className="flex flex-col md:flex-row justify-between items-start gap-4">
             <div>
-              <h1 className="text-4xl font-bold text-gray-900 mb-2">{engine.name}</h1>
-              <p className="text-lg text-gray-600">{engine.designer} • {engine.origin}</p>
-              <p className="text-sm text-gray-500 mt-1">Status: <span className="font-semibold">{engine.status}</span></p>
-            </div>
-            <div className="text-5xl">🚀</div>
-          </div>
-
-          {/* Key Metrics */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
-            <div className="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500">
-              <p className="text-sm text-gray-600 mb-1">T/W Ratio</p>
-              <p className="text-3xl font-bold text-blue-600">{engine.calculateThrustToWeightRatio ? engine.calculateThrustToWeightRatio.toFixed(2) : 'N/A'}</p>
-              <p className="text-xs text-gray-500 mt-1">thrust/weight</p>
-            </div>
-
-            <div className="bg-green-50 p-6 rounded-lg border-l-4 border-green-500">
-              <p className="text-sm text-gray-600 mb-1">ISP</p>
-              <p className="text-3xl font-bold text-green-600">{engine.isp_s || 'N/A'}</p>
-              <p className="text-xs text-gray-500 mt-1">{engine.isp_s ? 'seconds' : ''}</p>
-            </div>
-
-            <div className="bg-purple-50 p-6 rounded-lg border-l-4 border-purple-500">
-              <p className="text-sm text-gray-600 mb-1">Cycle</p>
-              <p className="text-lg font-bold text-purple-600">{engine.powerCycle || 'N/A'}</p>
-            </div>
-
-            <div className="bg-orange-50 p-6 rounded-lg border-l-4 border-orange-500">
-              <p className="text-sm text-gray-600 mb-1">Propellant</p>
-              <p className="text-lg font-bold text-orange-600">{engine.propellant}</p>
-            </div>
-          </div>
-
-          {/* Details Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Specifications */}
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Specifications</h2>
-              <div className="space-y-3">
-                <div className="flex justify-between py-2 border-b border-gray-200">
-                  <span className="font-semibold text-gray-700">Vehicle</span>
-                  <span className="text-gray-600">{engine.vehicle || 'N/A'}</span>
-                </div>
-                <div className="flex justify-between py-2 border-b border-gray-200">
-                  <span className="font-semibold text-gray-700">Thrust (N)</span>
-                  <span className="text-gray-600">{engine.thrustN ? `${engine.thrustN.toLocaleString()}` : 'N/A'}</span>
-                </div>
-                <div className="flex justify-between py-2 border-b border-gray-200">
-                  <span className="font-semibold text-gray-700">T/W Ratio</span>
-                  <span className="text-gray-600">{engine.calculateThrustToWeightRatio ? engine.calculateThrustToWeightRatio.toFixed(2) : 'N/A'}</span>
-                </div>
-                <div className="flex justify-between py-2 border-b border-gray-200">
-                  <span className="font-semibold text-gray-700">ISP (Sea Level)</span>
-                  <span className="text-gray-600">{engine.isp_s ? `${engine.isp_s} s` : 'N/A'}</span>
-                </div>
-                <div className="flex justify-between py-2 border-b border-gray-200">
-                  <span className="font-semibold text-gray-700">Power Cycle</span>
-                  <span className="text-gray-600">{engine.powerCycle || 'N/A'}</span>
-                </div>
-                <div className="flex justify-between py-2 border-b border-gray-200">
-                  <span className="font-semibold text-gray-700">Propellant</span>
-                  <span className="text-gray-600">{engine.propellant}</span>
-                </div>
-                <div className="flex justify-between py-2 border-b border-gray-200">
-                  <span className="font-semibold text-gray-700">Chamber Pressure (bar)</span>
-                  <span className="text-gray-600">{engine.chamberPressureBar || 'N/A'}</span>
-                </div>
-                <div className="flex justify-between py-2 border-b border-gray-200">
-                  <span className="font-semibold text-gray-700">Mass (kg)</span>
-                  <span className="text-gray-600">{engine.massKg ? `${engine.massKg.toLocaleString()}` : 'N/A'}</span>
-                </div>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-3xl">{getCountryFlag(engine.countryId)}</span>
+                <span className={`px-3 py-1 rounded text-sm font-medium ${
+                  engine.status === 'Active' ? 'bg-green-500' :
+                  engine.status === 'Retired' ? 'bg-gray-500' :
+                  engine.status === 'Development' ? 'bg-blue-500' :
+                  'bg-purple-500'
+                }`}>
+                  {engine.status}
+                </span>
               </div>
+              <h1 className="text-4xl font-bold mb-1">
+                {engine.name}
+                {engine.variant && (
+                  <span className="text-indigo-300 text-2xl ml-2">({engine.variant})</span>
+                )}
+              </h1>
+              <p className="text-indigo-200 text-lg">{engine.designer}</p>
+              <p className="text-indigo-300 text-sm mt-1">
+                {engine.origin || getCountryName(engine.countryId)}
+              </p>
             </div>
 
-            {/* Additional Info */}
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Additional Information</h2>
-              <div className="bg-gray-50 p-6 rounded-lg">
-                <div className="space-y-3 text-sm">
-                  <div>
-                    <p className="font-semibold text-gray-700 mb-1">Designer</p>
-                    <p className="text-gray-600">{engine.designer}</p>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-700 mb-1">Origin</p>
-                    <p className="text-gray-600">{engine.origin}</p>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-700 mb-1">Status</p>
-                    <p className="text-gray-600">{engine.status}</p>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-700 mb-1">Use</p>
-                    <p className="text-gray-600">{engine.use || 'N/A'}</p>
-                  </div>
-                  {engine.ofRatio && (
-                    <div>
-                      <p className="font-semibold text-gray-700 mb-1">O/F Ratio</p>
-                      <p className="text-gray-600">{engine.ofRatio}</p>
-                    </div>
-                  )}
-                </div>
-              </div>
+            {/* Capability Badges */}
+            <div className="flex flex-wrap gap-2">
+              {engine.reusable && (
+                <span className="inline-flex items-center px-3 py-1 rounded-full bg-purple-500 text-white text-sm">
+                  ♻️ Reusable
+                </span>
+              )}
+              {engine.advancedCycle && (
+                <span className="inline-flex items-center px-3 py-1 rounded-full bg-indigo-500 text-white text-sm">
+                  ⚡ Advanced Cycle
+                </span>
+              )}
+              {engine.throttleCapable && (
+                <span className="inline-flex items-center px-3 py-1 rounded-full bg-cyan-500 text-white text-sm">
+                  🎚️ Throttleable
+                </span>
+              )}
+              {engine.restartCapable && (
+                <span className="inline-flex items-center px-3 py-1 rounded-full bg-green-500 text-white text-sm">
+                  🔄 Restartable
+                </span>
+              )}
             </div>
           </div>
         </div>
 
+        {/* Quick Stats Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-8">
+          <StatBox
+            label="ISP (Vacuum)"
+            value={isp ?? '—'}
+            unit="s"
+            color="green"
+          />
+          <StatBox
+            label="Thrust"
+            value={engine.thrustKn ? formatNumber(engine.thrustKn) : '—'}
+            unit="kN"
+            color="blue"
+          />
+          <StatBox
+            label="T/W Ratio"
+            value={engine.calculateThrustToWeightRatio?.toFixed(1) || engine.twr || '—'}
+            color="purple"
+          />
+          <StatBox
+            label="Reliability"
+            value={engine.reliabilityRate ? `${engine.reliabilityRate.toFixed(1)}%` : '—'}
+            color={engine.reliabilityRate >= 99 ? 'green' : engine.reliabilityRate >= 95 ? 'blue' : 'orange'}
+          />
+          <StatBox
+            label="Chamber Pressure"
+            value={engine.chamberPressureBar ?? '—'}
+            unit="bar"
+            color="indigo"
+          />
+          <StatBox
+            label="Mass"
+            value={engine.massKg ? formatNumber(engine.massKg) : '—'}
+            unit="kg"
+            color="orange"
+          />
+        </div>
+
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Performance Specifications */}
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h2 className="text-xl font-bold text-gray-800 mb-4">
+              🚀 Performance Specifications
+            </h2>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center py-2 border-b">
+                <span className="text-gray-600">ISP (Sea Level)</span>
+                <span className="font-bold text-gray-800">
+                  {ispSL ? `${ispSL} s` : '—'}
+                </span>
+              </div>
+              <div className="flex justify-between items-center py-2 border-b">
+                <span className="text-gray-600">ISP (Vacuum)</span>
+                <span className="font-bold text-gray-800">
+                  {isp ? `${isp} s` : '—'}
+                </span>
+              </div>
+              <div className="flex justify-between items-center py-2 border-b">
+                <span className="text-gray-600">Thrust (Sea Level)</span>
+                <span className="font-bold text-gray-800">
+                  {engine.thrustKn ? `${formatNumber(engine.thrustKn)} kN` : '—'}
+                </span>
+              </div>
+              <div className="flex justify-between items-center py-2 border-b">
+                <span className="text-gray-600">Thrust (Vacuum)</span>
+                <span className="font-bold text-gray-800">
+                  {engine.thrustVacuumKn ? `${formatNumber(engine.thrustVacuumKn)} kN` : '—'}
+                </span>
+              </div>
+              <div className="flex justify-between items-center py-2 border-b">
+                <span className="text-gray-600">Chamber Pressure</span>
+                <span className="font-bold text-gray-800">
+                  {engine.chamberPressureBar ? `${engine.chamberPressureBar} bar` : '—'}
+                </span>
+              </div>
+              <div className="flex justify-between items-center py-2">
+                <span className="text-gray-600">Nozzle Expansion Ratio</span>
+                <span className="font-bold text-gray-800">
+                  {engine.nozzleExpansionRatio ? `${engine.nozzleExpansionRatio}:1` : '—'}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Technical Details */}
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h2 className="text-xl font-bold text-gray-800 mb-4">
+              ⚙️ Technical Details
+            </h2>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center py-2 border-b">
+                <span className="text-gray-600">Power Cycle</span>
+                <span className="font-bold text-gray-800">
+                  {engine.powerCycle || '—'}
+                </span>
+              </div>
+              <div className="flex justify-between items-center py-2 border-b">
+                <span className="text-gray-600">Propellant</span>
+                <span className="font-bold text-gray-800">
+                  {engine.propellant || '—'}
+                </span>
+              </div>
+              <div className="flex justify-between items-center py-2 border-b">
+                <span className="text-gray-600">O/F Ratio</span>
+                <span className="font-bold text-gray-800">
+                  {engine.ofRatio ?? '—'}
+                </span>
+              </div>
+              <div className="flex justify-between items-center py-2 border-b">
+                <span className="text-gray-600">Dry Mass</span>
+                <span className="font-bold text-gray-800">
+                  {engine.massKg ? `${formatNumber(engine.massKg)} kg` : '—'}
+                </span>
+              </div>
+              <div className="flex justify-between items-center py-2 border-b">
+                <span className="text-gray-600">Vehicle</span>
+                <span className="font-bold text-gray-800">
+                  {engine.vehicle || '—'}
+                </span>
+              </div>
+              <div className="flex justify-between items-center py-2">
+                <span className="text-gray-600">Stage Position</span>
+                <span className="font-bold text-gray-800">
+                  {engine.use || '—'}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Throttle & Control */}
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h2 className="text-xl font-bold text-gray-800 mb-4">
+              🎚️ Throttle & Control
+            </h2>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center py-2 border-b">
+                <span className="text-gray-600">Throttle Capable</span>
+                <span className={`font-bold ${engine.throttleCapable ? 'text-green-600' : 'text-gray-400'}`}>
+                  {engine.throttleCapable ? 'Yes' : 'No'}
+                </span>
+              </div>
+              {engine.throttleCapable && (
+                <div className="flex justify-between items-center py-2 border-b">
+                  <span className="text-gray-600">Throttle Range</span>
+                  <span className="font-bold text-gray-800">
+                    {engine.throttleMinPercent && engine.throttleMaxPercent
+                      ? `${engine.throttleMinPercent}% - ${engine.throttleMaxPercent}%`
+                      : '—'}
+                  </span>
+                </div>
+              )}
+              <div className="flex justify-between items-center py-2 border-b">
+                <span className="text-gray-600">Gimbal Capable</span>
+                <span className={`font-bold ${engine.gimbalCapable ? 'text-green-600' : 'text-gray-400'}`}>
+                  {engine.gimbalCapable ? 'Yes' : 'No'}
+                </span>
+              </div>
+              {engine.gimbalCapable && (
+                <div className="flex justify-between items-center py-2 border-b">
+                  <span className="text-gray-600">Gimbal Range</span>
+                  <span className="font-bold text-gray-800">
+                    {engine.gimbalRangeDegrees ? `±${engine.gimbalRangeDegrees}°` : '—'}
+                  </span>
+                </div>
+              )}
+              <div className="flex justify-between items-center py-2 border-b">
+                <span className="text-gray-600">Restart Capable</span>
+                <span className={`font-bold ${engine.restartCapable ? 'text-green-600' : 'text-gray-400'}`}>
+                  {engine.restartCapable ? 'Yes' : 'No'}
+                </span>
+              </div>
+              {engine.restartCapable && engine.maxRestarts && (
+                <div className="flex justify-between items-center py-2">
+                  <span className="text-gray-600">Max Restarts</span>
+                  <span className="font-bold text-gray-800">{engine.maxRestarts}</span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Reliability & Flight History */}
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h2 className="text-xl font-bold text-gray-800 mb-4">
+              📊 Reliability & History
+            </h2>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center py-2 border-b">
+                <span className="text-gray-600">First Flight</span>
+                <span className="font-bold text-gray-800">
+                  {engine.firstFlight || engine.firstFlightYear || '—'}
+                </span>
+              </div>
+              <div className="flex justify-between items-center py-2 border-b">
+                <span className="text-gray-600">Total Flights</span>
+                <span className="font-bold text-gray-800">
+                  {engine.totalFlights ?? '—'}
+                </span>
+              </div>
+              <div className="flex justify-between items-center py-2 border-b">
+                <span className="text-gray-600">Successful Flights</span>
+                <span className="font-bold text-green-600">
+                  {engine.successfulFlights ?? '—'}
+                </span>
+              </div>
+              <div className="flex justify-between items-center py-2 border-b">
+                <span className="text-gray-600">Failed Flights</span>
+                <span className="font-bold text-red-600">
+                  {engine.failedFlights ?? (engine.totalFlights && engine.successfulFlights
+                    ? engine.totalFlights - engine.successfulFlights
+                    : '—')}
+                </span>
+              </div>
+              <div className="flex justify-between items-center py-2">
+                <span className="text-gray-600">Reliability Rate</span>
+                <span className={`font-bold ${
+                  engine.reliabilityRate >= 99 ? 'text-green-600' :
+                  engine.reliabilityRate >= 95 ? 'text-blue-600' :
+                  engine.reliabilityRate >= 90 ? 'text-yellow-600' :
+                  'text-red-600'
+                }`}>
+                  {engine.reliabilityRate ? `${engine.reliabilityRate.toFixed(1)}%` : '—'}
+                </span>
+              </div>
+            </div>
+
+            {/* Reliability Bar */}
+            {engine.reliabilityRate && (
+              <div className="mt-4">
+                <div className="flex justify-between text-xs text-gray-500 mb-1">
+                  <span>0%</span>
+                  <span>Reliability</span>
+                  <span>100%</span>
+                </div>
+                <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
+                  <div
+                    className={`h-full rounded-full ${
+                      engine.reliabilityRate >= 99 ? 'bg-green-500' :
+                      engine.reliabilityRate >= 95 ? 'bg-blue-500' :
+                      engine.reliabilityRate >= 90 ? 'bg-yellow-500' :
+                      'bg-red-500'
+                    }`}
+                    style={{ width: `${engine.reliabilityRate}%` }}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Reusability */}
+          {engine.reusable && (
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h2 className="text-xl font-bold text-gray-800 mb-4">
+                ♻️ Reusability
+              </h2>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center py-2 border-b">
+                  <span className="text-gray-600">Reusable</span>
+                  <span className="font-bold text-green-600">Yes</span>
+                </div>
+                <div className="flex justify-between items-center py-2 border-b">
+                  <span className="text-gray-600">Certified Reuse Flights</span>
+                  <span className="font-bold text-gray-800">
+                    {engine.reusabilityFlights ?? '—'}
+                  </span>
+                </div>
+                {engine.actualReusedFlights && (
+                  <div className="flex justify-between items-center py-2">
+                    <span className="text-gray-600">Record Reuses (Single Unit)</span>
+                    <span className="font-bold text-purple-600">
+                      {engine.actualReusedFlights}
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Engine Family */}
+          {familyEngines && familyEngines.length > 1 && (
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h2 className="text-xl font-bold text-gray-800 mb-4">
+                🧬 Engine Family: {engine.engineFamily}
+              </h2>
+              <div className="space-y-3">
+                {familyEngines.map((familyEngine) => (
+                  <Link
+                    key={familyEngine.id}
+                    to={`/engines/${familyEngine.id}`}
+                    className={`block p-3 rounded-lg border transition ${
+                      familyEngine.id === engine.id
+                        ? 'bg-indigo-50 border-indigo-300'
+                        : 'hover:bg-gray-50 border-gray-200'
+                    }`}
+                  >
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <span className="font-semibold text-gray-800">
+                          {familyEngine.name}
+                        </span>
+                        {familyEngine.variant && (
+                          <span className="text-gray-500 text-sm ml-1">
+                            ({familyEngine.variant})
+                          </span>
+                        )}
+                        {familyEngine.id === engine.id && (
+                          <span className="ml-2 text-xs text-indigo-600">(Current)</span>
+                        )}
+                      </div>
+                      <span className="text-sm text-gray-500">
+                        {familyEngine.firstFlightYear}
+                      </span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
         {/* Actions */}
-        <div className="flex gap-4 justify-center">
+        <div className="mt-8 flex flex-wrap gap-4">
+          {engine.wikiUrl && (
+            <a
+              href={engine.wikiUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition"
+            >
+              📖 Wikipedia
+            </a>
+          )}
+          {engine.countryId && (
+            <Link
+              to={`/countries/${engine.countryId}`}
+              className="inline-flex items-center px-4 py-2 bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200 transition"
+            >
+              {getCountryFlag(engine.countryId)} View Country Profile
+            </Link>
+          )}
           <Link
-            to={`/compare?engine1=${engine.id}`}
-            className="bg-blue-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 transition"
+            to={`/compare/engines?engine1=${engine.id}`}
+            className="inline-flex items-center px-4 py-2 bg-green-100 text-green-700 rounded hover:bg-green-200 transition"
           >
-            Compare This Engine
-          </Link>
-          <Link
-            to="/"
-            className="bg-gray-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-600 transition"
-          >
-            Back to List
+            ⚖️ Compare This Engine
           </Link>
         </div>
       </div>
