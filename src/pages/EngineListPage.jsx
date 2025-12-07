@@ -43,7 +43,8 @@ export default function EngineListPage() {
 
   // Filter and sort engines
   const filteredAndSortedEngines = useMemo(() => {
-    let result = [...engines];
+    // Safety check: ensure engines is an array before spreading
+    let result = Array.isArray(engines) ? [...engines] : [];
 
     // Filter by status
     if (filterStatus !== 'all') {

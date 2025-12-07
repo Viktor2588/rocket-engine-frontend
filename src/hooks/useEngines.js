@@ -14,7 +14,8 @@ export const useEngines = () => {
       try {
         setLoading(true);
         const data = await engineService.getAll();
-        setEngines(data);
+        // Ensure data is always an array to prevent "n is not iterable" errors
+        setEngines(Array.isArray(data) ? data : []);
         setError(null);
       } catch (err) {
         setError(err.message || 'Failed to fetch engines');
