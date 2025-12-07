@@ -12,19 +12,19 @@ import SpaceIcon from '../components/icons/SpaceIcons';
 // Record Card Component
 function RecordCard({ title, value, subtitle, icon, link, color = 'indigo' }) {
   const colorClasses = {
-    indigo: 'bg-indigo-50 border-indigo-200 text-indigo-700',
-    green: 'bg-green-50 border-green-200 text-green-700',
-    blue: 'bg-blue-50 border-blue-200 text-blue-700',
-    purple: 'bg-purple-50 border-purple-200 text-purple-700',
-    orange: 'bg-orange-50 border-orange-200 text-orange-700',
-    yellow: 'bg-yellow-50 border-yellow-200 text-yellow-700',
+    indigo: 'bg-indigo-50 dark:bg-indigo-900/30 border-indigo-200 dark:border-indigo-700 text-indigo-700 dark:text-indigo-300',
+    green: 'bg-green-50 dark:bg-green-900/30 border-green-200 dark:border-green-700 text-green-700 dark:text-green-300',
+    blue: 'bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-300',
+    purple: 'bg-purple-50 dark:bg-purple-900/30 border-purple-200 dark:border-purple-700 text-purple-700 dark:text-purple-300',
+    orange: 'bg-orange-50 dark:bg-orange-900/30 border-orange-200 dark:border-orange-700 text-orange-700 dark:text-orange-300',
+    yellow: 'bg-yellow-50 dark:bg-yellow-900/30 border-yellow-200 dark:border-yellow-700 text-yellow-700 dark:text-yellow-300',
   };
 
   const content = (
     <div className={`${colorClasses[color]} rounded-lg border-2 p-4 transition hover:shadow-md`}>
       <div className="flex items-center gap-2 mb-2">
         <SpaceIcon name={icon} size="xl" />
-        <span className="text-sm font-medium text-gray-600 dark:text-gray-400 dark:text-gray-400">{title}</span>
+        <span className="text-sm font-medium text-gray-600 dark:text-gray-400">{title}</span>
       </div>
       <div className="text-xl font-bold">{value || 'N/A'}</div>
       {subtitle && <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">{subtitle}</div>}
@@ -51,13 +51,13 @@ function TrendBar({ label, value, maxValue, color = 'indigo' }) {
   return (
     <div className="flex items-center gap-3">
       <span className="w-32 text-sm text-gray-600 dark:text-gray-400 truncate">{label}</span>
-      <div className="flex-1 bg-gray-200 rounded-full h-4">
+      <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-4">
         <div
           className={`${colorClasses[color]} h-4 rounded-full transition-all duration-500`}
           style={{ width: `${percentage}%` }}
         ></div>
       </div>
-      <span className="w-10 text-sm font-medium text-gray-700 text-right">{value}</span>
+      <span className="w-10 text-sm font-medium text-gray-700 dark:text-gray-300 text-right">{value}</span>
     </div>
   );
 }
@@ -85,7 +85,7 @@ export default function AnalyticsPage() {
         <div className="container mx-auto px-4">
           <div className="text-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto mb-4"></div>
-            <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Loading analytics data...</p>
+            <p className="text-gray-600 dark:text-gray-400">Loading analytics data...</p>
           </div>
         </div>
       </div>
@@ -100,7 +100,7 @@ export default function AnalyticsPage() {
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
             Space Analytics Dashboard
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400">
+          <p className="text-gray-600 dark:text-gray-400">
             Explore trends, records, and insights across global space programs
           </p>
         </div>
@@ -111,25 +111,25 @@ export default function AnalyticsPage() {
             <div className="text-3xl font-bold text-indigo-600">
               {statsOverview?.totalCountries || countries.length}
             </div>
-            <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Space Programs</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400">Space Programs</div>
           </div>
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
             <div className="text-3xl font-bold text-green-600">
               {statsOverview?.totalEngines || engines.length}
             </div>
-            <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Rocket Engines</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400">Rocket Engines</div>
           </div>
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
             <div className="text-3xl font-bold text-purple-600">
               {statsOverview?.humanSpaceflightCapable || countries.filter(c => c.humanSpaceflightCapable).length}
             </div>
-            <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Human Spaceflight</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400">Human Spaceflight</div>
           </div>
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
             <div className="text-3xl font-bold text-orange-600">
               {statsOverview?.reusableRocketCapable || countries.filter(c => c.reusableRocketCapable).length}
             </div>
-            <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Reusable Rockets</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400">Reusable Rockets</div>
           </div>
         </div>
 
@@ -140,25 +140,25 @@ export default function AnalyticsPage() {
               <div className="text-3xl font-bold text-blue-600">
                 {statsOverview.totalLaunchVehicles || 0}
               </div>
-              <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Launch Vehicles</div>
+              <div className="text-sm text-gray-500 dark:text-gray-400">Launch Vehicles</div>
             </div>
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
               <div className="text-3xl font-bold text-cyan-600">
                 {statsOverview.totalSatellites || 0}
               </div>
-              <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Satellites</div>
+              <div className="text-sm text-gray-500 dark:text-gray-400">Satellites</div>
             </div>
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
               <div className="text-3xl font-bold text-pink-600">
                 {statsOverview.totalMissions || 0}
               </div>
-              <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Missions</div>
+              <div className="text-sm text-gray-500 dark:text-gray-400">Missions</div>
             </div>
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
               <div className="text-3xl font-bold text-yellow-600">
                 {statsOverview.totalLaunchSites || 0}
               </div>
-              <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Launch Sites</div>
+              <div className="text-sm text-gray-500 dark:text-gray-400">Launch Sites</div>
             </div>
           </div>
         )}
@@ -179,8 +179,8 @@ export default function AnalyticsPage() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center gap-2 px-6 py-4 text-sm font-medium whitespace-nowrap transition border-b-2 ${
                   activeTab === tab.id
-                    ? 'text-indigo-600 border-indigo-600'
-                    : 'text-gray-500 dark:text-gray-400 border-transparent hover:text-gray-700 hover:border-gray-300'
+                    ? 'text-indigo-600 dark:text-indigo-400 border-indigo-600 dark:border-indigo-400'
+                    : 'text-gray-500 dark:text-gray-400 border-transparent hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300'
                 }`}
               >
                 <SpaceIcon name={tab.icon} size="md" />
@@ -193,79 +193,94 @@ export default function AnalyticsPage() {
         {/* Tab Content */}
         {activeTab === 'launches' && (
           <div className="space-y-6">
-            <LaunchFrequencyChart
-              title="Global Launch Frequency by Country (2019-2024)"
-              stacked={true}
-            />
+            {/* Check if launch data is available */}
+            {launchData.years.length > 0 ? (
+              <>
+                <LaunchFrequencyChart
+                  title="Global Launch Frequency by Country (2019-2024)"
+                  stacked={true}
+                />
 
-            {/* Launch Summary Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-                <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">2024 Launch Leaders</h3>
-                <div className="space-y-3">
-                  {Object.entries(launchData.byCountry)
-                    .map(([country, values]) => ({ country, launches: values[values.length - 1] }))
-                    .sort((a, b) => b.launches - a.launches)
-                    .slice(0, 5)
-                    .map((item, idx) => (
-                      <div key={item.country} className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white ${
-                            idx === 0 ? 'bg-yellow-500' : idx === 1 ? 'bg-gray-400' : idx === 2 ? 'bg-orange-400' : 'bg-indigo-400'
-                          }`}>{idx + 1}</span>
-                          <span className="font-medium">{item.country}</span>
-                        </div>
-                        <span className="font-bold text-indigo-600">{item.launches}</span>
-                      </div>
-                    ))}
+                {/* Launch Summary Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                    <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">2024 Launch Leaders</h3>
+                    <div className="space-y-3">
+                      {Object.entries(launchData.byCountry)
+                        .map(([country, values]) => ({ country, launches: values[values.length - 1] }))
+                        .sort((a, b) => b.launches - a.launches)
+                        .slice(0, 5)
+                        .map((item, idx) => (
+                          <div key={item.country} className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white ${
+                                idx === 0 ? 'bg-yellow-500' : idx === 1 ? 'bg-gray-400' : idx === 2 ? 'bg-orange-400' : 'bg-indigo-400'
+                              }`}>{idx + 1}</span>
+                              <span className="font-medium text-gray-800 dark:text-white">{item.country}</span>
+                            </div>
+                            <span className="font-bold text-indigo-600 dark:text-indigo-400">{item.launches}</span>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+
+                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                    <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Year-over-Year Growth</h3>
+                    <div className="space-y-3">
+                      {Object.entries(launchData.byCountry)
+                        .map(([country, values]) => {
+                          const current = values[values.length - 1];
+                          const previous = values[values.length - 2];
+                          const growth = previous > 0 ? ((current - previous) / previous * 100).toFixed(0) : 0;
+                          return { country, growth: Number(growth), current };
+                        })
+                        .sort((a, b) => b.growth - a.growth)
+                        .slice(0, 5)
+                        .map(item => (
+                          <div key={item.country} className="flex items-center justify-between">
+                            <span className="font-medium text-gray-800 dark:text-white">{item.country}</span>
+                            <span className={`font-bold ${item.growth > 0 ? 'text-green-600 dark:text-green-400' : item.growth < 0 ? 'text-red-600 dark:text-red-400' : 'text-gray-600 dark:text-gray-400'}`}>
+                              {item.growth > 0 ? '+' : ''}{item.growth}%
+                            </span>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+
+                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                    <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Key Insights</h3>
+                    <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                      <li className="flex items-start gap-2">
+                        <span className="text-green-500">↑</span>
+                        USA dominates with SpaceX's high cadence
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-yellow-500">↑</span>
+                        China maintains steady growth trajectory
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-red-500">↓</span>
+                        Russia's launches declining due to sanctions
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-blue-500">→</span>
+                        India & Japan growing steadily
+                      </li>
+                    </ul>
+                  </div>
                 </div>
+              </>
+            ) : (
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-12 text-center">
+                <SpaceIcon name="rocket" size="4xl" />
+                <h3 className="text-xl font-semibold text-gray-800 dark:text-white mt-4 mb-2">
+                  Launch Frequency Data Not Available
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
+                  Launch frequency data requires an API endpoint. Check back later when the backend analytics API is available.
+                </p>
               </div>
-
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-                <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Year-over-Year Growth</h3>
-                <div className="space-y-3">
-                  {Object.entries(launchData.byCountry)
-                    .map(([country, values]) => {
-                      const current = values[values.length - 1];
-                      const previous = values[values.length - 2];
-                      const growth = previous > 0 ? ((current - previous) / previous * 100).toFixed(0) : 0;
-                      return { country, growth: Number(growth), current };
-                    })
-                    .sort((a, b) => b.growth - a.growth)
-                    .slice(0, 5)
-                    .map(item => (
-                      <div key={item.country} className="flex items-center justify-between">
-                        <span className="font-medium">{item.country}</span>
-                        <span className={`font-bold ${item.growth > 0 ? 'text-green-600' : item.growth < 0 ? 'text-red-600' : 'text-gray-600'}`}>
-                          {item.growth > 0 ? '+' : ''}{item.growth}%
-                        </span>
-                      </div>
-                    ))}
-                </div>
-              </div>
-
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-                <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Key Insights</h3>
-                <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">
-                  <li className="flex items-start gap-2">
-                    <span className="text-green-500">↑</span>
-                    USA dominates with SpaceX's high cadence
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-yellow-500">↑</span>
-                    China maintains steady growth trajectory
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500">↓</span>
-                    Russia's launches declining due to sanctions
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-blue-500">→</span>
-                    India & Japan growing steadily
-                  </li>
-                </ul>
-              </div>
-            </div>
+            )}
           </div>
         )}
 
@@ -453,25 +468,25 @@ export default function AnalyticsPage() {
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 lg:col-span-2">
                 <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Reusability Revolution</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="text-center p-4 bg-green-50 rounded-lg">
-                    <div className="text-3xl font-bold text-green-600">{trends.reusabilityTrend.reusableVehicles}</div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">Reusable Vehicles</div>
+                  <div className="text-center p-4 bg-green-50 dark:bg-green-900/30 rounded-lg">
+                    <div className="text-3xl font-bold text-green-600 dark:text-green-400">{trends.reusabilityTrend.reusableVehicles}</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">Reusable Vehicles</div>
                   </div>
-                  <div className="text-center p-4 bg-gray-50 rounded-lg">
-                    <div className="text-3xl font-bold text-gray-600 dark:text-gray-400 dark:text-gray-400">{trends.reusabilityTrend.expendableVehicles}</div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">Expendable Vehicles</div>
+                  <div className="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                    <div className="text-3xl font-bold text-gray-600 dark:text-gray-300">{trends.reusabilityTrend.expendableVehicles}</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">Expendable Vehicles</div>
                   </div>
-                  <div className="text-center p-4 bg-green-50 rounded-lg">
-                    <div className="text-3xl font-bold text-green-600">{trends.reusabilityTrend.reusableEngines}</div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">Reusable Engines</div>
+                  <div className="text-center p-4 bg-green-50 dark:bg-green-900/30 rounded-lg">
+                    <div className="text-3xl font-bold text-green-600 dark:text-green-400">{trends.reusabilityTrend.reusableEngines}</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">Reusable Engines</div>
                   </div>
-                  <div className="text-center p-4 bg-gray-50 rounded-lg">
-                    <div className="text-3xl font-bold text-gray-600 dark:text-gray-400 dark:text-gray-400">{trends.reusabilityTrend.expendableEngines}</div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">Expendable Engines</div>
+                  <div className="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                    <div className="text-3xl font-bold text-gray-600 dark:text-gray-300">{trends.reusabilityTrend.expendableEngines}</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">Expendable Engines</div>
                   </div>
                 </div>
-                <div className="mt-4 p-4 bg-indigo-50 rounded-lg">
-                  <p className="text-sm text-indigo-800">
+                <div className="mt-4 p-4 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg">
+                  <p className="text-sm text-indigo-800 dark:text-indigo-300">
                     <strong>The Reusability Shift:</strong> SpaceX pioneered routine reusability, dropping launch costs by ~90%.
                     Now China, Europe, and others are racing to develop their own reusable systems.
                   </p>
@@ -496,15 +511,15 @@ export default function AnalyticsPage() {
                     <Link
                       key={country.id}
                       to={`/countries/${country.isoCode}`}
-                      className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 transition"
+                      className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition"
                     >
                       <div className="flex items-center gap-2">
                         {country.flagUrl && (
                           <img src={country.flagUrl} alt="" className="w-6 h-4 object-cover rounded" />
                         )}
-                        <span className="font-medium">{country.spaceAgencyAcronym || country.name}</span>
+                        <span className="font-medium text-gray-800 dark:text-white">{country.spaceAgencyAcronym || country.name}</span>
                       </div>
-                      <span className="text-indigo-600 font-bold">
+                      <span className="text-indigo-600 dark:text-indigo-400 font-bold">
                         {(country.overallCapabilityScore || 0).toFixed(0)}
                       </span>
                     </Link>
@@ -522,15 +537,15 @@ export default function AnalyticsPage() {
                     <Link
                       key={country.id}
                       to={`/countries/${country.isoCode}`}
-                      className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 transition"
+                      className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition"
                     >
                       <div className="flex items-center gap-2">
                         {country.flagUrl && (
                           <img src={country.flagUrl} alt="" className="w-6 h-4 object-cover rounded" />
                         )}
-                        <span className="font-medium">{country.spaceAgencyAcronym || country.name}</span>
+                        <span className="font-medium text-gray-800 dark:text-white">{country.spaceAgencyAcronym || country.name}</span>
                       </div>
-                      <span className="text-green-600 font-bold">
+                      <span className="text-green-600 dark:text-green-400 font-bold">
                         {(country.overallCapabilityScore || 0).toFixed(0)}
                       </span>
                     </Link>
@@ -553,15 +568,15 @@ export default function AnalyticsPage() {
                     <Link
                       key={country.id}
                       to={`/countries/${country.isoCode}`}
-                      className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 transition"
+                      className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition"
                     >
                       <div className="flex items-center gap-2">
                         {country.flagUrl && (
                           <img src={country.flagUrl} alt="" className="w-6 h-4 object-cover rounded" />
                         )}
-                        <span className="font-medium">{country.spaceAgencyAcronym || country.name}</span>
+                        <span className="font-medium text-gray-800 dark:text-white">{country.spaceAgencyAcronym || country.name}</span>
                       </div>
-                      <span className="text-orange-600 font-bold">
+                      <span className="text-orange-600 dark:text-orange-400 font-bold">
                         {(country.overallCapabilityScore || 0).toFixed(0)}
                       </span>
                     </Link>
@@ -587,12 +602,12 @@ export default function AnalyticsPage() {
                   { key: 'lunarLanding', label: 'Lunar Landing', icon: 'moon', color: 'yellow' },
                   { key: 'marsLanding', label: 'Mars Landing', icon: 'globe', color: 'orange' },
                 ].map(item => (
-                  <div key={item.key} className="text-center p-4 bg-gray-50 rounded-lg">
+                  <div key={item.key} className="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
                     <div className="mb-2"><SpaceIcon name={item.icon} size="2xl" /></div>
-                    <div className={`text-2xl font-bold text-${item.color}-600`}>
+                    <div className={`text-2xl font-bold text-${item.color}-600 dark:text-${item.color}-400`}>
                       {analysis.achievements[item.key]?.length || 0}
                     </div>
-                    <div className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-400">{item.label}</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">{item.label}</div>
                   </div>
                 ))}
               </div>
@@ -620,10 +635,10 @@ export default function AnalyticsPage() {
                       <Link
                         key={engine.id}
                         to={`/engines/${engine.id}`}
-                        className="flex justify-between text-sm hover:text-indigo-600"
+                        className="flex justify-between text-sm hover:text-indigo-600 dark:hover:text-indigo-400"
                       >
-                        <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">{engine.name}</span>
-                        <span className="font-semibold">{engine.thrustKn?.toLocaleString()} kN</span>
+                        <span className="text-gray-600 dark:text-gray-400">{engine.name}</span>
+                        <span className="font-semibold text-gray-800 dark:text-gray-200">{engine.thrustKn?.toLocaleString()} kN</span>
                       </Link>
                     ))}
                 </div>
@@ -638,10 +653,10 @@ export default function AnalyticsPage() {
                       <Link
                         key={engine.id}
                         to={`/engines/${engine.id}`}
-                        className="flex justify-between text-sm hover:text-indigo-600"
+                        className="flex justify-between text-sm hover:text-indigo-600 dark:hover:text-indigo-400"
                       >
-                        <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">{engine.name}</span>
-                        <span className="font-semibold">{engine.specificImpulseS} s</span>
+                        <span className="text-gray-600 dark:text-gray-400">{engine.name}</span>
+                        <span className="font-semibold text-gray-800 dark:text-gray-200">{engine.specificImpulseS} s</span>
                       </Link>
                     ))}
                 </div>
@@ -660,8 +675,8 @@ export default function AnalyticsPage() {
                     .slice(0, 5)
                     .map(([cycle, count]) => (
                       <div key={cycle} className="flex justify-between text-sm">
-                        <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">{cycle}</span>
-                        <span className="font-semibold">{count} engines</span>
+                        <span className="text-gray-600 dark:text-gray-400">{cycle}</span>
+                        <span className="font-semibold text-gray-800 dark:text-gray-200">{count} engines</span>
                       </div>
                     ))}
                 </div>
@@ -688,7 +703,7 @@ export default function AnalyticsPage() {
                     <Link
                       key={country.id}
                       to={`/countries/${country.isoCode}`}
-                      className="flex items-center gap-4 hover:bg-gray-50 p-2 rounded-lg transition"
+                      className="flex items-center gap-4 hover:bg-gray-50 dark:hover:bg-gray-700 p-2 rounded-lg transition"
                     >
                       <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-white ${
                         idx === 0 ? 'bg-yellow-500' :
@@ -703,7 +718,7 @@ export default function AnalyticsPage() {
                           {country.flagUrl && (
                             <img src={country.flagUrl} alt="" className="w-6 h-4 object-cover rounded" />
                           )}
-                          <span className="font-medium">{country.name}</span>
+                          <span className="font-medium text-gray-800 dark:text-white">{country.name}</span>
                         </div>
                         <div className="flex gap-2 mt-1">
                           {country.humanSpaceflightCapable && <SpaceIcon name="astronaut" size="sm" title="Human Spaceflight" />}
@@ -713,10 +728,10 @@ export default function AnalyticsPage() {
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-2xl font-bold text-indigo-600">
+                        <div className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
                           {(country.overallCapabilityScore || 0).toFixed(0)}
                         </div>
-                        <div className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-400">SCI Score</div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">SCI Score</div>
                       </div>
                     </Link>
                   ))}
@@ -738,11 +753,11 @@ export default function AnalyticsPage() {
                   const count = countries.filter(c => c[cap.key]).length;
                   const percentage = ((count / countries.length) * 100).toFixed(0);
                   return (
-                    <div key={cap.key} className="text-center p-4 bg-gray-50 rounded-lg">
+                    <div key={cap.key} className="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
                       <div className="mb-2"><SpaceIcon name={cap.icon} size="2xl" /></div>
-                      <div className={`text-2xl font-bold text-${cap.color}-600`}>{count}</div>
-                      <div className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-400">{cap.label}</div>
-                      <div className="text-xs text-gray-400">({percentage}% of programs)</div>
+                      <div className={`text-2xl font-bold text-${cap.color}-600 dark:text-${cap.color}-400`}>{count}</div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400">{cap.label}</div>
+                      <div className="text-xs text-gray-400 dark:text-gray-500">({percentage}% of programs)</div>
                     </div>
                   );
                 })}

@@ -27,32 +27,32 @@ const SATELLITE_TYPE_CONFIG = {
 
 // Orbit type colors
 const ORBIT_COLORS = {
-  'LEO': 'bg-emerald-100 text-emerald-800',
-  'MEO': 'bg-blue-100 text-blue-800',
-  'GEO': 'bg-purple-100 text-purple-800',
-  'HEO': 'bg-orange-100 text-orange-800',
-  'L2': 'bg-pink-100 text-pink-800',
-  'Lunar': 'bg-amber-100 text-amber-800',
+  'LEO': 'bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-300',
+  'MEO': 'bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300',
+  'GEO': 'bg-purple-100 dark:bg-purple-900/40 text-purple-800 dark:text-purple-300',
+  'HEO': 'bg-orange-100 dark:bg-orange-900/40 text-orange-800 dark:text-orange-300',
+  'L2': 'bg-pink-100 dark:bg-pink-900/40 text-pink-800 dark:text-pink-300',
+  'Lunar': 'bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300',
 };
 
 // Status colors
 const STATUS_COLORS = {
-  'Active': 'bg-green-100 text-green-800',
-  'Inactive': 'bg-gray-100 text-gray-800',
-  'Decommissioned': 'bg-red-100 text-red-800',
-  'Completed': 'bg-blue-100 text-blue-800',
+  'Active': 'bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300',
+  'Inactive': 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300',
+  'Decommissioned': 'bg-red-100 dark:bg-red-900/40 text-red-800 dark:text-red-300',
+  'Completed': 'bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300',
 };
 
 function SatelliteCard({ satellite }) {
   const typeConfig = SATELLITE_TYPE_CONFIG[satellite.type] || { IconComponent: SatelliteAlt, color: 'bg-gray-500', textColor: 'text-gray-600' };
-  const orbitColor = ORBIT_COLORS[satellite.orbitType] || 'bg-gray-100 text-gray-800';
-  const statusColor = STATUS_COLORS[satellite.status] || 'bg-gray-100 text-gray-800';
+  const orbitColor = ORBIT_COLORS[satellite.orbitType] || 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300';
+  const statusColor = STATUS_COLORS[satellite.status] || 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300';
   const IconComponent = typeConfig.IconComponent;
 
   return (
     <Link
       to={`/satellites/${satellite.id}`}
-      className="block bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-indigo-200"
+      className="block bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-700 hover:border-indigo-200 dark:hover:border-indigo-600"
     >
       <div className="p-5">
         {/* Header */}
@@ -62,8 +62,8 @@ function SatelliteCard({ satellite }) {
               <IconComponent style={{ fontSize: '1.75rem' }} />
             </div>
             <div>
-              <h3 className="font-bold text-gray-900 text-lg">{satellite.name}</h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">{satellite.operator || 'Unknown operator'}</p>
+              <h3 className="font-bold text-gray-900 dark:text-white text-lg">{satellite.name}</h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400">{satellite.operator || 'Unknown operator'}</p>
             </div>
           </div>
           <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusColor}`}>
@@ -80,7 +80,7 @@ function SatelliteCard({ satellite }) {
             {satellite.orbitType}
           </span>
           {satellite.constellation && (
-            <span className="px-2 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+            <span className="px-2 py-1 rounded-full text-xs font-medium bg-indigo-100 dark:bg-indigo-900/40 text-indigo-800 dark:text-indigo-300">
               {satellite.constellation}
             </span>
           )}
@@ -128,10 +128,10 @@ function SatelliteCard({ satellite }) {
         )}
 
         {/* Country flag */}
-        <div className="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between">
-          <span className="text-sm font-medium text-gray-600 dark:text-gray-400 dark:text-gray-400">{satellite.countryId}</span>
+        <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between">
+          <span className="text-sm font-medium text-gray-600 dark:text-gray-400">{satellite.countryId}</span>
           {satellite.noradId && (
-            <span className="text-xs text-gray-400">NORAD: {satellite.noradId}</span>
+            <span className="text-xs text-gray-400 dark:text-gray-500">NORAD: {satellite.noradId}</span>
           )}
         </div>
       </div>
@@ -147,20 +147,20 @@ function StatisticsCard({ statistics }) {
       <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Satellite Statistics</h3>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="text-center p-4 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg">
-          <p className="text-3xl font-bold text-indigo-600">{statistics.total}</p>
-          <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">Total Satellites</p>
+          <p className="text-3xl font-bold text-indigo-600 dark:text-indigo-400">{statistics.total}</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">Total Satellites</p>
         </div>
         <div className="text-center p-4 bg-green-50 dark:bg-green-900/30 rounded-lg">
-          <p className="text-3xl font-bold text-green-600">{statistics.active}</p>
-          <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">Active</p>
+          <p className="text-3xl font-bold text-green-600 dark:text-green-400">{statistics.active}</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">Active</p>
         </div>
         <div className="text-center p-4 bg-purple-50 dark:bg-purple-900/30 rounded-lg">
-          <p className="text-3xl font-bold text-purple-600">{statistics.byType?.length || 0}</p>
-          <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">Types</p>
+          <p className="text-3xl font-bold text-purple-600 dark:text-purple-400">{statistics.byType?.length || 0}</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">Types</p>
         </div>
         <div className="text-center p-4 bg-amber-50 dark:bg-amber-900/30 rounded-lg">
-          <p className="text-3xl font-bold text-amber-600">{statistics.byCountry?.length || 0}</p>
-          <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">Countries</p>
+          <p className="text-3xl font-bold text-amber-600 dark:text-amber-400">{statistics.byCountry?.length || 0}</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">Countries</p>
         </div>
       </div>
     </div>
@@ -253,7 +253,7 @@ export default function SatelliteListPage() {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Satellites</h1>
-        <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400">
+        <p className="text-gray-600 dark:text-gray-400">
           Explore satellites and space assets from around the world
         </p>
       </div>
@@ -400,7 +400,7 @@ export default function SatelliteListPage() {
       </div>
 
       {/* Results count */}
-      <div className="mb-4 text-gray-600 dark:text-gray-400 dark:text-gray-400">
+      <div className="mb-4 text-gray-600 dark:text-gray-400">
         Showing {sortedSatellites.length} of {satellites.length} satellites
       </div>
 
@@ -441,21 +441,21 @@ export default function SatelliteListPage() {
                     <Link to={`/satellites/${satellite.id}`} className="font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300">
                       {satellite.name}
                     </Link>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">{satellite.operator}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{satellite.operator}</p>
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">{satellite.type}</td>
+                  <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{satellite.type}</td>
                   <td className="px-4 py-3">
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${ORBIT_COLORS[satellite.orbitType] || 'bg-gray-100'}`}>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${ORBIT_COLORS[satellite.orbitType] || 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300'}`}>
                       {satellite.orbitType}
                     </span>
                   </td>
                   <td className="px-4 py-3">
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${STATUS_COLORS[satellite.status] || 'bg-gray-100'}`}>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${STATUS_COLORS[satellite.status] || 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300'}`}>
                       {satellite.status}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">{satellite.countryId}</td>
-                  <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">{satellite.launchYear || '-'}</td>
+                  <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{satellite.countryId}</td>
+                  <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{satellite.launchYear || '-'}</td>
                 </tr>
               ))}
             </tbody>

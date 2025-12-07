@@ -95,13 +95,14 @@ export default function CountryListPage() {
   }
 
   if (error) {
+    const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8080/api';
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 text-center">
           <h2 className="text-lg font-semibold text-red-800 dark:text-red-400 mb-2">Error Loading Countries</h2>
           <p className="text-red-600 dark:text-red-400">{error}</p>
           <p className="text-sm text-red-500 dark:text-red-500 mt-2">
-            Make sure the backend API is running on http://localhost:8080
+            API URL: {apiUrl}
           </p>
         </div>
       </div>

@@ -38,7 +38,7 @@ function CountrySelector({ countries, selectedIds, onToggle, maxSelections }) {
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-lg font-semibold text-gray-800 dark:text-white">Select Countries</h3>
-        <span className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">
+        <span className="text-sm text-gray-500 dark:text-gray-400">
           {selectedIds.length} / {maxSelections} selected
         </span>
       </div>
@@ -49,7 +49,7 @@ function CountrySelector({ countries, selectedIds, onToggle, maxSelections }) {
         placeholder="Search countries or agencies..."
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
-        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg mb-4 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg mb-4 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
       />
 
       {/* Country grid */}
@@ -65,10 +65,10 @@ function CountrySelector({ countries, selectedIds, onToggle, maxSelections }) {
               disabled={disabled}
               className={`flex items-center gap-2 p-2 rounded-lg transition-all text-left ${
                 selected
-                  ? 'bg-indigo-100 ring-2 ring-indigo-500'
+                  ? 'bg-indigo-100 dark:bg-indigo-900/50 ring-2 ring-indigo-500'
                   : disabled
-                  ? 'bg-gray-100 opacity-50 cursor-not-allowed'
-                  : 'bg-gray-50 hover:bg-gray-100'
+                  ? 'bg-gray-100 dark:bg-gray-700 opacity-50 cursor-not-allowed'
+                  : 'bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600'
               }`}
             >
               {country.flagUrl ? (
@@ -81,15 +81,15 @@ function CountrySelector({ countries, selectedIds, onToggle, maxSelections }) {
                 <span className="text-lg">🏳️</span>
               )}
               <div className="flex-1 min-w-0">
-                <div className="text-sm font-medium text-gray-800 truncate">
+                <div className="text-sm font-medium text-gray-800 dark:text-white truncate">
                   {country.name}
                 </div>
-                <div className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-400">
+                <div className="text-xs text-gray-500 dark:text-gray-400">
                   {country.spaceAgencyAcronym || country.isoCode}
                 </div>
               </div>
               {selected && (
-                <span className="text-indigo-600 font-bold text-lg">✓</span>
+                <span className="text-indigo-600 dark:text-indigo-400 font-bold text-lg">✓</span>
               )}
             </button>
           );
@@ -135,14 +135,14 @@ function ComparisonCard({ country, rank }) {
         <div className="text-4xl font-bold text-indigo-600">
           {(country.overallCapabilityScore || 0).toFixed(0)}
         </div>
-        <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Space Capability Index</div>
+        <div className="text-sm text-gray-500 dark:text-gray-400">Space Capability Index</div>
         {rank && (
           <div className="mt-2">
             <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-bold ${
-              rank === 1 ? 'bg-yellow-100 text-yellow-800' :
-              rank === 2 ? 'bg-gray-100 text-gray-800' :
-              rank === 3 ? 'bg-orange-100 text-orange-800' :
-              'bg-blue-100 text-blue-800'
+              rank === 1 ? 'bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-300' :
+              rank === 2 ? 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300' :
+              rank === 3 ? 'bg-orange-100 dark:bg-orange-900/50 text-orange-800 dark:text-orange-300' :
+              'bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300'
             }`}>
               #{rank} in selection
             </span>
@@ -153,22 +153,22 @@ function ComparisonCard({ country, rank }) {
       {/* Key Stats */}
       <div className="p-4 grid grid-cols-2 gap-4 text-sm">
         <div>
-          <div className="text-gray-500 dark:text-gray-400 dark:text-gray-400">Founded</div>
-          <div className="font-semibold">{country.spaceAgencyFounded || '—'}</div>
+          <div className="text-gray-500 dark:text-gray-400">Founded</div>
+          <div className="font-semibold text-gray-900 dark:text-white">{country.spaceAgencyFounded || '—'}</div>
         </div>
         <div>
-          <div className="text-gray-500 dark:text-gray-400 dark:text-gray-400">Launches</div>
-          <div className="font-semibold">{country.totalLaunches ?? '—'}</div>
+          <div className="text-gray-500 dark:text-gray-400">Launches</div>
+          <div className="font-semibold text-gray-900 dark:text-white">{country.totalLaunches ?? '—'}</div>
         </div>
         <div>
-          <div className="text-gray-500 dark:text-gray-400 dark:text-gray-400">Success Rate</div>
-          <div className="font-semibold">
+          <div className="text-gray-500 dark:text-gray-400">Success Rate</div>
+          <div className="font-semibold text-gray-900 dark:text-white">
             {country.launchSuccessRate ? `${country.launchSuccessRate.toFixed(1)}%` : '—'}
           </div>
         </div>
         <div>
-          <div className="text-gray-500 dark:text-gray-400 dark:text-gray-400">Astronauts</div>
-          <div className="font-semibold">{country.activeAstronauts ?? '—'}</div>
+          <div className="text-gray-500 dark:text-gray-400">Astronauts</div>
+          <div className="font-semibold text-gray-900 dark:text-white">{country.activeAstronauts ?? '—'}</div>
         </div>
       </div>
 
@@ -177,32 +177,32 @@ function ComparisonCard({ country, rank }) {
         <div className="text-sm text-gray-500 dark:text-gray-400 mb-2">Capabilities</div>
         <div className="flex flex-wrap gap-2">
           {country.humanSpaceflightCapable && (
-            <span className="inline-flex items-center px-2 py-1 rounded bg-green-100 text-green-800 text-xs">
+            <span className="inline-flex items-center px-2 py-1 rounded bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300 text-xs">
               Human Spaceflight
             </span>
           )}
           {country.independentLaunchCapable && (
-            <span className="inline-flex items-center px-2 py-1 rounded bg-blue-100 text-blue-800 text-xs">
+            <span className="inline-flex items-center px-2 py-1 rounded bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 text-xs">
               Independent Launch
             </span>
           )}
           {country.reusableRocketCapable && (
-            <span className="inline-flex items-center px-2 py-1 rounded bg-purple-100 text-purple-800 text-xs">
+            <span className="inline-flex items-center px-2 py-1 rounded bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-300 text-xs">
               Reusable Rockets
             </span>
           )}
           {country.deepSpaceCapable && (
-            <span className="inline-flex items-center px-2 py-1 rounded bg-indigo-100 text-indigo-800 text-xs">
+            <span className="inline-flex items-center px-2 py-1 rounded bg-indigo-100 dark:bg-indigo-900/50 text-indigo-800 dark:text-indigo-300 text-xs">
               Deep Space
             </span>
           )}
           {country.spaceStationCapable && (
-            <span className="inline-flex items-center px-2 py-1 rounded bg-orange-100 text-orange-800 text-xs">
+            <span className="inline-flex items-center px-2 py-1 rounded bg-orange-100 dark:bg-orange-900/50 text-orange-800 dark:text-orange-300 text-xs">
               Space Station
             </span>
           )}
           {!country.humanSpaceflightCapable && !country.independentLaunchCapable && (
-            <span className="inline-flex items-center px-2 py-1 rounded bg-gray-100 text-gray-600 dark:text-gray-400 text-xs">
+            <span className="inline-flex items-center px-2 py-1 rounded bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 text-xs">
               Developing Program
             </span>
           )}
@@ -210,7 +210,7 @@ function ComparisonCard({ country, rank }) {
       </div>
 
       {/* View Details Link */}
-      <div className="border-t p-4">
+      <div className="border-t dark:border-gray-700 p-4">
         <Link
           to={`/countries/${country.isoCode}`}
           className="block text-center text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium text-sm"
@@ -241,10 +241,10 @@ function TabNavigation({ activeTab, onTabChange, selectedCount }) {
             disabled={isDisabled}
             className={`flex items-center gap-2 px-4 py-3 font-medium text-sm border-b-2 transition ${
               activeTab === tab.id
-                ? 'border-indigo-500 text-indigo-600'
+                ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400'
                 : isDisabled
-                ? 'border-transparent text-gray-300 cursor-not-allowed'
-                : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 hover:border-gray-300'
+                ? 'border-transparent text-gray-300 dark:text-gray-600 cursor-not-allowed'
+                : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300'
             }`}
           >
             <SpaceIcon name={tab.icon} size="sm" />
@@ -320,29 +320,29 @@ function OverviewTab({ selectedCountries }) {
           Comparison Summary
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="text-center p-4 bg-indigo-50 rounded-lg">
-            <div className="text-2xl font-bold text-indigo-600">
+          <div className="text-center p-4 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg">
+            <div className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
               {selectedCountries[0]?.name || '—'}
             </div>
-            <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Highest Score</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400">Highest Score</div>
           </div>
-          <div className="text-center p-4 bg-green-50 rounded-lg">
-            <div className="text-2xl font-bold text-green-600">
+          <div className="text-center p-4 bg-green-50 dark:bg-green-900/30 rounded-lg">
+            <div className="text-2xl font-bold text-green-600 dark:text-green-400">
               {selectedCountries.filter(c => c.humanSpaceflightCapable).length}
             </div>
-            <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Human Spaceflight</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400">Human Spaceflight</div>
           </div>
-          <div className="text-center p-4 bg-blue-50 rounded-lg">
-            <div className="text-2xl font-bold text-blue-600">
+          <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
+            <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
               {selectedCountries.filter(c => c.independentLaunchCapable).length}
             </div>
-            <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Independent Launch</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400">Independent Launch</div>
           </div>
-          <div className="text-center p-4 bg-purple-50 rounded-lg">
-            <div className="text-2xl font-bold text-purple-600">
+          <div className="text-center p-4 bg-purple-50 dark:bg-purple-900/30 rounded-lg">
+            <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
               {selectedCountries.filter(c => c.reusableRocketCapable).length}
             </div>
-            <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Reusable Rockets</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400">Reusable Rockets</div>
           </div>
         </div>
       </div>
@@ -473,46 +473,46 @@ export default function CountryComparisonPage() {
             <span className="text-sm text-gray-500 dark:text-gray-400 mr-2">Quick Select:</span>
             <button
               onClick={() => handleQuickSelect('top4')}
-              className="px-3 py-1 rounded-full bg-indigo-100 text-indigo-700 text-sm hover:bg-indigo-200 transition"
+              className="px-3 py-1 rounded-full bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 text-sm hover:bg-indigo-200 dark:hover:bg-indigo-900/70 transition"
             >
               Top 4
             </button>
             <button
               onClick={() => handleQuickSelect('superpowers')}
-              className="px-3 py-1 rounded-full bg-purple-100 text-purple-700 text-sm hover:bg-purple-200 transition"
+              className="px-3 py-1 rounded-full bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300 text-sm hover:bg-purple-200 dark:hover:bg-purple-900/70 transition"
             >
               Space Superpowers
             </button>
             <button
               onClick={() => handleQuickSelect('asia')}
-              className="px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm hover:bg-green-200 transition"
+              className="px-3 py-1 rounded-full bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300 text-sm hover:bg-green-200 dark:hover:bg-green-900/70 transition"
             >
               Asia Leaders
             </button>
             <button
               onClick={() => handleQuickSelect('europe')}
-              className="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-sm hover:bg-blue-200 transition"
+              className="px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 text-sm hover:bg-blue-200 dark:hover:bg-blue-900/70 transition"
             >
               European Programs
             </button>
-            <span className="text-gray-300 mx-2">|</span>
-            <span className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Gap Analysis:</span>
+            <span className="text-gray-300 dark:text-gray-600 mx-2">|</span>
+            <span className="text-sm text-gray-500 dark:text-gray-400">Gap Analysis:</span>
             <button
               onClick={() => handleQuickSelect('usa-china')}
-              className="px-3 py-1 rounded-full bg-red-100 text-red-700 text-sm hover:bg-red-200 transition"
+              className="px-3 py-1 rounded-full bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300 text-sm hover:bg-red-200 dark:hover:bg-red-900/70 transition"
             >
               USA vs China
             </button>
             <button
               onClick={() => handleQuickSelect('usa-russia')}
-              className="px-3 py-1 rounded-full bg-orange-100 text-orange-700 text-sm hover:bg-orange-200 transition"
+              className="px-3 py-1 rounded-full bg-orange-100 dark:bg-orange-900/50 text-orange-700 dark:text-orange-300 text-sm hover:bg-orange-200 dark:hover:bg-orange-900/70 transition"
             >
               USA vs Russia
             </button>
             {selectedIds.length > 0 && (
               <button
                 onClick={() => setSelectedIds([])}
-                className="px-3 py-1 rounded-full bg-gray-100 text-gray-700 text-sm hover:bg-gray-200 transition ml-2"
+                className="px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition ml-2"
               >
                 Clear All
               </button>
