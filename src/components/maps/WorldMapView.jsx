@@ -1,30 +1,57 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, memo } from 'react';
 import { Link } from 'react-router-dom';
+import {
+  ComposableMap,
+  Geographies,
+  Geography,
+  Marker,
+  ZoomableGroup,
+} from 'react-simple-maps';
 
-// ISO code to approximate position mapping for major space-faring nations
-const COUNTRY_POSITIONS = {
-  USA: { x: 150, y: 180, name: 'United States' },
-  CHN: { x: 680, y: 200, name: 'China' },
-  RUS: { x: 600, y: 120, name: 'Russia' },
-  IND: { x: 600, y: 240, name: 'India' },
-  JPN: { x: 750, y: 190, name: 'Japan' },
-  FRA: { x: 420, y: 160, name: 'France' },
-  DEU: { x: 430, y: 150, name: 'Germany' },
-  GBR: { x: 410, y: 140, name: 'United Kingdom' },
-  ITA: { x: 440, y: 170, name: 'Italy' },
-  ISR: { x: 500, y: 210, name: 'Israel' },
-  KOR: { x: 720, y: 190, name: 'South Korea' },
-  BRA: { x: 260, y: 310, name: 'Brazil' },
-  CAN: { x: 180, y: 120, name: 'Canada' },
-  AUS: { x: 740, y: 360, name: 'Australia' },
-  IRN: { x: 540, y: 210, name: 'Iran' },
-  UAE: { x: 530, y: 230, name: 'UAE' },
-  NZL: { x: 810, y: 390, name: 'New Zealand' },
-  ARG: { x: 240, y: 380, name: 'Argentina' },
-  ESP: { x: 400, y: 175, name: 'Spain' },
-  UKR: { x: 490, y: 150, name: 'Ukraine' },
-  // European Space Agency (multi-national)
-  ESA: { x: 430, y: 155, name: 'ESA' },
+// World TopoJSON URL from unpkg
+const GEO_URL = 'https://unpkg.com/world-atlas@2.0.2/countries-110m.json';
+
+// ISO 3166-1 Alpha-3 to country name and position mapping
+const COUNTRY_DATA = {
+  USA: { name: 'United States', coords: [-98, 39], alpha2: 'US' },
+  CHN: { name: 'China', coords: [104, 35], alpha2: 'CN' },
+  RUS: { name: 'Russia', coords: [100, 60], alpha2: 'RU' },
+  IND: { name: 'India', coords: [78, 21], alpha2: 'IN' },
+  JPN: { name: 'Japan', coords: [138, 36], alpha2: 'JP' },
+  FRA: { name: 'France', coords: [2, 46], alpha2: 'FR' },
+  DEU: { name: 'Germany', coords: [10, 51], alpha2: 'DE' },
+  GBR: { name: 'United Kingdom', coords: [-2, 54], alpha2: 'GB' },
+  ITA: { name: 'Italy', coords: [12, 43], alpha2: 'IT' },
+  ISR: { name: 'Israel', coords: [35, 31], alpha2: 'IL' },
+  KOR: { name: 'South Korea', coords: [127, 36], alpha2: 'KR' },
+  BRA: { name: 'Brazil', coords: [-51, -10], alpha2: 'BR' },
+  CAN: { name: 'Canada', coords: [-106, 56], alpha2: 'CA' },
+  AUS: { name: 'Australia', coords: [134, -25], alpha2: 'AU' },
+  IRN: { name: 'Iran', coords: [53, 32], alpha2: 'IR' },
+  UAE: { name: 'UAE', coords: [54, 24], alpha2: 'AE' },
+  NZL: { name: 'New Zealand', coords: [174, -41], alpha2: 'NZ' },
+  ARG: { name: 'Argentina', coords: [-64, -34], alpha2: 'AR' },
+  ESP: { name: 'Spain', coords: [-4, 40], alpha2: 'ES' },
+  UKR: { name: 'Ukraine', coords: [32, 49], alpha2: 'UA' },
+  PRK: { name: 'North Korea', coords: [127, 40], alpha2: 'KP' },
+  PAK: { name: 'Pakistan', coords: [69, 30], alpha2: 'PK' },
+  IDN: { name: 'Indonesia', coords: [118, -2], alpha2: 'ID' },
+  MYS: { name: 'Malaysia', coords: [102, 4], alpha2: 'MY' },
+  TUR: { name: 'Turkey', coords: [35, 39], alpha2: 'TR' },
+  SAU: { name: 'Saudi Arabia', coords: [45, 24], alpha2: 'SA' },
+  MEX: { name: 'Mexico', coords: [-102, 23], alpha2: 'MX' },
+  NGA: { name: 'Nigeria', coords: [8, 10], alpha2: 'NG' },
+  ZAF: { name: 'South Africa', coords: [25, -29], alpha2: 'ZA' },
+};
+
+// ISO Alpha-3 to numeric code mapping for TopoJSON matching
+const ISO_NUMERIC = {
+  USA: '840', CHN: '156', RUS: '643', IND: '356', JPN: '392',
+  FRA: '250', DEU: '276', GBR: '826', ITA: '380', ISR: '376',
+  KOR: '410', BRA: '076', CAN: '124', AUS: '036', IRN: '364',
+  UAE: '784', NZL: '554', ARG: '032', ESP: '724', UKR: '804',
+  PRK: '408', PAK: '586', IDN: '360', MYS: '458', TUR: '792',
+  SAU: '682', MEX: '484', NGA: '566', ZAF: '710',
 };
 
 /**
@@ -35,213 +62,257 @@ function getScoreColor(score) {
   if (score >= 60) return '#2563eb'; // Blue-600
   if (score >= 40) return '#d97706'; // Amber-600
   if (score >= 20) return '#ea580c'; // Orange-600
-  return '#6b7280'; // Gray-500
+  return '#9ca3af'; // Gray-400
 }
 
 /**
  * Get marker size based on score
  */
 function getMarkerSize(score) {
-  if (score >= 80) return 18;
-  if (score >= 60) return 14;
-  if (score >= 40) return 11;
-  return 8;
+  if (score >= 80) return 12;
+  if (score >= 60) return 10;
+  if (score >= 40) return 8;
+  if (score >= 20) return 6;
+  return 4;
 }
 
 /**
- * WorldMapView - SVG-based world map showing space-faring nations
- *
- * @param {Object} props
- * @param {Array} props.countries - Array of country objects with space programs
- * @param {Function} props.onCountrySelect - Callback when a country is selected
- * @param {string} props.selectedCountry - Currently selected country ISO code
- * @param {boolean} props.showLabels - Whether to show country labels
+ * WorldMapView - Interactive world map showing space-faring nations
  */
-export default function WorldMapView({
+function WorldMapView({
   countries = [],
   onCountrySelect,
   selectedCountry,
   showLabels = true,
+  showMarkers = true,
 }) {
   const [hoveredCountry, setHoveredCountry] = useState(null);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
+  const [position, setPosition] = useState({ coordinates: [0, 20], zoom: 1 });
 
-  // Map countries to their positions with scores
+  // Map countries to ISO codes for highlighting
+  const countryScoreMap = useMemo(() => {
+    const map = {};
+    countries.forEach(country => {
+      if (country.isoCode) {
+        map[country.isoCode] = country;
+        // Also map numeric code
+        if (ISO_NUMERIC[country.isoCode]) {
+          map[ISO_NUMERIC[country.isoCode]] = country;
+        }
+      }
+    });
+    return map;
+  }, [countries]);
+
+  // Countries with marker coordinates
   const countryMarkers = useMemo(() => {
     return countries
-      .filter(country => COUNTRY_POSITIONS[country.isoCode])
+      .filter(country => COUNTRY_DATA[country.isoCode])
       .map(country => ({
         ...country,
-        position: COUNTRY_POSITIONS[country.isoCode],
+        coords: COUNTRY_DATA[country.isoCode].coords,
         color: getScoreColor(country.overallCapabilityScore || 0),
         size: getMarkerSize(country.overallCapabilityScore || 0),
       }));
   }, [countries]);
 
-  // Handle mouse move for tooltip positioning
+  // Handle zoom
+  const handleZoomIn = () => {
+    if (position.zoom >= 4) return;
+    setPosition(pos => ({ ...pos, zoom: pos.zoom * 1.5 }));
+  };
+
+  const handleZoomOut = () => {
+    if (position.zoom <= 1) return;
+    setPosition(pos => ({ ...pos, zoom: pos.zoom / 1.5 }));
+  };
+
+  const handleReset = () => {
+    setPosition({ coordinates: [0, 20], zoom: 1 });
+  };
+
+  // Handle mouse move for tooltip
   const handleMouseMove = (e, country) => {
-    const rect = e.currentTarget.closest('svg').getBoundingClientRect();
+    const rect = e.currentTarget.closest('.map-container').getBoundingClientRect();
     setTooltipPos({
       x: e.clientX - rect.left,
-      y: e.clientY - rect.top - 60,
+      y: e.clientY - rect.top - 80,
     });
     setHoveredCountry(country);
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-4">
+    <div className="bg-gray-800 rounded-lg shadow-lg p-4">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-semibold text-gray-800">Global Space Programs</h3>
-        <div className="flex items-center gap-4 text-xs">
-          <div className="flex items-center gap-1">
-            <span className="w-3 h-3 rounded-full bg-emerald-600"></span>
-            <span>80+</span>
+        <h3 className="text-lg font-semibold text-white">Global Space Programs</h3>
+        <div className="flex items-center gap-4">
+          {/* Legend */}
+          <div className="hidden sm:flex items-center gap-3 text-xs text-gray-300">
+            <div className="flex items-center gap-1">
+              <span className="w-3 h-3 rounded-full bg-emerald-600"></span>
+              <span>80+</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <span className="w-3 h-3 rounded-full bg-blue-600"></span>
+              <span>60-79</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <span className="w-3 h-3 rounded-full bg-amber-600"></span>
+              <span>40-59</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <span className="w-3 h-3 rounded-full bg-orange-600"></span>
+              <span>20-39</span>
+            </div>
           </div>
+
+          {/* Zoom controls */}
           <div className="flex items-center gap-1">
-            <span className="w-3 h-3 rounded-full bg-blue-600"></span>
-            <span>60-79</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <span className="w-3 h-3 rounded-full bg-amber-600"></span>
-            <span>40-59</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <span className="w-3 h-3 rounded-full bg-orange-600"></span>
-            <span>20-39</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <span className="w-3 h-3 rounded-full bg-gray-500"></span>
-            <span>&lt;20</span>
+            <button
+              onClick={handleZoomIn}
+              className="p-1 rounded bg-gray-700 hover:bg-gray-600 text-white transition"
+              title="Zoom in"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+            </button>
+            <button
+              onClick={handleZoomOut}
+              className="p-1 rounded bg-gray-700 hover:bg-gray-600 text-white transition"
+              title="Zoom out"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+              </svg>
+            </button>
+            <button
+              onClick={handleReset}
+              className="p-1 rounded bg-gray-700 hover:bg-gray-600 text-white transition"
+              title="Reset view"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+            </button>
           </div>
         </div>
       </div>
 
-      <div className="relative overflow-hidden rounded-lg bg-slate-100">
-        <svg
-          viewBox="0 0 900 450"
-          className="w-full h-auto"
-          style={{ minHeight: '300px' }}
+      <div className="relative overflow-hidden rounded-lg map-container" style={{ minHeight: '400px' }}>
+        <ComposableMap
+          projection="geoMercator"
+          projectionConfig={{
+            scale: 120,
+            center: [0, 20],
+          }}
+          style={{ width: '100%', height: '400px', backgroundColor: '#1e3a5f' }}
         >
-          {/* Simplified world map background */}
-          <defs>
-            <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
-              <path d="M 50 0 L 0 0 0 50" fill="none" stroke="#e5e7eb" strokeWidth="0.5" />
-            </pattern>
-          </defs>
+          <ZoomableGroup
+            zoom={position.zoom}
+            center={position.coordinates}
+            onMoveEnd={(pos) => setPosition(pos)}
+          >
+            <Geographies geography={GEO_URL}>
+              {({ geographies }) =>
+                geographies.map((geo) => {
+                  const countryId = geo.id;
+                  const countryData = countryScoreMap[countryId];
+                  const isSpaceFaring = !!countryData;
+                  const isSelected = countryData?.isoCode === selectedCountry;
+                  const score = countryData?.overallCapabilityScore || 0;
 
-          {/* Ocean background */}
-          <rect width="900" height="450" fill="#e0f2fe" />
+                  return (
+                    <Geography
+                      key={geo.rsmKey}
+                      geography={geo}
+                      fill={isSpaceFaring ? getScoreColor(score) : '#374151'}
+                      stroke="#1f2937"
+                      strokeWidth={0.5}
+                      style={{
+                        default: {
+                          outline: 'none',
+                          transition: 'fill 0.2s',
+                        },
+                        hover: {
+                          fill: isSpaceFaring ? getScoreColor(score) : '#4b5563',
+                          outline: 'none',
+                          cursor: isSpaceFaring ? 'pointer' : 'default',
+                        },
+                        pressed: {
+                          fill: isSpaceFaring ? getScoreColor(score) : '#374151',
+                          outline: 'none',
+                        },
+                      }}
+                      onMouseEnter={(e) => {
+                        if (countryData) {
+                          handleMouseMove(e, countryData);
+                        }
+                      }}
+                      onMouseMove={(e) => {
+                        if (countryData) {
+                          handleMouseMove(e, countryData);
+                        }
+                      }}
+                      onMouseLeave={() => setHoveredCountry(null)}
+                      onClick={() => {
+                        if (countryData && onCountrySelect) {
+                          onCountrySelect(countryData);
+                        }
+                      }}
+                    />
+                  );
+                })
+              }
+            </Geographies>
 
-          {/* Simplified continent outlines - stylized shapes */}
-          {/* North America */}
-          <path
-            d="M 60,80 Q 100,60 160,80 L 220,100 Q 240,120 230,180 L 200,220 Q 180,280 140,320 L 80,340 Q 40,320 30,280 L 20,200 Q 30,120 60,80 Z"
-            fill="#d1d5db"
-            stroke="#9ca3af"
-            strokeWidth="1"
-          />
-
-          {/* South America */}
-          <path
-            d="M 200,300 Q 220,290 250,320 L 280,380 Q 290,420 260,440 L 220,430 Q 190,400 180,360 L 200,300 Z"
-            fill="#d1d5db"
-            stroke="#9ca3af"
-            strokeWidth="1"
-          />
-
-          {/* Europe */}
-          <path
-            d="M 380,100 Q 420,80 480,100 L 500,130 Q 490,160 460,180 L 420,190 Q 380,180 370,150 L 380,100 Z"
-            fill="#d1d5db"
-            stroke="#9ca3af"
-            strokeWidth="1"
-          />
-
-          {/* Africa */}
-          <path
-            d="M 400,200 Q 450,190 500,210 L 520,280 Q 510,360 470,400 L 420,390 Q 380,340 390,280 L 400,200 Z"
-            fill="#d1d5db"
-            stroke="#9ca3af"
-            strokeWidth="1"
-          />
-
-          {/* Asia */}
-          <path
-            d="M 500,80 Q 600,60 720,100 L 780,150 Q 800,200 780,250 L 700,280 Q 620,300 540,260 L 500,200 Q 490,140 500,80 Z"
-            fill="#d1d5db"
-            stroke="#9ca3af"
-            strokeWidth="1"
-          />
-
-          {/* Australia */}
-          <path
-            d="M 700,320 Q 740,310 780,330 L 800,370 Q 790,410 750,420 L 710,400 Q 690,360 700,320 Z"
-            fill="#d1d5db"
-            stroke="#9ca3af"
-            strokeWidth="1"
-          />
-
-          {/* Grid overlay for reference */}
-          <rect width="900" height="450" fill="url(#grid)" opacity="0.3" />
-
-          {/* Country markers */}
-          {countryMarkers.map((country) => (
-            <g
-              key={country.isoCode}
-              className="cursor-pointer transition-all duration-200"
-              onMouseEnter={(e) => handleMouseMove(e, country)}
-              onMouseMove={(e) => handleMouseMove(e, country)}
-              onMouseLeave={() => setHoveredCountry(null)}
-              onClick={() => onCountrySelect?.(country)}
-            >
-              {/* Main marker */}
-              <circle
-                cx={country.position.x}
-                cy={country.position.y}
-                r={country.size}
-                fill={country.color}
-                stroke={selectedCountry === country.isoCode ? '#1e40af' : 'white'}
-                strokeWidth={selectedCountry === country.isoCode ? 3 : 2}
-                className="transition-all duration-200 hover:opacity-80"
-              />
-
-              {/* Country label */}
-              {showLabels && (
-                <text
-                  x={country.position.x}
-                  y={country.position.y + country.size + 12}
-                  textAnchor="middle"
-                  className="text-xs font-medium fill-gray-700"
-                  style={{ fontSize: '10px' }}
-                >
-                  {country.spaceAgencyAcronym || country.isoCode}
-                </text>
-              )}
-
-              {/* Score label inside large markers */}
-              {country.size >= 14 && (
-                <text
-                  x={country.position.x}
-                  y={country.position.y + 4}
-                  textAnchor="middle"
-                  className="font-bold fill-white"
-                  style={{ fontSize: '10px' }}
-                >
-                  {Math.round(country.overallCapabilityScore || 0)}
-                </text>
-              )}
-            </g>
-          ))}
-        </svg>
+            {/* Markers for space-faring nations */}
+            {showMarkers && countryMarkers.map((country) => (
+              <Marker
+                key={country.isoCode}
+                coordinates={country.coords}
+                onMouseEnter={(e) => handleMouseMove(e, country)}
+                onMouseMove={(e) => handleMouseMove(e, country)}
+                onMouseLeave={() => setHoveredCountry(null)}
+                onClick={() => onCountrySelect?.(country)}
+                style={{ cursor: 'pointer' }}
+              >
+                <circle
+                  r={country.size}
+                  fill={country.color}
+                  stroke={selectedCountry === country.isoCode ? '#fff' : 'rgba(255,255,255,0.3)'}
+                  strokeWidth={selectedCountry === country.isoCode ? 2 : 1}
+                  className="transition-all duration-200"
+                />
+                {showLabels && country.size >= 8 && (
+                  <text
+                    textAnchor="middle"
+                    y={country.size + 12}
+                    style={{
+                      fontFamily: 'system-ui',
+                      fontSize: '8px',
+                      fill: '#fff',
+                      fontWeight: 500,
+                      pointerEvents: 'none',
+                    }}
+                  >
+                    {country.spaceAgencyAcronym || country.isoCode}
+                  </text>
+                )}
+              </Marker>
+            ))}
+          </ZoomableGroup>
+        </ComposableMap>
 
         {/* Tooltip */}
         {hoveredCountry && (
           <div
-            className="absolute bg-white rounded-lg shadow-lg p-3 z-10 pointer-events-none border border-gray-200"
+            className="absolute bg-gray-900 rounded-lg shadow-xl p-3 z-20 pointer-events-none border border-gray-700"
             style={{
-              left: `${Math.min(tooltipPos.x, 700)}px`,
+              left: `${Math.min(Math.max(tooltipPos.x, 100), window.innerWidth - 250)}px`,
               top: `${Math.max(tooltipPos.y, 10)}px`,
-              minWidth: '180px',
+              minWidth: '200px',
             }}
           >
             <div className="flex items-center gap-2 mb-2">
@@ -252,24 +323,36 @@ export default function WorldMapView({
                   className="w-6 h-4 object-cover rounded"
                 />
               )}
-              <span className="font-semibold text-gray-800">{hoveredCountry.name}</span>
+              <span className="font-semibold text-white">{hoveredCountry.name}</span>
             </div>
-            <div className="text-sm text-gray-600 space-y-1">
-              <div className="flex justify-between">
-                <span>Agency:</span>
-                <span className="font-medium">{hoveredCountry.spaceAgencyAcronym}</span>
-              </div>
+            <div className="text-sm text-gray-300 space-y-1">
+              {hoveredCountry.spaceAgencyAcronym && (
+                <div className="flex justify-between">
+                  <span>Agency:</span>
+                  <span className="font-medium text-white">{hoveredCountry.spaceAgencyAcronym}</span>
+                </div>
+              )}
               <div className="flex justify-between">
                 <span>SCI Score:</span>
-                <span className="font-bold" style={{ color: hoveredCountry.color }}>
-                  {(hoveredCountry.overallCapabilityScore || 0).toFixed(0)}
+                <span
+                  className="font-bold"
+                  style={{ color: getScoreColor(hoveredCountry.overallCapabilityScore || 0) }}
+                >
+                  {(hoveredCountry.overallCapabilityScore || 0).toFixed(1)}
                 </span>
               </div>
-              <div className="flex gap-1 mt-2">
+              {hoveredCountry.totalLaunches > 0 && (
+                <div className="flex justify-between">
+                  <span>Total Launches:</span>
+                  <span className="font-medium text-white">{hoveredCountry.totalLaunches.toLocaleString()}</span>
+                </div>
+              )}
+              <div className="flex gap-1 mt-2 pt-2 border-t border-gray-700">
                 {hoveredCountry.humanSpaceflightCapable && <span title="Human Spaceflight">👨‍🚀</span>}
-                {hoveredCountry.independentLaunchCapable && <span title="Launch">🚀</span>}
-                {hoveredCountry.reusableRocketCapable && <span title="Reusable">♻️</span>}
+                {hoveredCountry.independentLaunchCapable && <span title="Independent Launch">🚀</span>}
+                {hoveredCountry.reusableRocketCapable && <span title="Reusable Rockets">♻️</span>}
                 {hoveredCountry.deepSpaceCapable && <span title="Deep Space">🌙</span>}
+                {hoveredCountry.spaceStationCapable && <span title="Space Station">🛰️</span>}
               </div>
             </div>
           </div>
@@ -285,18 +368,18 @@ export default function WorldMapView({
             <Link
               key={country.isoCode}
               to={`/countries/${country.isoCode}`}
-              className={`flex items-center gap-2 p-2 rounded-lg transition-all hover:bg-gray-100 ${
-                selectedCountry === country.isoCode ? 'bg-indigo-50 ring-2 ring-indigo-500' : ''
+              className={`flex items-center gap-2 p-2 rounded-lg transition-all bg-gray-700/50 hover:bg-gray-700 ${
+                selectedCountry === country.isoCode ? 'ring-2 ring-indigo-500 bg-gray-700' : ''
               }`}
             >
               <span
                 className="w-3 h-3 rounded-full flex-shrink-0"
                 style={{ backgroundColor: country.color }}
               ></span>
-              <span className="text-xs font-medium text-gray-700 truncate">
+              <span className="text-xs font-medium text-gray-200 truncate">
                 {country.spaceAgencyAcronym || country.isoCode}
               </span>
-              <span className="text-xs text-gray-500 ml-auto">
+              <span className="text-xs text-gray-400 ml-auto">
                 {(country.overallCapabilityScore || 0).toFixed(0)}
               </span>
             </Link>
@@ -305,3 +388,5 @@ export default function WorldMapView({
     </div>
   );
 }
+
+export default memo(WorldMapView);
