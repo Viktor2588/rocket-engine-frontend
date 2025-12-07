@@ -1,9 +1,22 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 export default function Navigation() {
   const location = useLocation();
   const [compareMenuOpen, setCompareMenuOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setCompareMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   // Helper to check if link is active
   const isActive = (path) => {
@@ -47,12 +60,14 @@ export default function Navigation() {
           {/* Compare dropdown */}
           <div
             className="relative"
-            onMouseEnter={() => setCompareMenuOpen(true)}
-            onMouseLeave={() => setCompareMenuOpen(false)}
+            ref={dropdownRef}
           >
-            <button className={`hover:text-indigo-400 transition flex items-center gap-1 ${isActive('/compare') ? 'text-indigo-400 font-semibold' : ''}`}>
+            <button
+              className={`hover:text-indigo-400 transition flex items-center gap-1 ${isActive('/compare') ? 'text-indigo-400 font-semibold' : ''}`}
+              onClick={() => setCompareMenuOpen(!compareMenuOpen)}
+            >
               Compare
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className={`w-4 h-4 transition-transform ${compareMenuOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
             </button>
