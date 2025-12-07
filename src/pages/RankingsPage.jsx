@@ -211,7 +211,7 @@ export default function RankingsPage() {
           <select
             value={tierFilter || ''}
             onChange={(e) => setTierFilter(e.target.value || null)}
-            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500"
+            className="px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500"
           >
             <option value="">All Tiers</option>
             {SCI_TIER_THRESHOLDS.map(tier => (
@@ -223,7 +223,7 @@ export default function RankingsPage() {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500"
+            className="px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500"
           >
             <option value="overall">Overall Score</option>
             <option value="rank">Global Rank</option>
@@ -238,7 +238,7 @@ export default function RankingsPage() {
           {/* Sort Order */}
           <button
             onClick={() => setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc')}
-            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 transition"
+            className="px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition"
           >
             {sortOrder === 'desc' ? '↓ Desc' : '↑ Asc'}
           </button>
@@ -247,19 +247,19 @@ export default function RankingsPage() {
           <div className="flex border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
             <button
               onClick={() => setViewMode('list')}
-              className={`px-4 py-2 ${viewMode === 'list' ? 'bg-indigo-600 text-white' : 'bg-white hover:bg-gray-50'}`}
+              className={`px-4 py-2 ${viewMode === 'list' ? 'bg-indigo-600 text-white' : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600'}`}
             >
               List
             </button>
             <button
               onClick={() => setViewMode('grid')}
-              className={`px-4 py-2 ${viewMode === 'grid' ? 'bg-indigo-600 text-white' : 'bg-white hover:bg-gray-50'}`}
+              className={`px-4 py-2 ${viewMode === 'grid' ? 'bg-indigo-600 text-white' : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600'}`}
             >
               Grid
             </button>
             <button
               onClick={() => setViewMode('compare')}
-              className={`px-4 py-2 ${viewMode === 'compare' ? 'bg-indigo-600 text-white' : 'bg-white hover:bg-gray-50'}`}
+              className={`px-4 py-2 ${viewMode === 'compare' ? 'bg-indigo-600 text-white' : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600'}`}
             >
               Compare
             </button>
@@ -349,8 +349,8 @@ function RankingRow({ breakdown, rank, isSelected, onToggleSelect, canSelect }) 
 
   return (
     <div
-      className={`bg-white rounded-lg shadow-sm border transition ${
-        isSelected ? 'border-indigo-500 ring-2 ring-indigo-200' : 'border-gray-100'
+      className={`bg-white dark:bg-gray-800 rounded-lg shadow-sm border transition ${
+        isSelected ? 'border-indigo-500 ring-2 ring-indigo-200' : 'border-gray-100 dark:border-gray-700'
       }`}
     >
       <div className="p-4 flex items-center gap-4">
@@ -408,7 +408,7 @@ function RankingRow({ breakdown, rank, isSelected, onToggleSelect, canSelect }) 
             const catInfo = CATEGORY_WEIGHTS?.find(cw => cw.category === cs.category);
             return (
               <div key={cs.category} className="flex-1" title={catInfo?.label}>
-                <div className="h-6 bg-gray-100 rounded relative overflow-hidden">
+                <div className="h-6 bg-gray-100 dark:bg-gray-700 rounded relative overflow-hidden">
                   <div
                     className="absolute left-0 top-0 h-full rounded"
                     style={{
@@ -428,7 +428,7 @@ function RankingRow({ breakdown, rank, isSelected, onToggleSelect, canSelect }) 
         {/* Expand Button */}
         <button
           onClick={() => setExpanded(!expanded)}
-          className="p-2 hover:bg-gray-100 rounded-lg transition"
+          className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition"
         >
           {expanded ? '▲' : '▼'}
         </button>
@@ -436,7 +436,7 @@ function RankingRow({ breakdown, rank, isSelected, onToggleSelect, canSelect }) 
 
       {/* Expanded Details */}
       {expanded && (
-        <div className="px-4 pb-4 border-t border-gray-100">
+        <div className="px-4 pb-4 border-t border-gray-100 dark:border-gray-700">
           <div className="pt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Category Scores */}
             <div>
@@ -561,7 +561,7 @@ function ComparisonView({ comparison }) {
                 const maxScore = Math.max(...scores);
 
                 return (
-                  <tr key={cw.category} className="border-b border-gray-100 hover:bg-gray-50 dark:bg-gray-700">
+                  <tr key={cw.category} className="border-b border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700">
                     <td className="py-3 px-4 flex items-center gap-2">
                       <SpaceIcon name={cw.icon} size="sm" />
                       {cw.label}

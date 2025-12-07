@@ -112,7 +112,7 @@ export default function MissionListPage() {
                 placeholder="Search missions..."
                 value={filters.searchQuery}
                 onChange={(e) => updateFilter('searchQuery', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
               />
             </div>
 
@@ -120,7 +120,7 @@ export default function MissionListPage() {
             <select
               value={filters.status || ''}
               onChange={(e) => updateFilter('status', e.target.value || null)}
-              className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500"
+              className="px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500"
             >
               <option value="">All Statuses</option>
               {STATUS_OPTIONS.map(opt => (
@@ -132,7 +132,7 @@ export default function MissionListPage() {
             <select
               value={filters.missionType || ''}
               onChange={(e) => updateFilter('missionType', e.target.value || null)}
-              className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500"
+              className="px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500"
             >
               <option value="">All Types</option>
               {Object.entries(MISSION_TYPE_INFO).map(([key, info]) => (
@@ -144,7 +144,7 @@ export default function MissionListPage() {
             <select
               value={filters.destination || ''}
               onChange={(e) => updateFilter('destination', e.target.value || null)}
-              className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500"
+              className="px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500"
             >
               <option value="">All Destinations</option>
               {Object.entries(DESTINATION_INFO).map(([key, info]) => (
@@ -184,7 +184,7 @@ export default function MissionListPage() {
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-2 focus:ring-indigo-500"
+                  className="px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded focus:ring-2 focus:ring-indigo-500"
                 >
                   <option value="launchDate">Launch Date</option>
                   <option value="name">Name</option>
@@ -201,16 +201,16 @@ export default function MissionListPage() {
               </div>
 
               {/* View Mode */}
-              <div className="flex rounded-lg border border-gray-300 overflow-hidden">
+              <div className="flex rounded-lg border border-gray-300 dark:border-gray-600 overflow-hidden">
                 <button
                   onClick={() => setViewMode('grid')}
-                  className={`px-3 py-1 text-sm ${viewMode === 'grid' ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+                  className={`px-3 py-1 text-sm ${viewMode === 'grid' ? 'bg-indigo-600 text-white' : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600'}`}
                 >
                   Grid
                 </button>
                 <button
                   onClick={() => setViewMode('list')}
-                  className={`px-3 py-1 text-sm border-l ${viewMode === 'list' ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+                  className={`px-3 py-1 text-sm border-l border-gray-300 dark:border-gray-600 ${viewMode === 'list' ? 'bg-indigo-600 text-white' : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600'}`}
                 >
                   List
                 </button>
@@ -293,9 +293,9 @@ export default function MissionListPage() {
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200 dark:divide-gray-700">
+              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                 {filteredMissions.map(mission => (
-                  <tr key={mission.id} className="hover:bg-gray-50 dark:bg-gray-700">
+                  <tr key={mission.id} className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <Link
                         to={`/missions/${mission.id}`}
@@ -336,32 +336,32 @@ export default function MissionListPage() {
         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
           <Link
             to="/missions?filter=crewed"
-            className="bg-purple-50 hover:bg-purple-100 rounded-lg p-4 flex items-center gap-3 transition"
+            className="bg-purple-50 dark:bg-purple-900/30 hover:bg-purple-100 dark:hover:bg-purple-900/50 rounded-lg p-4 flex items-center gap-3 transition"
           >
-            <PersonOutline style={{ fontSize: '2rem' }} className="text-purple-600" />
+            <PersonOutline style={{ fontSize: '2rem' }} className="text-purple-600 dark:text-purple-400" />
             <div>
-              <h3 className="font-semibold text-purple-800">Crewed Missions</h3>
-              <p className="text-sm text-purple-600">Explore human spaceflight</p>
+              <h3 className="font-semibold text-purple-800 dark:text-purple-300">Crewed Missions</h3>
+              <p className="text-sm text-purple-600 dark:text-purple-400">Explore human spaceflight</p>
             </div>
           </Link>
           <Link
             to="/missions?destination=MARS"
-            className="bg-red-50 hover:bg-red-100 rounded-lg p-4 flex items-center gap-3 transition"
+            className="bg-red-50 dark:bg-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/50 rounded-lg p-4 flex items-center gap-3 transition"
           >
-            <Circle style={{ fontSize: '2rem' }} className="text-red-600" />
+            <Circle style={{ fontSize: '2rem' }} className="text-red-600 dark:text-red-400" />
             <div>
-              <h3 className="font-semibold text-red-800">Mars Missions</h3>
+              <h3 className="font-semibold text-red-800 dark:text-red-300">Mars Missions</h3>
               <p className="text-sm text-red-600 dark:text-red-400">Journey to the Red Planet</p>
             </div>
           </Link>
           <Link
             to="/missions?destination=MOON"
-            className="bg-gray-50 hover:bg-gray-100 rounded-lg p-4 flex items-center gap-3 transition"
+            className="bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg p-4 flex items-center gap-3 transition"
           >
-            <NightlightRound style={{ fontSize: '2rem' }} className="text-gray-600" />
+            <NightlightRound style={{ fontSize: '2rem' }} className="text-gray-600 dark:text-gray-300" />
             <div>
               <h3 className="font-semibold text-gray-800 dark:text-white">Lunar Missions</h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">Return to the Moon</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Return to the Moon</p>
             </div>
           </Link>
         </div>

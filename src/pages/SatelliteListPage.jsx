@@ -89,7 +89,7 @@ function SatelliteCard({ satellite }) {
         {/* Stats grid */}
         <div className="grid grid-cols-2 gap-3 text-sm">
           {satellite.altitude && (
-            <div className="bg-gray-50 rounded-lg p-2">
+            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-2">
               <span className="text-gray-500 dark:text-gray-400 text-xs">Altitude</span>
               <p className="font-semibold text-gray-800 dark:text-white">
                 {satellite.altitude >= 1000
@@ -99,7 +99,7 @@ function SatelliteCard({ satellite }) {
             </div>
           )}
           {satellite.massKg && (
-            <div className="bg-gray-50 rounded-lg p-2">
+            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-2">
               <span className="text-gray-500 dark:text-gray-400 text-xs">Mass</span>
               <p className="font-semibold text-gray-800 dark:text-white">
                 {satellite.massKg >= 1000
@@ -109,13 +109,13 @@ function SatelliteCard({ satellite }) {
             </div>
           )}
           {satellite.launchYear && (
-            <div className="bg-gray-50 rounded-lg p-2">
+            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-2">
               <span className="text-gray-500 dark:text-gray-400 text-xs">Launched</span>
               <p className="font-semibold text-gray-800 dark:text-white">{satellite.launchYear}</p>
             </div>
           )}
           {satellite.inclination && (
-            <div className="bg-gray-50 rounded-lg p-2">
+            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-2">
               <span className="text-gray-500 dark:text-gray-400 text-xs">Inclination</span>
               <p className="font-semibold text-gray-800 dark:text-white">{satellite.inclination}°</p>
             </div>
@@ -146,19 +146,19 @@ function StatisticsCard({ statistics }) {
     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mb-6">
       <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Satellite Statistics</h3>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="text-center p-4 bg-indigo-50 rounded-lg">
+        <div className="text-center p-4 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg">
           <p className="text-3xl font-bold text-indigo-600">{statistics.total}</p>
           <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">Total Satellites</p>
         </div>
-        <div className="text-center p-4 bg-green-50 rounded-lg">
+        <div className="text-center p-4 bg-green-50 dark:bg-green-900/30 rounded-lg">
           <p className="text-3xl font-bold text-green-600">{statistics.active}</p>
           <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">Active</p>
         </div>
-        <div className="text-center p-4 bg-purple-50 rounded-lg">
+        <div className="text-center p-4 bg-purple-50 dark:bg-purple-900/30 rounded-lg">
           <p className="text-3xl font-bold text-purple-600">{statistics.byType?.length || 0}</p>
           <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">Types</p>
         </div>
-        <div className="text-center p-4 bg-amber-50 rounded-lg">
+        <div className="text-center p-4 bg-amber-50 dark:bg-amber-900/30 rounded-lg">
           <p className="text-3xl font-bold text-amber-600">{statistics.byCountry?.length || 0}</p>
           <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">Countries</p>
         </div>
@@ -278,23 +278,23 @@ export default function SatelliteListPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
           {/* Search */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Search</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Search</label>
             <input
               type="text"
               value={filters.search}
               onChange={(e) => handleFilterChange('search', e.target.value)}
               placeholder="Search satellites..."
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             />
           </div>
 
           {/* Type filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Type</label>
             <select
               value={filters.type}
               onChange={(e) => handleFilterChange('type', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             >
               <option value="">All Types</option>
               {filterOptions.types.map(type => (
@@ -305,11 +305,11 @@ export default function SatelliteListPage() {
 
           {/* Orbit filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Orbit</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Orbit</label>
             <select
               value={filters.orbitType}
               onChange={(e) => handleFilterChange('orbitType', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             >
               <option value="">All Orbits</option>
               {filterOptions.orbits.map(orbit => (
@@ -320,11 +320,11 @@ export default function SatelliteListPage() {
 
           {/* Status filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status</label>
             <select
               value={filters.status}
               onChange={(e) => handleFilterChange('status', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             >
               <option value="">All Statuses</option>
               {filterOptions.statuses.map(status => (
@@ -335,11 +335,11 @@ export default function SatelliteListPage() {
 
           {/* Country filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Country</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Country</label>
             <select
               value={filters.countryId}
               onChange={(e) => handleFilterChange('countryId', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             >
               <option value="">All Countries</option>
               {filterOptions.countries.map(country => (
@@ -350,11 +350,11 @@ export default function SatelliteListPage() {
 
           {/* Constellation filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Constellation</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Constellation</label>
             <select
               value={filters.constellation}
               onChange={(e) => handleFilterChange('constellation', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             >
               <option value="">All Constellations</option>
               {filterOptions.constellations.map(constellation => (
@@ -365,11 +365,11 @@ export default function SatelliteListPage() {
 
           {/* Sort by */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Sort by</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Sort by</label>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             >
               <option value="name">Name</option>
               <option value="launchYear">Launch Year</option>
@@ -380,17 +380,17 @@ export default function SatelliteListPage() {
 
           {/* View mode */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">View</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">View</label>
             <div className="flex gap-2">
               <button
                 onClick={() => setViewMode('grid')}
-                className={`flex-1 px-3 py-2 rounded-lg border ${viewMode === 'grid' ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-700 border-gray-300'}`}
+                className={`flex-1 px-3 py-2 rounded-lg border ${viewMode === 'grid' ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600'}`}
               >
                 Grid
               </button>
               <button
                 onClick={() => setViewMode('list')}
-                className={`flex-1 px-3 py-2 rounded-lg border ${viewMode === 'list' ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-700 border-gray-300'}`}
+                className={`flex-1 px-3 py-2 rounded-lg border ${viewMode === 'list' ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600'}`}
               >
                 List
               </button>
@@ -406,7 +406,7 @@ export default function SatelliteListPage() {
 
       {/* Satellite grid/list */}
       {sortedSatellites.length === 0 ? (
-        <div className="bg-gray-50 rounded-xl p-12 text-center">
+        <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-12 text-center">
           <p className="text-gray-500 dark:text-gray-400 text-lg">No satellites found matching your criteria</p>
           <button
             onClick={clearFilters}
@@ -426,17 +426,17 @@ export default function SatelliteListPage() {
           <table className="w-full">
             <thead className="bg-gray-50 dark:bg-gray-700">
               <tr>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Name</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Type</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Orbit</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Status</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Country</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Launch</th>
+                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Name</th>
+                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Type</th>
+                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Orbit</th>
+                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Status</th>
+                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Country</th>
+                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Launch</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
               {sortedSatellites.map(satellite => (
-                <tr key={satellite.id} className="hover:bg-gray-50 dark:bg-gray-700">
+                <tr key={satellite.id} className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700">
                   <td className="px-4 py-3">
                     <Link to={`/satellites/${satellite.id}`} className="font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300">
                       {satellite.name}

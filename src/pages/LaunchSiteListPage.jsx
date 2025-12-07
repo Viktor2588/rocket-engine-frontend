@@ -42,10 +42,10 @@ const REGION_COLORS = {
 
 function StatCard({ label, value, IconComponent, color = 'indigo' }) {
   const colorClasses = {
-    indigo: 'bg-indigo-50 text-indigo-600',
-    green: 'bg-green-50 text-green-600',
-    blue: 'bg-blue-50 text-blue-600',
-    purple: 'bg-purple-50 text-purple-600',
+    indigo: 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600',
+    green: 'bg-green-50 dark:bg-green-900/30 text-green-600',
+    blue: 'bg-blue-50 dark:bg-blue-900/30 text-blue-600',
+    purple: 'bg-purple-50 dark:bg-purple-900/30 text-purple-600',
   };
 
   return (
@@ -84,15 +84,15 @@ function LaunchSiteCard({ site }) {
 
         {/* Stats Row */}
         <div className="grid grid-cols-3 gap-2 text-center text-xs">
-          <div className="bg-gray-50 rounded p-2">
+          <div className="bg-gray-50 dark:bg-gray-700 rounded p-2">
             <div className="font-bold text-indigo-600">{site.totalLaunches || 0}</div>
             <div className="text-gray-500 dark:text-gray-400 dark:text-gray-400">Launches</div>
           </div>
-          <div className="bg-gray-50 rounded p-2">
+          <div className="bg-gray-50 dark:bg-gray-700 rounded p-2">
             <div className="font-bold text-green-600">{site.successRate?.toFixed(1) || 0}%</div>
             <div className="text-gray-500 dark:text-gray-400 dark:text-gray-400">Success</div>
           </div>
-          <div className="bg-gray-50 rounded p-2">
+          <div className="bg-gray-50 dark:bg-gray-700 rounded p-2">
             <div className="font-bold text-blue-600">{site.established || '-'}</div>
             <div className="text-gray-500 dark:text-gray-400 dark:text-gray-400">Est.</div>
           </div>
@@ -371,7 +371,7 @@ export default function LaunchSiteListPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
       </div>
     );
@@ -379,7 +379,7 @@ export default function LaunchSiteListPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">Error Loading Launch Sites</h2>
           <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400">{error}</p>
@@ -444,23 +444,23 @@ export default function LaunchSiteListPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Search */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Search</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Search</label>
               <input
                 type="text"
                 placeholder="Search launch sites..."
                 value={filters.search}
                 onChange={(e) => handleFilterChange('search', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
               />
             </div>
 
             {/* Status Filter */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status</label>
               <select
                 value={filters.status}
                 onChange={(e) => handleFilterChange('status', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
               >
                 <option value="">All Status</option>
                 <option value="Active">Active</option>
@@ -471,11 +471,11 @@ export default function LaunchSiteListPage() {
 
             {/* Country Filter */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Country</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Country</label>
               <select
                 value={filters.countryId}
                 onChange={(e) => handleFilterChange('countryId', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
               >
                 <option value="">All Countries</option>
                 {uniqueCountries.map(country => (
@@ -486,11 +486,11 @@ export default function LaunchSiteListPage() {
 
             {/* Region Filter */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Region</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Region</label>
               <select
                 value={filters.region}
                 onChange={(e) => handleFilterChange('region', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
               >
                 <option value="">All Regions</option>
                 {uniqueRegions.map(region => (
@@ -544,7 +544,7 @@ export default function LaunchSiteListPage() {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="px-2 py-1 border border-gray-300 dark:border-gray-600 rounded text-sm focus:ring-2 focus:ring-indigo-500"
+                className="px-2 py-1 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded text-sm focus:ring-2 focus:ring-indigo-500"
               >
                 <option value="name">Name</option>
                 <option value="totalLaunches">Total Launches</option>
@@ -563,13 +563,13 @@ export default function LaunchSiteListPage() {
             <div className="flex border border-gray-300 dark:border-gray-600 rounded overflow-hidden">
               <button
                 onClick={() => setViewMode('grid')}
-                className={`px-3 py-1 text-sm ${viewMode === 'grid' ? 'bg-indigo-600 text-white' : 'bg-white text-gray-600 dark:text-gray-400 hover:bg-gray-100'}`}
+                className={`px-3 py-1 text-sm ${viewMode === 'grid' ? 'bg-indigo-600 text-white' : 'bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'}`}
               >
                 Grid
               </button>
               <button
                 onClick={() => setViewMode('list')}
-                className={`px-3 py-1 text-sm ${viewMode === 'list' ? 'bg-indigo-600 text-white' : 'bg-white text-gray-600 dark:text-gray-400 hover:bg-gray-100'}`}
+                className={`px-3 py-1 text-sm ${viewMode === 'list' ? 'bg-indigo-600 text-white' : 'bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'}`}
               >
                 List
               </button>
@@ -601,7 +601,7 @@ export default function LaunchSiteListPage() {
                 {sortedSites.map(site => {
                   const statusClass = STATUS_COLORS[site.status?.replace(' ', '_')] || STATUS_COLORS.Active;
                   return (
-                    <tr key={site.id} className="hover:bg-gray-50 dark:bg-gray-700">
+                    <tr key={site.id} className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700">
                       <td className="px-4 py-3">
                         <Link to={`/launch-sites/${site.id}`} className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium">
                           {site.name}
