@@ -5,6 +5,14 @@ import { useLaunchVehicles } from './useLaunchVehicles';
 import { useAllMissions } from './useMissions';
 import { useSatellites } from './useSatellites';
 import { useLaunchSites } from './useLaunchSites';
+import {
+  Public,
+  Rocket,
+  FlightTakeoff,
+  SatelliteAlt,
+  Satellite,
+  Construction,
+} from '@mui/icons-material';
 
 /**
  * Entity type definitions with icons and routes
@@ -12,37 +20,43 @@ import { useLaunchSites } from './useLaunchSites';
 const ENTITY_TYPES = {
   country: {
     label: 'Country',
-    icon: '🌍',
+    icon: 'globe',
+    IconComponent: Public,
     route: (item) => `/countries/${item.isoCode}`,
     color: 'indigo',
   },
   engine: {
     label: 'Engine',
-    icon: '🚀',
+    icon: 'rocket',
+    IconComponent: Rocket,
     route: (item) => `/engines/${item.id}`,
     color: 'blue',
   },
   vehicle: {
     label: 'Vehicle',
-    icon: '🛸',
+    icon: 'launch',
+    IconComponent: FlightTakeoff,
     route: (item) => `/vehicles/${item.id}`,
     color: 'purple',
   },
   mission: {
     label: 'Mission',
-    icon: '🛰️',
+    icon: 'satellite',
+    IconComponent: SatelliteAlt,
     route: (item) => `/missions/${item.id}`,
     color: 'green',
   },
   satellite: {
     label: 'Satellite',
-    icon: '📡',
+    icon: 'satellite-orbital',
+    IconComponent: Satellite,
     route: (item) => `/satellites/${item.id}`,
     color: 'cyan',
   },
   launchSite: {
     label: 'Launch Site',
-    icon: '🏗️',
+    icon: 'construction',
+    IconComponent: Construction,
     route: (item) => `/launch-sites/${item.id}`,
     color: 'orange',
   },

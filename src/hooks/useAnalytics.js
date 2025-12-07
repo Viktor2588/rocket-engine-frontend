@@ -293,20 +293,21 @@ export function useEmergingNations() {
 
 /**
  * Hook for launches per year data
+ * Note: This data should come from a backend API endpoint like /api/analytics/launches-per-year
  */
 export function useLaunchesPerYear() {
-  // Mock data for demonstration - would come from backend
+  // TODO: Implement API call to fetch launch data per year
+  // Expected endpoint: GET /api/analytics/launches-per-year
+  // Expected response format:
+  // {
+  //   years: [2019, 2020, 2021, ...],
+  //   byCountry: { USA: [...], CHN: [...], ... },
+  //   total: [...]
+  // }
   const data = useMemo(() => ({
-    years: [2019, 2020, 2021, 2022, 2023, 2024],
-    byCountry: {
-      USA: [21, 40, 51, 78, 109, 135],
-      CHN: [34, 39, 55, 62, 67, 68],
-      RUS: [25, 17, 25, 22, 19, 16],
-      IND: [6, 2, 2, 5, 7, 8],
-      JPN: [4, 4, 3, 1, 2, 4],
-      EUR: [6, 5, 6, 5, 3, 4],
-    },
-    total: [102, 114, 145, 180, 212, 240],
+    years: [],
+    byCountry: {},
+    total: [],
   }), []);
 
   return { data };

@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import GlobalSearch from './GlobalSearch';
 import { ThemeToggleButton } from './ThemeToggle';
+import { Public } from '@mui/icons-material';
 
 export default function Navigation() {
   const location = useLocation();
@@ -44,7 +45,7 @@ export default function Navigation() {
         <div className="flex justify-between items-center py-3">
           {/* Logo */}
           <Link to="/" className="text-xl font-bold flex items-center gap-2 flex-shrink-0">
-            <span>🌍</span>
+            <Public style={{ fontSize: '1.5rem' }} />
             <span className="hidden md:inline">Space Capabilities</span>
             <span className="md:hidden">Space</span>
           </Link>

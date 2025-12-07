@@ -1,6 +1,8 @@
 import { useEffect, useRef, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useGlobalSearch } from '../hooks/useGlobalSearch';
+import SpaceIcon from './icons/SpaceIcons';
+import { Search } from '@mui/icons-material';
 
 /**
  * Type filter badge colors
@@ -32,7 +34,7 @@ function SearchResultItem({ result, entityTypes, onSelect }) {
         {result.image ? (
           <img src={result.image} alt="" className="w-full h-full object-cover" />
         ) : (
-          <span className="text-xl">{typeInfo.icon}</span>
+          <SpaceIcon name={typeInfo.icon} size="lg" />
         )}
       </div>
 
@@ -70,7 +72,7 @@ function TypeFilters({ selectedTypes, toggleType, entityTypes }) {
                 : 'bg-white text-gray-400 border-gray-200 hover:border-gray-300'
             }`}
           >
-            <span>{info.icon}</span>
+            <SpaceIcon name={info.icon} size="sm" />
             <span>{info.label}</span>
           </button>
         );
@@ -221,7 +223,7 @@ export default function GlobalSearch() {
           {/* No Results */}
           {!isLoading && results.length === 0 && (
             <div className="px-4 py-8 text-center text-gray-500">
-              <div className="text-4xl mb-2">🔍</div>
+              <div className="mb-2"><Search style={{ fontSize: '2.5rem' }} /></div>
               <p>No results found for "{query}"</p>
               <p className="text-sm mt-1">Try different keywords or check the filters</p>
             </div>
@@ -239,8 +241,8 @@ export default function GlobalSearch() {
               {Object.entries(groupedResults).map(([type, typeResults]) => (
                 <div key={type}>
                   <div className="px-4 py-2 bg-gray-50 border-b border-gray-100">
-                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                      {entityTypes[type].icon} {entityTypes[type].label}s ({typeResults.length})
+                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider flex items-center gap-1">
+                      <SpaceIcon name={entityTypes[type].icon} size="sm" /> {entityTypes[type].label}s ({typeResults.length})
                     </span>
                   </div>
                   <div className="divide-y divide-gray-100">

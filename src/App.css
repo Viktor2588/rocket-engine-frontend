@@ -1,7 +1,25 @@
 /* App Styles - Primarily styled with Tailwind CSS */
 .App {
   min-height: 100vh;
-  background-color: #f9fafb;
+}
+
+/* Default light mode background */
+:root {
+  --bg-color: #f9fafb;
+  --text-color: #111827;
+}
+
+/* Dark mode colors */
+:root.dark {
+  --bg-color: #111827;
+  --text-color: #f9fafb;
+}
+
+/* Apply to body for smooth transitions */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 /* Screen Reader Only - for accessibility */

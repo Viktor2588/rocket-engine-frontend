@@ -4,6 +4,7 @@ import { useCountries } from '../hooks/useCountries';
 import { useEngines } from '../hooks/useEngines';
 import { useLaunchVehicles } from '../hooks/useLaunchVehicles';
 import { useLaunchSites } from '../hooks/useLaunchSites';
+import SpaceIcon from './icons/SpaceIcons';
 
 /**
  * Space facts generator based on actual data
@@ -202,12 +203,12 @@ function useSpaceFacts() {
  * Category icons and colors
  */
 const CATEGORY_STYLES = {
-  country: { icon: '🌍', color: 'indigo' },
-  engine: { icon: '🚀', color: 'blue' },
-  vehicle: { icon: '🛸', color: 'purple' },
-  launchSite: { icon: '🏗️', color: 'orange' },
-  history: { icon: '📜', color: 'amber' },
-  technology: { icon: '⚡', color: 'cyan' },
+  country: { icon: 'globe', color: 'indigo' },
+  engine: { icon: 'rocket', color: 'blue' },
+  vehicle: { icon: 'satellite', color: 'purple' },
+  launchSite: { icon: 'launchpad', color: 'orange' },
+  history: { icon: 'history', color: 'amber' },
+  technology: { icon: 'bolt', color: 'cyan' },
 };
 
 /**
@@ -248,7 +249,7 @@ export default function DidYouKnow({ autoRotate = true, interval = 8000 }) {
       <div className="flex items-start gap-3">
         {/* Icon */}
         <div className={`flex-shrink-0 w-10 h-10 rounded-full bg-${style.color}-500/20 flex items-center justify-center`}>
-          <span className="text-xl">{style.icon}</span>
+          <SpaceIcon name={style.icon} size="lg" />
         </div>
 
         {/* Content */}

@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { LightMode, DarkMode, Computer } from '@mui/icons-material';
 
 const ThemeContext = createContext(null);
 
@@ -8,17 +9,20 @@ const ThemeContext = createContext(null);
 export const THEMES = {
   light: {
     name: 'Light',
-    icon: '☀️',
+    icon: 'light-mode',
+    IconComponent: LightMode,
     value: 'light',
   },
   dark: {
     name: 'Dark',
-    icon: '🌙',
+    icon: 'dark-mode',
+    IconComponent: DarkMode,
     value: 'dark',
   },
   system: {
     name: 'System',
-    icon: '💻',
+    icon: 'computer',
+    IconComponent: Computer,
     value: 'system',
   },
 };

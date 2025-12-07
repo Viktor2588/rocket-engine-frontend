@@ -2,14 +2,15 @@ import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useLaunchVehicles, useLaunchVehicleStatistics } from '../hooks/useLaunchVehicles';
 import LaunchVehicleCard from '../components/LaunchVehicleCard';
+import { Rocket, Recycling, PersonOutline } from '@mui/icons-material';
 
 const COUNTRIES = [
-  { code: 'USA', name: 'United States', flag: '🇺🇸' },
-  { code: 'CHN', name: 'China', flag: '🇨🇳' },
-  { code: 'RUS', name: 'Russia', flag: '🇷🇺' },
-  { code: 'FRA', name: 'France/ESA', flag: '🇫🇷' },
-  { code: 'JPN', name: 'Japan', flag: '🇯🇵' },
-  { code: 'IND', name: 'India', flag: '🇮🇳' },
+  { code: 'USA', name: 'United States' },
+  { code: 'CHN', name: 'China' },
+  { code: 'RUS', name: 'Russia' },
+  { code: 'FRA', name: 'France/ESA' },
+  { code: 'JPN', name: 'Japan' },
+  { code: 'IND', name: 'India' },
 ];
 
 export default function LaunchVehicleListPage() {
@@ -94,8 +95,8 @@ export default function LaunchVehicleListPage() {
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
-            🚀 Launch Vehicles
+          <h1 className="text-4xl font-bold text-gray-900 mb-2 flex items-center gap-3">
+            <Rocket style={{ fontSize: '2.5rem' }} className="text-blue-600" /> Launch Vehicles
           </h1>
           <p className="text-gray-600">
             Explore {vehicles.length} launch vehicles from space agencies around the world
@@ -302,8 +303,8 @@ export default function LaunchVehicleListPage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex gap-1">
-                          {vehicle.reusable && <span title="Reusable">♻️</span>}
-                          {vehicle.humanRated && <span title="Human-Rated">👨‍🚀</span>}
+                          {vehicle.reusable && <Recycling titleAccess="Reusable" className="text-purple-600" style={{ fontSize: '1.25rem' }} />}
+                          {vehicle.humanRated && <PersonOutline titleAccess="Human-Rated" className="text-green-600" style={{ fontSize: '1.25rem' }} />}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm">

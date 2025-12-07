@@ -7,6 +7,19 @@ import CapabilityScoreCard, { CategoryMetricsDetail } from '../components/Capabi
 import { MilestoneCard } from '../components/Timeline';
 import { MissionCardCompact } from '../components/MissionCard';
 import EngineCard from '../components/EngineCard';
+import {
+  PersonOutline,
+  Rocket,
+  Recycling,
+  NightlightRound,
+  SatelliteAlt,
+  Flag,
+  Circle,
+  LocalFireDepartment,
+  Assessment,
+  EmojiEvents,
+  FlightTakeoff,
+} from '@mui/icons-material';
 
 export default function CountryDetailPage() {
   const { code } = useParams();
@@ -22,7 +35,7 @@ export default function CountryDetailPage() {
       <div className="container mx-auto px-4 py-12">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading country details...</p>
+          <p className="text-gray-600 dark:text-gray-400">Loading country details...</p>
         </div>
       </div>
     );
@@ -31,10 +44,10 @@ export default function CountryDetailPage() {
   if (error) {
     return (
       <div className="container mx-auto px-4 py-12">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-          <h2 className="text-lg font-semibold text-red-800 mb-2">Error Loading Country</h2>
-          <p className="text-red-600">{error}</p>
-          <Link to="/countries" className="mt-4 inline-block text-indigo-500 hover:text-indigo-700 font-semibold">
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 text-center">
+          <h2 className="text-lg font-semibold text-red-800 dark:text-red-400 mb-2">Error Loading Country</h2>
+          <p className="text-red-600 dark:text-red-400">{error}</p>
+          <Link to="/countries" className="mt-4 inline-block text-indigo-500 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-semibold">
             ← Back to Countries
           </Link>
         </div>
@@ -46,8 +59,8 @@ export default function CountryDetailPage() {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="text-center">
-          <p className="text-gray-500 text-lg">Country not found</p>
-          <Link to="/countries" className="mt-4 inline-block text-indigo-500 hover:text-indigo-700 font-semibold">
+          <p className="text-gray-500 dark:text-gray-400 text-lg">Country not found</p>
+          <Link to="/countries" className="mt-4 inline-block text-indigo-500 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-semibold">
             ← Back to Countries
           </Link>
         </div>
@@ -57,51 +70,51 @@ export default function CountryDetailPage() {
 
   // Capability badges configuration
   const capabilities = [
-    { key: 'humanSpaceflightCapable', label: 'Human Spaceflight', icon: '👨‍🚀', color: 'bg-green-100 text-green-800' },
-    { key: 'independentLaunchCapable', label: 'Independent Launch', icon: '🚀', color: 'bg-blue-100 text-blue-800' },
-    { key: 'reusableRocketCapable', label: 'Reusable Rockets', icon: '♻️', color: 'bg-purple-100 text-purple-800' },
-    { key: 'deepSpaceCapable', label: 'Deep Space Exploration', icon: '🌙', color: 'bg-indigo-100 text-indigo-800' },
-    { key: 'spaceStationCapable', label: 'Space Station', icon: '🛰️', color: 'bg-orange-100 text-orange-800' },
-    { key: 'lunarLandingCapable', label: 'Lunar Landing', icon: '🌕', color: 'bg-yellow-100 text-yellow-800' },
-    { key: 'marsLandingCapable', label: 'Mars Landing', icon: '🔴', color: 'bg-red-100 text-red-800' },
+    { key: 'humanSpaceflightCapable', label: 'Human Spaceflight', IconComponent: PersonOutline, color: 'bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300' },
+    { key: 'independentLaunchCapable', label: 'Independent Launch', IconComponent: Rocket, color: 'bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300' },
+    { key: 'reusableRocketCapable', label: 'Reusable Rockets', IconComponent: Recycling, color: 'bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-300' },
+    { key: 'deepSpaceCapable', label: 'Deep Space Exploration', IconComponent: NightlightRound, color: 'bg-indigo-100 dark:bg-indigo-900/50 text-indigo-800 dark:text-indigo-300' },
+    { key: 'spaceStationCapable', label: 'Space Station', IconComponent: SatelliteAlt, color: 'bg-orange-100 dark:bg-orange-900/50 text-orange-800 dark:text-orange-300' },
+    { key: 'lunarLandingCapable', label: 'Lunar Landing', IconComponent: NightlightRound, color: 'bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-300' },
+    { key: 'marsLandingCapable', label: 'Mars Landing', IconComponent: Circle, color: 'bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300' },
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
       <div className="container mx-auto px-4">
         {/* Back Button */}
-        <Link to="/countries" className="text-indigo-500 hover:text-indigo-700 font-semibold mb-6 inline-block">
+        <Link to="/countries" className="text-indigo-500 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-semibold mb-6 inline-block">
           ← Back to Countries
         </Link>
 
         {/* Country Header */}
-        <div className="bg-white rounded-lg shadow-md p-8 mb-8">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 mb-8">
           <div className="flex flex-col md:flex-row items-start justify-between gap-6 mb-6">
             <div className="flex items-start gap-4">
               <div className="text-6xl">
                 {country.flagUrl ? (
                   <img src={country.flagUrl} alt={`${country.name} flag`} className="w-20 h-14 object-cover rounded shadow" />
                 ) : (
-                  <span>🏳️</span>
+                  <Flag style={{ fontSize: '3rem' }} className="text-gray-400" />
                 )}
               </div>
               <div>
-                <h1 className="text-4xl font-bold text-gray-900 mb-2">{country.name}</h1>
-                <p className="text-lg text-gray-600">
+                <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">{country.name}</h1>
+                <p className="text-lg text-gray-600 dark:text-gray-300">
                   {country.spaceAgencyName}
                   {country.spaceAgencyAcronym && ` (${country.spaceAgencyAcronym})`}
                 </p>
-                <p className="text-sm text-gray-500 mt-1">
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                   Region: {country.region}
                   {country.spaceAgencyFounded && ` • Established ${country.spaceAgencyFounded}`}
                 </p>
               </div>
             </div>
             <div className="text-center">
-              <div className="text-5xl font-bold text-indigo-600">
+              <div className="text-5xl font-bold text-indigo-600 dark:text-indigo-400">
                 {(country.overallCapabilityScore || 0).toFixed(0)}
               </div>
-              <div className="text-sm text-gray-500">Capability Score</div>
+              <div className="text-sm text-gray-500 dark:text-gray-400">Capability Score</div>
             </div>
           </div>
 
@@ -111,10 +124,10 @@ export default function CountryDetailPage() {
               <span
                 key={cap.key}
                 className={`inline-flex items-center gap-2 px-3 py-2 rounded-full text-sm font-medium ${
-                  country[cap.key] ? cap.color : 'bg-gray-100 text-gray-400 line-through'
+                  country[cap.key] ? cap.color : 'bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500 line-through'
                 }`}
               >
-                <span>{cap.icon}</span>
+                <cap.IconComponent style={{ fontSize: '1rem' }} />
                 {cap.label}
               </span>
             ))}
@@ -122,48 +135,48 @@ export default function CountryDetailPage() {
 
           {/* Description */}
           {country.description && (
-            <div className="bg-gray-50 rounded-lg p-4 mb-6">
-              <p className="text-gray-700 leading-relaxed">{country.description}</p>
+            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mb-6">
+              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{country.description}</p>
             </div>
           )}
 
           {/* Key Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            <div className="bg-blue-50 p-4 rounded-lg text-center">
-              <p className="text-sm text-gray-600 mb-1">Total Launches</p>
-              <p className="text-2xl font-bold text-blue-600">{country.totalLaunches ?? '-'}</p>
+            <div className="bg-blue-50 dark:bg-blue-900/30 p-4 rounded-lg text-center">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Total Launches</p>
+              <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{country.totalLaunches ?? '-'}</p>
             </div>
-            <div className="bg-green-50 p-4 rounded-lg text-center">
-              <p className="text-sm text-gray-600 mb-1">Success Rate</p>
-              <p className="text-2xl font-bold text-green-600">
+            <div className="bg-green-50 dark:bg-green-900/30 p-4 rounded-lg text-center">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Success Rate</p>
+              <p className="text-2xl font-bold text-green-600 dark:text-green-400">
                 {country.launchSuccessRate
                   ? `${country.launchSuccessRate.toFixed(1)}%`
                   : '-'}
               </p>
             </div>
-            <div className="bg-purple-50 p-4 rounded-lg text-center">
-              <p className="text-sm text-gray-600 mb-1">Annual Budget</p>
-              <p className="text-2xl font-bold text-purple-600">
+            <div className="bg-purple-50 dark:bg-purple-900/30 p-4 rounded-lg text-center">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Annual Budget</p>
+              <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">
                 {country.annualBudgetUsd
                   ? `$${(country.annualBudgetUsd / 1e9).toFixed(1)}B`
                   : '-'}
               </p>
             </div>
-            <div className="bg-orange-50 p-4 rounded-lg text-center">
-              <p className="text-sm text-gray-600 mb-1">% of GDP</p>
-              <p className="text-2xl font-bold text-orange-600">
+            <div className="bg-orange-50 dark:bg-orange-900/30 p-4 rounded-lg text-center">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">% of GDP</p>
+              <p className="text-2xl font-bold text-orange-600 dark:text-orange-400">
                 {country.budgetAsPercentOfGdp
                   ? `${country.budgetAsPercentOfGdp.toFixed(3)}%`
                   : '-'}
               </p>
             </div>
-            <div className="bg-indigo-50 p-4 rounded-lg text-center">
-              <p className="text-sm text-gray-600 mb-1">Active Astronauts</p>
-              <p className="text-2xl font-bold text-indigo-600">{country.activeAstronauts ?? '-'}</p>
+            <div className="bg-indigo-50 dark:bg-indigo-900/30 p-4 rounded-lg text-center">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Active Astronauts</p>
+              <p className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">{country.activeAstronauts ?? '-'}</p>
             </div>
-            <div className="bg-gray-100 p-4 rounded-lg text-center">
-              <p className="text-sm text-gray-600 mb-1">Employees</p>
-              <p className="text-2xl font-bold text-gray-600">
+            <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg text-center">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Employees</p>
+              <p className="text-2xl font-bold text-gray-600 dark:text-gray-300">
                 {country.totalSpaceAgencyEmployees
                   ? country.totalSpaceAgencyEmployees.toLocaleString()
                   : '-'}
@@ -176,9 +189,9 @@ export default function CountryDetailPage() {
           {/* Left Column - Capability Score */}
           <div className="lg:col-span-2">
             {sciLoading ? (
-              <div className="bg-white rounded-lg shadow-md p-8 text-center">
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 text-center">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500 mx-auto mb-4"></div>
-                <p className="text-gray-500">Loading capability analysis...</p>
+                <p className="text-gray-500 dark:text-gray-400">Loading capability analysis...</p>
               </div>
             ) : sciBreakdown ? (
               <CapabilityScoreCard breakdown={sciBreakdown} />
@@ -190,8 +203,8 @@ export default function CountryDetailPage() {
           {/* Right Column - Quick Actions */}
           <div className="space-y-6">
             {/* Actions Card */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-lg font-bold text-gray-800 mb-4">Actions</h3>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+              <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4">Actions</h3>
               <div className="space-y-3">
                 <Link
                   to={`/compare/countries?c1=${country.isoCode}`}
@@ -207,7 +220,7 @@ export default function CountryDetailPage() {
                 </Link>
                 <Link
                   to="/countries"
-                  className="block w-full text-center bg-gray-200 text-gray-700 px-4 py-3 rounded-lg font-semibold hover:bg-gray-300 transition"
+                  className="block w-full text-center bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-4 py-3 rounded-lg font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition"
                 >
                   Back to All Countries
                 </Link>
@@ -215,8 +228,8 @@ export default function CountryDetailPage() {
             </div>
 
             {/* Agency Info Card */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-lg font-bold text-gray-800 mb-4">Space Agency</h3>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+              <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4">Space Agency</h3>
               <div className="space-y-3 text-sm">
                 {country.spaceAgencyLogo && (
                   <div className="flex justify-center mb-4">
@@ -224,19 +237,19 @@ export default function CountryDetailPage() {
                   </div>
                 )}
                 <div>
-                  <p className="font-semibold text-gray-700">Name</p>
-                  <p className="text-gray-600">{country.spaceAgencyName}</p>
+                  <p className="font-semibold text-gray-700 dark:text-gray-300">Name</p>
+                  <p className="text-gray-600 dark:text-gray-400">{country.spaceAgencyName}</p>
                 </div>
                 {country.spaceAgencyAcronym && (
                   <div>
-                    <p className="font-semibold text-gray-700">Acronym</p>
-                    <p className="text-gray-600">{country.spaceAgencyAcronym}</p>
+                    <p className="font-semibold text-gray-700 dark:text-gray-300">Acronym</p>
+                    <p className="text-gray-600 dark:text-gray-400">{country.spaceAgencyAcronym}</p>
                   </div>
                 )}
                 {country.spaceAgencyFounded && (
                   <div>
-                    <p className="font-semibold text-gray-700">Founded</p>
-                    <p className="text-gray-600">{country.spaceAgencyFounded}</p>
+                    <p className="font-semibold text-gray-700 dark:text-gray-300">Founded</p>
+                    <p className="text-gray-600 dark:text-gray-400">{country.spaceAgencyFounded}</p>
                   </div>
                 )}
               </div>
@@ -247,8 +260,8 @@ export default function CountryDetailPage() {
         {/* SCI Category Details */}
         {sciBreakdown && (
           <div className="mt-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              📊 Space Capability Index Breakdown
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+              <Assessment style={{ fontSize: '1.75rem' }} className="text-indigo-600 dark:text-indigo-400" /> Space Capability Index Breakdown
             </h2>
             <CategoryMetricsDetail breakdown={sciBreakdown} />
           </div>
@@ -256,8 +269,8 @@ export default function CountryDetailPage() {
 
         {/* Engines Section */}
         <div className="mt-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            🔥 Rocket Engines ({engines?.length || 0})
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+            <LocalFireDepartment style={{ fontSize: '1.75rem' }} className="text-orange-500" /> Rocket Engines ({engines?.length || 0})
           </h2>
           {enginesLoading ? (
             <div className="text-center py-8">
@@ -270,7 +283,7 @@ export default function CountryDetailPage() {
               ))}
             </div>
           ) : (
-            <div className="bg-white rounded-lg shadow p-8 text-center text-gray-500">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-8 text-center text-gray-500 dark:text-gray-400">
               No engines found for this country
             </div>
           )}
@@ -278,7 +291,7 @@ export default function CountryDetailPage() {
             <div className="text-center mt-4">
               <Link
                 to={`/engines?country=${country.isoCode}`}
-                className="text-indigo-600 hover:text-indigo-800 font-semibold"
+                className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-semibold"
               >
                 View all {engines.length} engines →
               </Link>
@@ -288,8 +301,8 @@ export default function CountryDetailPage() {
 
         {/* Launch Vehicles Section */}
         <div className="mt-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            🚀 Launch Vehicles ({vehicles?.length || 0})
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+            <Rocket style={{ fontSize: '1.75rem' }} className="text-blue-600" /> Launch Vehicles ({vehicles?.length || 0})
           </h2>
           {vehiclesLoading ? (
             <div className="text-center py-8">
@@ -298,56 +311,56 @@ export default function CountryDetailPage() {
           ) : vehicles && vehicles.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {vehicles.map(vehicle => (
-                <div key={vehicle.id} className="bg-white rounded-lg shadow-md p-6">
+                <div key={vehicle.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
                   <div className="flex justify-between items-start mb-4">
                     <div>
-                      <h3 className="text-xl font-bold text-gray-800">{vehicle.name}</h3>
+                      <h3 className="text-xl font-bold text-gray-800 dark:text-white">{vehicle.name}</h3>
                       {vehicle.variant && (
-                        <p className="text-sm text-gray-500">{vehicle.variant}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">{vehicle.variant}</p>
                       )}
                     </div>
                     <span className={`px-2 py-1 text-xs rounded-full ${
-                      vehicle.status === 'Active' ? 'bg-green-100 text-green-800' :
-                      vehicle.status === 'Development' ? 'bg-yellow-100 text-yellow-800' :
-                      'bg-gray-100 text-gray-800'
+                      vehicle.status === 'Active' ? 'bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300' :
+                      vehicle.status === 'Development' ? 'bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-300' :
+                      'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300'
                     }`}>
                       {vehicle.status}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-600 mb-4">{vehicle.manufacturer}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">{vehicle.manufacturer}</p>
                   <div className="grid grid-cols-2 gap-3 text-sm">
-                    <div className="bg-gray-50 p-2 rounded">
-                      <p className="text-xs text-gray-500">LEO Payload</p>
-                      <p className="font-semibold">
+                    <div className="bg-gray-50 dark:bg-gray-700 p-2 rounded">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">LEO Payload</p>
+                      <p className="font-semibold text-gray-900 dark:text-white">
                         {vehicle.payloadToLeoKg ? `${(vehicle.payloadToLeoKg / 1000).toFixed(1)}t` : '-'}
                       </p>
                     </div>
-                    <div className="bg-gray-50 p-2 rounded">
-                      <p className="text-xs text-gray-500">Launches</p>
-                      <p className="font-semibold">{vehicle.totalLaunches ?? '-'}</p>
+                    <div className="bg-gray-50 dark:bg-gray-700 p-2 rounded">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Launches</p>
+                      <p className="font-semibold text-gray-900 dark:text-white">{vehicle.totalLaunches ?? '-'}</p>
                     </div>
-                    <div className="bg-gray-50 p-2 rounded">
-                      <p className="text-xs text-gray-500">Success Rate</p>
-                      <p className="font-semibold">
+                    <div className="bg-gray-50 dark:bg-gray-700 p-2 rounded">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Success Rate</p>
+                      <p className="font-semibold text-gray-900 dark:text-white">
                         {vehicle.successRate ? `${(vehicle.successRate * 100).toFixed(0)}%` : '-'}
                       </p>
                     </div>
-                    <div className="bg-gray-50 p-2 rounded">
-                      <p className="text-xs text-gray-500">Cost/Launch</p>
-                      <p className="font-semibold">
+                    <div className="bg-gray-50 dark:bg-gray-700 p-2 rounded">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Cost/Launch</p>
+                      <p className="font-semibold text-gray-900 dark:text-white">
                         {vehicle.costPerLaunchUsd ? `$${(vehicle.costPerLaunchUsd / 1e6).toFixed(0)}M` : '-'}
                       </p>
                     </div>
                   </div>
                   <div className="flex gap-2 mt-4">
                     {vehicle.reusable && (
-                      <span className="inline-flex items-center px-2 py-1 bg-purple-50 text-purple-700 text-xs rounded-full">
-                        ♻️ Reusable
+                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-purple-50 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300 text-xs rounded-full">
+                        <Recycling style={{ fontSize: '0.875rem' }} /> Reusable
                       </span>
                     )}
                     {vehicle.humanRated && (
-                      <span className="inline-flex items-center px-2 py-1 bg-green-50 text-green-700 text-xs rounded-full">
-                        👨‍🚀 Human-Rated
+                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-50 dark:bg-green-900/50 text-green-700 dark:text-green-300 text-xs rounded-full">
+                        <PersonOutline style={{ fontSize: '0.875rem' }} /> Human-Rated
                       </span>
                     )}
                   </div>
@@ -355,7 +368,7 @@ export default function CountryDetailPage() {
               ))}
             </div>
           ) : (
-            <div className="bg-white rounded-lg shadow p-8 text-center text-gray-500">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-8 text-center text-gray-500 dark:text-gray-400">
               No launch vehicles found for this country
             </div>
           )}
@@ -364,13 +377,13 @@ export default function CountryDetailPage() {
         {/* Space Milestones Section */}
         <div className="mt-8">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-bold text-gray-900">
-              🏆 Space Milestones ({milestones?.length || 0})
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+              <EmojiEvents style={{ fontSize: '1.75rem' }} className="text-yellow-500" /> Space Milestones ({milestones?.length || 0})
             </h2>
             {milestones && milestones.length > 0 && (
               <Link
                 to={`/countries/${country.isoCode}/timeline`}
-                className="text-indigo-600 hover:text-indigo-800 font-semibold text-sm"
+                className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-semibold text-sm"
               >
                 View Full Timeline →
               </Link>
@@ -385,8 +398,8 @@ export default function CountryDetailPage() {
               {/* World Firsts */}
               {milestones.filter(m => m.isFirst).length > 0 && (
                 <div className="mb-4">
-                  <h3 className="text-lg font-semibold text-gray-700 mb-3 flex items-center gap-2">
-                    <span>🥇</span> World First Achievements
+                  <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
+                    <EmojiEvents style={{ fontSize: '1.25rem' }} className="text-yellow-500" /> World First Achievements
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {milestones.filter(m => m.isFirst).slice(0, 6).map(milestone => (
@@ -399,7 +412,7 @@ export default function CountryDetailPage() {
               {/* Other Milestones */}
               {milestones.filter(m => !m.isFirst).length > 0 && (
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-700 mb-3">Other Achievements</h3>
+                  <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3">Other Achievements</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {milestones.filter(m => !m.isFirst).slice(0, 6).map(milestone => (
                       <MilestoneCard key={milestone.id} milestone={milestone} showCountry={false} compact />
@@ -412,7 +425,7 @@ export default function CountryDetailPage() {
                 <div className="text-center mt-4">
                   <Link
                     to={`/countries/${country.isoCode}/timeline`}
-                    className="text-indigo-600 hover:text-indigo-800 font-semibold"
+                    className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-semibold"
                   >
                     View all {milestones.length} milestones →
                   </Link>
@@ -420,7 +433,7 @@ export default function CountryDetailPage() {
               )}
             </>
           ) : (
-            <div className="bg-white rounded-lg shadow p-8 text-center text-gray-500">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-8 text-center text-gray-500 dark:text-gray-400">
               No milestones recorded for this country
             </div>
           )}
@@ -429,13 +442,13 @@ export default function CountryDetailPage() {
         {/* Space Missions Section */}
         <div className="mt-8">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-bold text-gray-900">
-              🛸 Space Missions ({missions?.length || 0})
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+              <FlightTakeoff style={{ fontSize: '1.75rem' }} className="text-indigo-600 dark:text-indigo-400" /> Space Missions ({missions?.length || 0})
             </h2>
             {missions && missions.length > 0 && (
               <Link
                 to={`/missions?country=${country.isoCode}`}
-                className="text-indigo-600 hover:text-indigo-800 font-semibold text-sm"
+                className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-semibold text-sm"
               >
                 View All Missions →
               </Link>
@@ -449,27 +462,27 @@ export default function CountryDetailPage() {
           ) : missionSummary && missions && missions.length > 0 ? (
             <>
               {/* Mission Stats Summary */}
-              <div className="bg-white rounded-lg shadow-md p-4 mb-4">
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 mb-4">
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
-                  <div className="p-2 bg-indigo-50 rounded-lg">
-                    <div className="text-xl font-bold text-indigo-600">{missionSummary.totalMissions}</div>
-                    <div className="text-xs text-gray-500">Total</div>
+                  <div className="p-2 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg">
+                    <div className="text-xl font-bold text-indigo-600 dark:text-indigo-400">{missionSummary.totalMissions}</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">Total</div>
                   </div>
-                  <div className="p-2 bg-green-50 rounded-lg">
-                    <div className="text-xl font-bold text-green-600">{missionSummary.activeMissions}</div>
-                    <div className="text-xs text-gray-500">Active</div>
+                  <div className="p-2 bg-green-50 dark:bg-green-900/30 rounded-lg">
+                    <div className="text-xl font-bold text-green-600 dark:text-green-400">{missionSummary.activeMissions}</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">Active</div>
                   </div>
-                  <div className="p-2 bg-purple-50 rounded-lg">
-                    <div className="text-xl font-bold text-purple-600">{missionSummary.crewedMissions}</div>
-                    <div className="text-xs text-gray-500">Crewed</div>
+                  <div className="p-2 bg-purple-50 dark:bg-purple-900/30 rounded-lg">
+                    <div className="text-xl font-bold text-purple-600 dark:text-purple-400">{missionSummary.crewedMissions}</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">Crewed</div>
                   </div>
-                  <div className="p-2 bg-teal-50 rounded-lg">
-                    <div className="text-xl font-bold text-teal-600">{missionSummary.successRate}%</div>
-                    <div className="text-xs text-gray-500">Success</div>
+                  <div className="p-2 bg-teal-50 dark:bg-teal-900/30 rounded-lg">
+                    <div className="text-xl font-bold text-teal-600 dark:text-teal-400">{missionSummary.successRate}%</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">Success</div>
                   </div>
-                  <div className="p-2 bg-orange-50 rounded-lg">
-                    <div className="text-xl font-bold text-orange-600">{missionSummary.totalCrewMembers}</div>
-                    <div className="text-xs text-gray-500">Astronauts</div>
+                  <div className="p-2 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
+                    <div className="text-xl font-bold text-orange-600 dark:text-orange-400">{missionSummary.totalCrewMembers}</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">Astronauts</div>
                   </div>
                 </div>
               </div>
@@ -485,7 +498,7 @@ export default function CountryDetailPage() {
                 <div className="text-center mt-4">
                   <Link
                     to={`/missions?country=${country.isoCode}`}
-                    className="text-indigo-600 hover:text-indigo-800 font-semibold"
+                    className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-semibold"
                   >
                     View all {missions.length} missions →
                   </Link>
@@ -493,14 +506,14 @@ export default function CountryDetailPage() {
               )}
             </>
           ) : (
-            <div className="bg-white rounded-lg shadow p-8 text-center text-gray-500">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-8 text-center text-gray-500 dark:text-gray-400">
               No missions recorded for this country
             </div>
           )}
         </div>
 
         {/* Footer */}
-        <div className="mt-8 text-center text-sm text-gray-500">
+        <div className="mt-8 text-center text-sm text-gray-500 dark:text-gray-400">
           <p>
             Data sources: Wikipedia, official space agency reports.
             Last updated: December 2025

@@ -12,6 +12,7 @@ import {
 import { Radar, Doughnut } from 'react-chartjs-2';
 import { CATEGORY_WEIGHTS, SCI_TIER_THRESHOLDS } from '../types';
 import { CAPABILITY_CATEGORIES } from '../constants';
+import SpaceIcon from './icons/SpaceIcons';
 
 // Register Chart.js components
 ChartJS.register(
@@ -168,7 +169,7 @@ export default function CapabilityScoreCard({
                 <div key={key}>
                   <div className="flex justify-between items-center mb-1">
                     <span className="text-sm text-gray-700 flex items-center gap-2">
-                      <span>{category.icon}</span>
+                      <SpaceIcon name={category.icon} size="sm" />
                       {category.label}
                     </span>
                     <span className={`text-sm font-semibold ${categoryColor.text}`}>{categoryScore.toFixed(0)}</span>
@@ -324,7 +325,7 @@ function SCIBreakdownCard({ breakdown, showDetails = true, compact = false }) {
               const catInfo = CATEGORY_WEIGHTS?.find(cw => cw.category === catScore.category);
               return (
                 <div key={catScore.category} className="flex items-center gap-3">
-                  <span className="text-xl w-8">{catInfo?.icon}</span>
+                  <span className="w-8"><SpaceIcon name={catInfo?.icon} size="lg" /></span>
                   <div className="flex-1">
                     <div className="flex justify-between items-center mb-1">
                       <span className="text-sm font-medium text-gray-700">{catInfo?.label}</span>
@@ -360,7 +361,7 @@ function SCIBreakdownCard({ breakdown, showDetails = true, compact = false }) {
                   const catInfo = CATEGORY_WEIGHTS?.find(cw => cw.category === s);
                   return (
                     <li key={s} className="text-sm text-green-700 flex items-center gap-2">
-                      <span>{catInfo?.icon}</span>
+                      <SpaceIcon name={catInfo?.icon} size="sm" />
                       {catInfo?.label}
                     </li>
                   );
@@ -376,7 +377,7 @@ function SCIBreakdownCard({ breakdown, showDetails = true, compact = false }) {
                   const catInfo = CATEGORY_WEIGHTS?.find(cw => cw.category === w);
                   return (
                     <li key={w} className="text-sm text-amber-700 flex items-center gap-2">
-                      <span>{catInfo?.icon}</span>
+                      <SpaceIcon name={catInfo?.icon} size="sm" />
                       {catInfo?.label}
                     </li>
                   );
@@ -613,7 +614,7 @@ export function CategoryScoreBar({ category, score, showLabel = true }) {
 
   return (
     <div className="flex items-center gap-2">
-      <span className="text-lg">{catInfo.icon}</span>
+      <SpaceIcon name={catInfo.icon} size="md" />
       {showLabel && (
         <span className="text-sm text-gray-600 w-28 truncate">{catInfo.label}</span>
       )}
@@ -641,7 +642,7 @@ export function CategoryMetricsDetail({ categoryScore }) {
   return (
     <div className="bg-white rounded-lg shadow p-4">
       <div className="flex items-center gap-2 mb-3">
-        <span className="text-2xl">{catInfo?.icon}</span>
+        <SpaceIcon name={catInfo?.icon} size="xl" />
         <h3 className="text-lg font-semibold text-gray-800">{catInfo?.label}</h3>
         <span className="ml-auto text-2xl font-bold" style={{ color: catInfo?.color }}>
           {categoryScore.score?.toFixed(1)}

@@ -4,14 +4,15 @@ import { useCountries } from '../hooks/useCountries';
 import CapabilityRadarChart, { CapabilityComparisonTable } from '../components/charts/CapabilityRadarChart';
 import GapAnalysis from '../components/comparison/GapAnalysis';
 import StrengthsWeaknesses from '../components/comparison/StrengthsWeaknesses';
+import SpaceIcon from '../components/icons/SpaceIcons';
 
 const MAX_COMPARE_COUNTRIES = 4;
 
 // Tab definitions
 const TABS = [
-  { id: 'overview', label: 'Overview', icon: '📊' },
-  { id: 'gap-analysis', label: 'Gap Analysis', icon: '📈' },
-  { id: 'swot', label: 'SWOT Analysis', icon: '🎯' },
+  { id: 'overview', label: 'Overview', icon: 'chart' },
+  { id: 'gap-analysis', label: 'Gap Analysis', icon: 'stats' },
+  { id: 'swot', label: 'SWOT Analysis', icon: 'target' },
 ];
 
 /**
@@ -246,7 +247,7 @@ function TabNavigation({ activeTab, onTabChange, selectedCount }) {
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
-            <span>{tab.icon}</span>
+            <SpaceIcon name={tab.icon} size="sm" />
             <span>{tab.label}</span>
             {isDisabled && (
               <span className="text-xs text-gray-400">
@@ -267,7 +268,7 @@ function OverviewTab({ selectedCountries }) {
   if (selectedCountries.length === 0) {
     return (
       <div className="bg-white rounded-lg shadow-md p-12 text-center">
-        <div className="text-6xl mb-4">🛰️</div>
+        <div className="text-6xl mb-4"><SpaceIcon name="satellite" size="4xl" /></div>
         <h2 className="text-xl font-semibold text-gray-800 mb-2">
           Select Countries to Compare
         </h2>
@@ -550,7 +551,7 @@ export default function CountryComparisonPage() {
 
             {activeTab === 'gap-analysis' && selectedCountries.length !== 2 && (
               <div className="bg-white rounded-lg shadow-md p-12 text-center">
-                <div className="text-6xl mb-4">📊</div>
+                <div className="text-6xl mb-4"><SpaceIcon name="chart" size="4xl" /></div>
                 <h2 className="text-xl font-semibold text-gray-800 mb-2">
                   Select Exactly Two Countries
                 </h2>
@@ -570,7 +571,7 @@ export default function CountryComparisonPage() {
 
             {activeTab === 'swot' && selectedCountries.length !== 1 && (
               <div className="bg-white rounded-lg shadow-md p-12 text-center">
-                <div className="text-6xl mb-4">🎯</div>
+                <div className="text-6xl mb-4"><SpaceIcon name="target" size="4xl" /></div>
                 <h2 className="text-xl font-semibold text-gray-800 mb-2">
                   Select One Country
                 </h2>
@@ -586,7 +587,7 @@ export default function CountryComparisonPage() {
         {/* Empty State */}
         {selectedCountries.length === 0 && (
           <div className="mt-8 bg-white rounded-lg shadow-md p-12 text-center">
-            <div className="text-6xl mb-4">🛰️</div>
+            <div className="text-6xl mb-4"><SpaceIcon name="satellite" size="4xl" /></div>
             <h2 className="text-xl font-semibold text-gray-800 mb-2">
               Select Countries to Compare
             </h2>

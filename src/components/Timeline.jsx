@@ -1,6 +1,8 @@
 import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { MILESTONE_TYPE_INFO } from '../types';
+import SpaceIcon from './icons/SpaceIcons';
+import { EmojiEvents, CalendarToday } from '@mui/icons-material';
 
 /**
  * Timeline visualization components for space milestones
@@ -43,7 +45,7 @@ export function MilestoneCard({ milestone, compact = false, showCountry = true }
   if (compact) {
     return (
       <div className="flex items-center gap-3 p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition">
-        <span className="text-2xl">{typeInfo?.icon || '🏆'}</span>
+        <SpaceIcon name={typeInfo?.icon || 'trophy'} size="xl" />
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
             {showCountry && (
@@ -71,7 +73,7 @@ export function MilestoneCard({ milestone, compact = false, showCountry = true }
       <div className="p-4">
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-3">
-            <span className="text-3xl">{typeInfo?.icon || '🏆'}</span>
+            <SpaceIcon name={typeInfo?.icon || 'trophy'} size="2xl" />
             <div>
               {showCountry && (
                 <div className="flex items-center gap-2 text-sm text-gray-500 mb-1">
@@ -84,7 +86,7 @@ export function MilestoneCard({ milestone, compact = false, showCountry = true }
           </div>
           {milestone.isFirst && (
             <span className="px-2 py-1 bg-yellow-100 text-yellow-800 text-sm rounded-full font-bold flex items-center gap-1">
-              <span>🥇</span> First
+              <EmojiEvents style={{ fontSize: '1rem' }} /> First
             </span>
           )}
         </div>
@@ -92,8 +94,8 @@ export function MilestoneCard({ milestone, compact = false, showCountry = true }
         <p className="text-sm text-gray-600 mb-3">{milestone.description}</p>
 
         <div className="flex flex-wrap items-center gap-2 text-sm">
-          <span className="px-2 py-1 bg-gray-100 rounded text-gray-700">
-            📅 {new Date(milestone.dateAchieved).toLocaleDateString('en-US', {
+          <span className="px-2 py-1 bg-gray-100 rounded text-gray-700 flex items-center gap-1">
+            <CalendarToday style={{ fontSize: '1rem' }} /> {new Date(milestone.dateAchieved).toLocaleDateString('en-US', {
               year: 'numeric',
               month: 'short',
               day: 'numeric'
@@ -207,7 +209,7 @@ export function HorizontalTimeline({ milestones, onMilestoneClick }) {
                 <div className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 z-20">
                   <div className="bg-gray-900 text-white text-xs rounded-lg p-3 min-w-[200px] shadow-lg">
                     <div className="flex items-center gap-2 mb-1">
-                      <span>{typeInfo?.icon}</span>
+                      <SpaceIcon name={typeInfo?.icon} size="sm" />
                       <span className="font-semibold">{m.title}</span>
                     </div>
                     <div className="flex items-center gap-2 text-gray-300">
@@ -272,7 +274,7 @@ export function VerticalTimeline({ milestones, showCountry = true }) {
                 `}
                 style={{ backgroundColor: typeInfo?.color || '#6B7280' }}
               >
-                {typeInfo?.icon?.charAt(0) || '🏆'}
+                <SpaceIcon name={typeInfo?.icon || 'trophy'} size="sm" className="text-white" />
               </div>
 
               {/* Content */}
@@ -294,8 +296,8 @@ export function VerticalTimeline({ milestones, showCountry = true }) {
                     )}
                     <h3 className="font-bold text-gray-800">{m.title}</h3>
                     {m.isFirst && (
-                      <span className="px-2 py-0.5 bg-yellow-100 text-yellow-800 text-xs rounded-full font-bold">
-                        🥇 First
+                      <span className="px-2 py-0.5 bg-yellow-100 text-yellow-800 text-xs rounded-full font-bold flex items-center gap-1">
+                        <EmojiEvents style={{ fontSize: '0.875rem' }} /> First
                       </span>
                     )}
                   </div>
@@ -383,11 +385,11 @@ export function SpaceRaceView({ country1Timeline, country2Timeline }) {
                     <div className="text-xs text-gray-500 mb-1">
                       {m.year}
                     </div>
-                    <div className="font-semibold text-sm text-gray-800">
-                      {typeInfo?.icon} {m.title}
+                    <div className="font-semibold text-sm text-gray-800 flex items-center gap-1">
+                      <SpaceIcon name={typeInfo?.icon} size="sm" /> {m.title}
                     </div>
                     {m.isFirst && (
-                      <span className="text-xs text-yellow-600 font-bold">🥇 FIRST</span>
+                      <span className="text-xs text-yellow-600 font-bold flex items-center gap-1"><EmojiEvents style={{ fontSize: '0.75rem' }} /> FIRST</span>
                     )}
                   </div>
                 </div>
@@ -419,13 +421,13 @@ export function SpaceRaceView({ country1Timeline, country2Timeline }) {
  */
 export function CategoryFilter({ selectedCategory, onSelect }) {
   const categories = [
-    { key: null, label: 'All', icon: '🌟' },
-    { key: 'orbital', label: 'Orbital', icon: '🛰️' },
-    { key: 'lunar', label: 'Lunar', icon: '🌙' },
-    { key: 'planetary', label: 'Planetary', icon: '🪐' },
-    { key: 'human', label: 'Human', icon: '👨‍🚀' },
-    { key: 'technology', label: 'Technology', icon: '⚡' },
-    { key: 'other', label: 'Other', icon: '☄️' }
+    { key: null, label: 'All', icon: 'star' },
+    { key: 'orbital', label: 'Orbital', icon: 'satellite' },
+    { key: 'lunar', label: 'Lunar', icon: 'moon' },
+    { key: 'planetary', label: 'Planetary', icon: 'globe' },
+    { key: 'human', label: 'Human', icon: 'astronaut' },
+    { key: 'technology', label: 'Technology', icon: 'bolt' },
+    { key: 'other', label: 'Other', icon: 'rocket' }
   ];
 
   return (
@@ -443,7 +445,7 @@ export function CategoryFilter({ selectedCategory, onSelect }) {
             }
           `}
         >
-          <span>{cat.icon}</span>
+          <SpaceIcon name={cat.icon} size="sm" />
           <span>{cat.label}</span>
         </button>
       ))}

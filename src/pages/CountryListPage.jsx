@@ -5,6 +5,15 @@ import CountryCard from '../components/CountryCard';
 import { CapabilityScoreBadge } from '../components/CapabilityScoreCard';
 import WorldMapView from '../components/maps/WorldMapView';
 import { REGIONS } from '../constants';
+import {
+  Public,
+  PersonOutline,
+  Rocket,
+  Recycling,
+  NightlightRound,
+  SatelliteAlt,
+  Flag,
+} from '@mui/icons-material';
 
 export default function CountryListPage() {
   const { countries, loading, error } = useCountries();
@@ -72,7 +81,7 @@ export default function CountryListPage() {
       <div className="container mx-auto px-4 py-12">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading space programs...</p>
+          <p className="text-gray-600 dark:text-gray-400">Loading space programs...</p>
         </div>
       </div>
     );
@@ -81,10 +90,10 @@ export default function CountryListPage() {
   if (error) {
     return (
       <div className="container mx-auto px-4 py-12">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-          <h2 className="text-lg font-semibold text-red-800 mb-2">Error Loading Countries</h2>
-          <p className="text-red-600">{error}</p>
-          <p className="text-sm text-red-500 mt-2">
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 text-center">
+          <h2 className="text-lg font-semibold text-red-800 dark:text-red-400 mb-2">Error Loading Countries</h2>
+          <p className="text-red-600 dark:text-red-400">{error}</p>
+          <p className="text-sm text-red-500 dark:text-red-500 mt-2">
             Make sure the backend API is running on http://localhost:8080
           </p>
         </div>
@@ -93,53 +102,53 @@ export default function CountryListPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
-            🌍 Global Space Programs
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-3">
+            <Public style={{ fontSize: '2.5rem' }} className="text-indigo-600 dark:text-indigo-400" /> Global Space Programs
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400">
             Explore and compare space capabilities across {stats.totalCountries} nations
           </p>
         </div>
 
         {/* Quick Stats */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
-          <div className="bg-white rounded-lg shadow p-4 text-center">
-            <p className="text-3xl font-bold text-indigo-600">{stats.totalCountries}</p>
-            <p className="text-sm text-gray-500">Space Programs</p>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
+            <p className="text-3xl font-bold text-indigo-600 dark:text-indigo-400">{stats.totalCountries}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Space Programs</p>
           </div>
-          <div className="bg-white rounded-lg shadow p-4 text-center">
-            <p className="text-3xl font-bold text-green-600">{stats.humanSpaceflight}</p>
-            <p className="text-sm text-gray-500">Human Spaceflight</p>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
+            <p className="text-3xl font-bold text-green-600 dark:text-green-400">{stats.humanSpaceflight}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Human Spaceflight</p>
           </div>
-          <div className="bg-white rounded-lg shadow p-4 text-center">
-            <p className="text-3xl font-bold text-blue-600">{stats.independentLaunch}</p>
-            <p className="text-sm text-gray-500">Independent Launch</p>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
+            <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">{stats.independentLaunch}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Independent Launch</p>
           </div>
-          <div className="bg-white rounded-lg shadow p-4 text-center">
-            <p className="text-3xl font-bold text-purple-600">{stats.reusableRockets}</p>
-            <p className="text-sm text-gray-500">Reusable Rockets</p>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
+            <p className="text-3xl font-bold text-purple-600 dark:text-purple-400">{stats.reusableRockets}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Reusable Rockets</p>
           </div>
-          <div className="bg-white rounded-lg shadow p-4 text-center">
-            <p className="text-3xl font-bold text-orange-600">{stats.averageScore.toFixed(0)}</p>
-            <p className="text-sm text-gray-500">Avg. Score</p>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
+            <p className="text-3xl font-bold text-orange-600 dark:text-orange-400">{stats.averageScore.toFixed(0)}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Avg. Score</p>
           </div>
         </div>
 
         {/* Controls */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
           <div className="flex flex-col lg:flex-row gap-4 justify-between items-start lg:items-center">
             <div className="flex flex-wrap gap-4">
               {/* Sort */}
               <label className="flex items-center gap-2">
-                <span className="text-gray-700 font-semibold text-sm">Sort:</span>
+                <span className="text-gray-700 dark:text-gray-300 font-semibold text-sm">Sort:</span>
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 >
                   <option value="score">Capability Score</option>
                   <option value="name">Name</option>
@@ -150,11 +159,11 @@ export default function CountryListPage() {
 
               {/* Filter by Region */}
               <label className="flex items-center gap-2">
-                <span className="text-gray-700 font-semibold text-sm">Region:</span>
+                <span className="text-gray-700 dark:text-gray-300 font-semibold text-sm">Region:</span>
                 <select
                   value={filterRegion}
                   onChange={(e) => setFilterRegion(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 >
                   <option value="all">All Regions</option>
                   {Object.values(REGIONS).map(region => (
@@ -165,11 +174,11 @@ export default function CountryListPage() {
 
               {/* Filter by Capability */}
               <label className="flex items-center gap-2">
-                <span className="text-gray-700 font-semibold text-sm">Capability:</span>
+                <span className="text-gray-700 dark:text-gray-300 font-semibold text-sm">Capability:</span>
                 <select
                   value={filterCapability}
                   onChange={(e) => setFilterCapability(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 >
                   <option value="all">All Capabilities</option>
                   <option value="humanSpaceflightCapable">Human Spaceflight</option>
@@ -187,7 +196,7 @@ export default function CountryListPage() {
                 className={`px-4 py-2 rounded-md font-semibold transition text-sm ${
                   viewMode === 'map'
                     ? 'bg-indigo-500 text-white'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
                 }`}
               >
                 Map
@@ -197,7 +206,7 @@ export default function CountryListPage() {
                 className={`px-4 py-2 rounded-md font-semibold transition text-sm ${
                   viewMode === 'grid'
                     ? 'bg-indigo-500 text-white'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
                 }`}
               >
                 Grid
@@ -207,7 +216,7 @@ export default function CountryListPage() {
                 className={`px-4 py-2 rounded-md font-semibold transition text-sm ${
                   viewMode === 'table'
                     ? 'bg-indigo-500 text-white'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
                 }`}
               >
                 Table
@@ -239,37 +248,37 @@ export default function CountryListPage() {
             ))}
           </div>
         ) : (
-          <div className="bg-white rounded-lg shadow-md overflow-hidden">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+              <thead className="bg-gray-50 dark:bg-gray-700">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                     Rank
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                     Country
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                     Agency
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                     Score
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                     Launches
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                     Capabilities
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                 {filteredAndSortedCountries.map((country, index) => (
-                  <tr key={country.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <tr key={country.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                       {sortBy === 'score' ? rankingMap[country.id] || index + 1 : index + 1}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -277,33 +286,33 @@ export default function CountryListPage() {
                         <span className="text-xl">
                           {country.flagUrl ? (
                             <img src={country.flagUrl} alt="" className="w-6 h-4 object-cover rounded" />
-                          ) : '🏳️'}
+                          ) : <Flag className="text-gray-400" style={{ fontSize: '1.25rem' }} />}
                         </span>
-                        <span className="font-medium text-gray-900">{country.name}</span>
+                        <span className="font-medium text-gray-900 dark:text-white">{country.name}</span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                       {country.spaceAgencyAcronym || country.spaceAgencyName}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <CapabilityScoreBadge score={country.overallCapabilityScore || 0} />
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                       {country.totalLaunches ?? '-'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex gap-1">
-                        {country.humanSpaceflightCapable && <span title="Human Spaceflight">👨‍🚀</span>}
-                        {country.independentLaunchCapable && <span title="Independent Launch">🚀</span>}
-                        {country.reusableRocketCapable && <span title="Reusable Rockets">♻️</span>}
-                        {country.deepSpaceCapable && <span title="Deep Space">🌙</span>}
-                        {country.spaceStationCapable && <span title="Space Station">🛰️</span>}
+                        {country.humanSpaceflightCapable && <PersonOutline titleAccess="Human Spaceflight" className="text-green-600" style={{ fontSize: '1.25rem' }} />}
+                        {country.independentLaunchCapable && <Rocket titleAccess="Independent Launch" className="text-blue-600" style={{ fontSize: '1.25rem' }} />}
+                        {country.reusableRocketCapable && <Recycling titleAccess="Reusable Rockets" className="text-purple-600" style={{ fontSize: '1.25rem' }} />}
+                        {country.deepSpaceCapable && <NightlightRound titleAccess="Deep Space" className="text-indigo-600" style={{ fontSize: '1.25rem' }} />}
+                        {country.spaceStationCapable && <SatelliteAlt titleAccess="Space Station" className="text-orange-600" style={{ fontSize: '1.25rem' }} />}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm">
                       <Link
                         to={`/countries/${country.isoCode}`}
-                        className="text-indigo-600 hover:text-indigo-900"
+                        className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300"
                       >
                         View Details
                       </Link>
@@ -318,13 +327,13 @@ export default function CountryListPage() {
         {/* No results */}
         {filteredAndSortedCountries.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">No countries match your filters</p>
+            <p className="text-gray-500 dark:text-gray-400 text-lg">No countries match your filters</p>
             <button
               onClick={() => {
                 setFilterRegion('all');
                 setFilterCapability('all');
               }}
-              className="mt-4 text-indigo-600 hover:text-indigo-800"
+              className="mt-4 text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300"
             >
               Clear filters
             </button>
@@ -332,7 +341,7 @@ export default function CountryListPage() {
         )}
 
         {/* Footer note */}
-        <div className="mt-8 text-center text-sm text-gray-500">
+        <div className="mt-8 text-center text-sm text-gray-500 dark:text-gray-400">
           <p>
             Data sources: Wikipedia, space agency official statistics.
             Scores are calculated based on the Space Capability Index (SCI) methodology.

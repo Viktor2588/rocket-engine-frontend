@@ -87,6 +87,16 @@ class CountryService {
       const response = await this.axiosInstance.get<Country>(`/countries/by-code/${isoCode.toUpperCase()}`);
       return response.data;
     } catch (error) {
+      // Fallback: fetch all countries and find by ISO code
+      try {
+        const allCountries = await this.getAll();
+        const country = allCountries.find(c => c.isoCode?.toUpperCase() === isoCode.toUpperCase());
+        if (country) {
+          return country;
+        }
+      } catch (fallbackError) {
+        console.error('Fallback fetch failed:', fallbackError);
+      }
       console.error(`Error fetching country by code ${isoCode}:`, error);
       if (axios.isAxiosError(error) && error.response?.status === 404) {
         throw new Error(ERROR_MESSAGES.COUNTRY_NOT_FOUND);
@@ -229,8 +239,49 @@ class CountryService {
       const response = await this.axiosInstance.get<Engine[]>(`/countries/${countryId}/engines`);
       return response.data;
     } catch (error) {
-      console.error(`Error fetching engines for country ${countryId}:`, error);
-      throw new Error(ERROR_MESSAGES.FETCH_ENGINES_FAILED);
+      // Fallback: fetch all engines and filter by countryId or origin
+      try {
+        const allEnginesResponse = await this.axiosInstance.get<Engine[]>('/engines');
+        const allEngines = allEnginesResponse.data;
+
+        // Get country info to match by name
+        let country: Country | null = null;
+        try {
+          const allCountries = await this.getAll();
+          country = allCountries.find(c =>
+            c.id?.toString() === countryId.toString() ||
+            c.isoCode?.toUpperCase() === countryId.toString().toUpperCase()
+          ) || null;
+        } catch (e) {
+          // Continue without country info
+        }
+
+        const countryName = country?.name?.toLowerCase();
+        const isoCode = country?.isoCode?.toUpperCase();
+
+        // Filter engines by various matching criteria
+        return allEngines.filter(engine => {
+          const engineOrigin = engine.origin?.toLowerCase();
+          const engineCountryId = engine.countryId?.toString().toUpperCase();
+
+          // Match by origin name (e.g., "Russia", "United States")
+          if (countryName && engineOrigin?.includes(countryName)) {
+            return true;
+          }
+          // Match by ISO code in countryId field
+          if (isoCode && engineCountryId === isoCode) {
+            return true;
+          }
+          // Match by numeric ID
+          if (engine.countryId?.toString() === countryId.toString()) {
+            return true;
+          }
+          return false;
+        });
+      } catch (fallbackError) {
+        console.error(`Fallback engine fetch also failed for country ${countryId}:`, fallbackError);
+        return [];
+      }
     }
   }
 
@@ -242,8 +293,50 @@ class CountryService {
       const response = await this.axiosInstance.get<LaunchVehicle[]>(`/countries/${countryId}/launch-vehicles`);
       return response.data;
     } catch (error) {
-      console.error(`Error fetching launch vehicles for country ${countryId}:`, error);
-      throw new Error(ERROR_MESSAGES.INTERNAL_ERROR);
+      // Fallback: fetch all launch vehicles and filter by countryId
+      try {
+        const allVehiclesResponse = await this.axiosInstance.get<LaunchVehicle[]>('/launch-vehicles');
+        const allVehicles = allVehiclesResponse.data;
+
+        // Get country info to match by numeric ID
+        let country: Country | null = null;
+        try {
+          const allCountries = await this.getAll();
+          country = allCountries.find(c =>
+            c.id?.toString() === countryId.toString() ||
+            c.isoCode?.toUpperCase() === countryId.toString().toUpperCase()
+          ) || null;
+        } catch (e) {
+          // Continue without country info
+        }
+
+        const numericCountryId = country?.id?.toString();
+
+        // Filter vehicles by countryId (numeric) - handle nested country object
+        return allVehicles.filter(vehicle => {
+          // Check nested country object first (backend returns this structure)
+          const nestedCountryId = (vehicle as any).country?.id?.toString();
+          // Also check flat countryId field
+          const flatCountryId = vehicle.countryId?.toString();
+
+          // Match by nested country ID
+          if (numericCountryId && nestedCountryId === numericCountryId) {
+            return true;
+          }
+          // Match by flat countryId
+          if (numericCountryId && flatCountryId === numericCountryId) {
+            return true;
+          }
+          // Match by the passed countryId directly
+          if (nestedCountryId === countryId.toString() || flatCountryId === countryId.toString()) {
+            return true;
+          }
+          return false;
+        });
+      } catch (fallbackError) {
+        console.error(`Fallback launch vehicle fetch also failed for country ${countryId}:`, fallbackError);
+        return [];
+      }
     }
   }
 

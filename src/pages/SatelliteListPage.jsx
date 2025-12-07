@@ -1,17 +1,28 @@
 import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useSatellites, useFilteredSatellites, useSatelliteStatistics } from '../hooks/useSatellites';
+import {
+  SettingsInputAntenna,
+  Explore,
+  Science,
+  Cloud,
+  Public,
+  Satellite,
+  MilitaryTech,
+  NightlightRound,
+  SatelliteAlt,
+} from '@mui/icons-material';
 
 // Satellite type icons and colors
 const SATELLITE_TYPE_CONFIG = {
-  'Communication': { icon: '📡', color: 'bg-blue-500', textColor: 'text-blue-600' },
-  'Navigation': { icon: '🧭', color: 'bg-green-500', textColor: 'text-green-600' },
-  'Scientific': { icon: '🔬', color: 'bg-purple-500', textColor: 'text-purple-600' },
-  'Weather': { icon: '🌦️', color: 'bg-cyan-500', textColor: 'text-cyan-600' },
-  'Earth Observation': { icon: '🌍', color: 'bg-teal-500', textColor: 'text-teal-600' },
-  'Space Station': { icon: '🛸', color: 'bg-indigo-500', textColor: 'text-indigo-600' },
-  'Military': { icon: '🎖️', color: 'bg-red-500', textColor: 'text-red-600' },
-  'Lunar Probe': { icon: '🌙', color: 'bg-amber-500', textColor: 'text-amber-600' },
+  'Communication': { IconComponent: SettingsInputAntenna, color: 'bg-blue-500', textColor: 'text-blue-600' },
+  'Navigation': { IconComponent: Explore, color: 'bg-green-500', textColor: 'text-green-600' },
+  'Scientific': { IconComponent: Science, color: 'bg-purple-500', textColor: 'text-purple-600' },
+  'Weather': { IconComponent: Cloud, color: 'bg-cyan-500', textColor: 'text-cyan-600' },
+  'Earth Observation': { IconComponent: Public, color: 'bg-teal-500', textColor: 'text-teal-600' },
+  'Space Station': { IconComponent: Satellite, color: 'bg-indigo-500', textColor: 'text-indigo-600' },
+  'Military': { IconComponent: MilitaryTech, color: 'bg-red-500', textColor: 'text-red-600' },
+  'Lunar Probe': { IconComponent: NightlightRound, color: 'bg-amber-500', textColor: 'text-amber-600' },
 };
 
 // Orbit type colors
@@ -33,9 +44,10 @@ const STATUS_COLORS = {
 };
 
 function SatelliteCard({ satellite }) {
-  const typeConfig = SATELLITE_TYPE_CONFIG[satellite.type] || { icon: '🛰️', color: 'bg-gray-500', textColor: 'text-gray-600' };
+  const typeConfig = SATELLITE_TYPE_CONFIG[satellite.type] || { IconComponent: SatelliteAlt, color: 'bg-gray-500', textColor: 'text-gray-600' };
   const orbitColor = ORBIT_COLORS[satellite.orbitType] || 'bg-gray-100 text-gray-800';
   const statusColor = STATUS_COLORS[satellite.status] || 'bg-gray-100 text-gray-800';
+  const IconComponent = typeConfig.IconComponent;
 
   return (
     <Link
@@ -46,8 +58,8 @@ function SatelliteCard({ satellite }) {
         {/* Header */}
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-3">
-            <div className={`w-12 h-12 rounded-xl ${typeConfig.color} flex items-center justify-center text-2xl`}>
-              {typeConfig.icon}
+            <div className={`w-12 h-12 rounded-xl ${typeConfig.color} flex items-center justify-center text-white`}>
+              <IconComponent style={{ fontSize: '1.75rem' }} />
             </div>
             <div>
               <h3 className="font-bold text-gray-900 text-lg">{satellite.name}</h3>

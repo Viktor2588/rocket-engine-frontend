@@ -1,6 +1,26 @@
 import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useLaunchSites, useFilteredLaunchSites, useLaunchSiteStatistics } from '../hooks/useLaunchSites';
+import {
+  ComposableMap,
+  Geographies,
+  Geography,
+  Marker,
+  ZoomableGroup,
+} from 'react-simple-maps';
+import {
+  Rocket,
+  CheckCircle,
+  TrendingUp,
+  GpsFixed,
+  PersonOutline,
+  Public,
+  AcUnit,
+  FlightLand,
+} from '@mui/icons-material';
+
+// World TopoJSON URL
+const GEO_URL = 'https://unpkg.com/world-atlas@2.0.2/countries-110m.json';
 
 // Status colors
 const STATUS_COLORS = {
@@ -20,23 +40,7 @@ const REGION_COLORS = {
   'Oceania': '#06B6D4',
 };
 
-// Launch site positions for simple map
-const SITE_POSITIONS = {
-  'Kennedy Space Center': { x: 22, y: 42 },
-  'Cape Canaveral Space Force Station': { x: 22, y: 43 },
-  'Vandenberg Space Force Base': { x: 12, y: 40 },
-  'Baikonur Cosmodrome': { x: 57, y: 35 },
-  'Plesetsk Cosmodrome': { x: 53, y: 25 },
-  'Jiuquan Satellite Launch Center': { x: 70, y: 38 },
-  'Wenchang Space Launch Center': { x: 73, y: 48 },
-  'Satish Dhawan Space Centre': { x: 64, y: 50 },
-  'Tanegashima Space Center': { x: 80, y: 42 },
-  'Guiana Space Centre': { x: 30, y: 55 },
-  'Starbase': { x: 18, y: 44 },
-  'Naro Space Center': { x: 78, y: 40 },
-};
-
-function StatCard({ label, value, icon, color = 'indigo' }) {
+function StatCard({ label, value, IconComponent, color = 'indigo' }) {
   const colorClasses = {
     indigo: 'bg-indigo-50 text-indigo-600',
     green: 'bg-green-50 text-green-600',
@@ -47,7 +51,7 @@ function StatCard({ label, value, icon, color = 'indigo' }) {
   return (
     <div className={`${colorClasses[color]} rounded-lg p-4`}>
       <div className="flex items-center gap-2 mb-1">
-        <span className="text-xl">{icon}</span>
+        <IconComponent style={{ fontSize: '1.25rem' }} />
         <span className="text-sm font-medium">{label}</span>
       </div>
       <div className="text-2xl font-bold">{value}</div>
@@ -114,79 +118,184 @@ function LaunchSiteCard({ site }) {
   );
 }
 
-function SimpleWorldMap({ launchSites, onSiteHover, hoveredSite }) {
+function LaunchSiteWorldMap({ launchSites, onSiteHover, hoveredSite, onSiteClick }) {
+  const [position, setPosition] = useState({ coordinates: [0, 20], zoom: 1 });
+  const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
+
+  // Filter sites that have coordinates
+  const sitesWithCoords = useMemo(() => {
+    return launchSites.filter(site => site.latitude && site.longitude);
+  }, [launchSites]);
+
+  const handleZoomIn = () => {
+    if (position.zoom >= 4) return;
+    setPosition(pos => ({ ...pos, zoom: pos.zoom * 1.5 }));
+  };
+
+  const handleZoomOut = () => {
+    if (position.zoom <= 1) return;
+    setPosition(pos => ({ ...pos, zoom: pos.zoom / 1.5 }));
+  };
+
+  const handleReset = () => {
+    setPosition({ coordinates: [0, 20], zoom: 1 });
+  };
+
+  const handleMouseMove = (e, site) => {
+    const rect = e.currentTarget.closest('.map-container')?.getBoundingClientRect();
+    if (rect) {
+      setTooltipPos({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top - 80,
+      });
+    }
+    onSiteHover(site);
+  };
+
   return (
     <div className="bg-gray-900 rounded-lg p-4 relative overflow-hidden">
-      <h3 className="text-white text-lg font-semibold mb-4">Launch Sites Worldwide</h3>
-
-      {/* Simple World Map SVG */}
-      <svg viewBox="0 0 100 60" className="w-full h-48">
-        {/* Ocean background */}
-        <rect width="100" height="60" fill="#1E3A5F" />
-
-        {/* Simplified continents */}
-        <g fill="#2D4A6A" stroke="#3D5A7A" strokeWidth="0.3">
-          {/* North America */}
-          <path d="M5,15 Q15,10 25,12 L28,20 Q30,28 25,35 L20,38 Q10,35 8,25 Z" />
-          {/* South America */}
-          <path d="M22,42 Q28,40 32,45 L30,58 Q25,60 22,55 L20,48 Z" />
-          {/* Europe */}
-          <path d="M42,18 Q50,15 55,18 L54,28 Q50,32 44,30 L42,24 Z" />
-          {/* Africa */}
-          <path d="M42,32 Q52,30 55,35 L52,52 Q45,55 42,50 L40,40 Z" />
-          {/* Asia */}
-          <path d="M55,15 Q75,10 85,18 L88,35 Q82,45 70,48 L60,42 Q55,35 55,25 Z" />
-          {/* Australia */}
-          <path d="M78,48 Q85,45 90,50 L88,55 Q82,58 78,54 Z" />
-        </g>
-
-        {/* Launch site markers */}
-        {launchSites.map((site) => {
-          const pos = SITE_POSITIONS[site.name];
-          if (!pos) return null;
-
-          const isHovered = hoveredSite?.id === site.id;
-          const regionColor = REGION_COLORS[site.region] || '#F59E0B';
-
-          return (
-            <g key={site.id}>
-              {/* Glow effect for hovered */}
-              {isHovered && (
-                <circle
-                  cx={pos.x}
-                  cy={pos.y}
-                  r={3}
-                  fill={regionColor}
-                  opacity={0.3}
-                />
-              )}
-              {/* Main marker */}
-              <circle
-                cx={pos.x}
-                cy={pos.y}
-                r={isHovered ? 2 : 1.5}
-                fill={regionColor}
-                stroke="#fff"
-                strokeWidth={0.3}
-                className="cursor-pointer transition-all"
-                onMouseEnter={() => onSiteHover(site)}
-                onMouseLeave={() => onSiteHover(null)}
-              />
-            </g>
-          );
-        })}
-      </svg>
-
-      {/* Tooltip */}
-      {hoveredSite && (
-        <div className="absolute top-16 right-4 bg-white rounded-lg shadow-lg p-3 min-w-[180px]">
-          <div className="font-semibold text-gray-800">{hoveredSite.name}</div>
-          <div className="text-sm text-gray-500">{hoveredSite.countryId}</div>
-          <div className="text-sm text-gray-600 mt-1">
-            {hoveredSite.totalLaunches} launches | {hoveredSite.successRate?.toFixed(1)}% success
-          </div>
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-white text-lg font-semibold">Launch Sites Worldwide</h3>
+        <div className="flex items-center gap-1">
+          <button
+            onClick={handleZoomIn}
+            className="p-1 rounded bg-gray-700 hover:bg-gray-600 text-white transition"
+            title="Zoom in"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+          </button>
+          <button
+            onClick={handleZoomOut}
+            className="p-1 rounded bg-gray-700 hover:bg-gray-600 text-white transition"
+            title="Zoom out"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+            </svg>
+          </button>
+          <button
+            onClick={handleReset}
+            className="p-1 rounded bg-gray-700 hover:bg-gray-600 text-white transition"
+            title="Reset view"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+          </button>
         </div>
-      )}
+      </div>
+
+      <div className="relative map-container" style={{ height: '300px' }}>
+        <ComposableMap
+          projection="geoMercator"
+          projectionConfig={{
+            scale: 120,
+            center: [0, 20],
+          }}
+          style={{ width: '100%', height: '100%', backgroundColor: '#1e3a5f' }}
+        >
+          <ZoomableGroup
+            zoom={position.zoom}
+            center={position.coordinates}
+            onMoveEnd={(pos) => setPosition(pos)}
+          >
+            <Geographies geography={GEO_URL}>
+              {({ geographies }) =>
+                geographies.map((geo) => (
+                  <Geography
+                    key={geo.rsmKey}
+                    geography={geo}
+                    fill="#374151"
+                    stroke="#1f2937"
+                    strokeWidth={0.5}
+                    style={{
+                      default: { outline: 'none' },
+                      hover: { outline: 'none', fill: '#4b5563' },
+                      pressed: { outline: 'none' },
+                    }}
+                  />
+                ))
+              }
+            </Geographies>
+
+            {/* Launch site markers */}
+            {sitesWithCoords.map((site) => {
+              const isHovered = hoveredSite?.id === site.id;
+              const regionColor = REGION_COLORS[site.region] || '#F59E0B';
+              const isActive = site.status === 'Active';
+
+              return (
+                <Marker
+                  key={site.id}
+                  coordinates={[site.longitude, site.latitude]}
+                  onMouseEnter={(e) => handleMouseMove(e, site)}
+                  onMouseMove={(e) => handleMouseMove(e, site)}
+                  onMouseLeave={() => onSiteHover(null)}
+                  onClick={() => onSiteClick?.(site)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  {/* Pulse effect for active sites */}
+                  {isActive && (
+                    <circle
+                      r={isHovered ? 12 : 8}
+                      fill={regionColor}
+                      opacity={0.2}
+                      className={isHovered ? '' : 'animate-ping'}
+                    />
+                  )}
+                  {/* Main marker */}
+                  <circle
+                    r={isHovered ? 6 : 4}
+                    fill={isActive ? regionColor : '#6B7280'}
+                    stroke={isHovered ? '#fff' : 'rgba(255,255,255,0.5)'}
+                    strokeWidth={isHovered ? 2 : 1}
+                    className="transition-all duration-200"
+                  />
+                </Marker>
+              );
+            })}
+          </ZoomableGroup>
+        </ComposableMap>
+
+        {/* Tooltip */}
+        {hoveredSite && (
+          <div
+            className="absolute bg-gray-900/95 rounded-lg shadow-xl p-3 z-20 pointer-events-none border border-gray-700"
+            style={{
+              left: `${Math.min(Math.max(tooltipPos.x, 100), 300)}px`,
+              top: `${Math.max(tooltipPos.y, 10)}px`,
+              minWidth: '200px',
+            }}
+          >
+            <div className="font-semibold text-white">{hoveredSite.name}</div>
+            <div className="text-sm text-gray-400">{hoveredSite.countryId} | {hoveredSite.region}</div>
+            <div className="text-sm text-gray-300 mt-2 space-y-1">
+              <div className="flex justify-between">
+                <span>Total Launches:</span>
+                <span className="font-medium text-white">{hoveredSite.totalLaunches || 0}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Success Rate:</span>
+                <span className="font-medium text-green-400">{hoveredSite.successRate?.toFixed(1) || 0}%</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Status:</span>
+                <span className={`font-medium ${hoveredSite.status === 'Active' ? 'text-green-400' : 'text-gray-400'}`}>
+                  {hoveredSite.status}
+                </span>
+              </div>
+            </div>
+            <div className="flex gap-1 mt-2 pt-2 border-t border-gray-700">
+              {hoveredSite.humanRated && <PersonOutline titleAccess="Human Rated" style={{ fontSize: '1rem' }} />}
+              {hoveredSite.geoCapable && <Public titleAccess="GEO Capable" style={{ fontSize: '1rem' }} />}
+              {hoveredSite.polarCapable && <AcUnit titleAccess="Polar Capable" style={{ fontSize: '1rem' }} />}
+              {hoveredSite.hasLanding && <FlightLand titleAccess="Landing Capable" style={{ fontSize: '1rem' }} />}
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* Legend */}
       <div className="flex flex-wrap gap-3 mt-4">
@@ -296,25 +405,25 @@ export default function LaunchSiteListPage() {
             <StatCard
               label="Total Sites"
               value={statistics.total}
-              icon="🚀"
+              IconComponent={Rocket}
               color="indigo"
             />
             <StatCard
               label="Active Sites"
               value={statistics.active}
-              icon="✅"
+              IconComponent={CheckCircle}
               color="green"
             />
             <StatCard
               label="Total Launches"
               value={statistics.totalLaunches?.toLocaleString() || 0}
-              icon="📈"
+              IconComponent={TrendingUp}
               color="blue"
             />
             <StatCard
               label="Avg Success Rate"
               value={`${statistics.averageSuccessRate?.toFixed(1) || 0}%`}
-              icon="🎯"
+              IconComponent={GpsFixed}
               color="purple"
             />
           </div>
@@ -322,10 +431,11 @@ export default function LaunchSiteListPage() {
 
         {/* World Map */}
         <div className="mb-6">
-          <SimpleWorldMap
+          <LaunchSiteWorldMap
             launchSites={launchSites}
             onSiteHover={setHoveredSite}
             hoveredSite={hoveredSite}
+            onSiteClick={(site) => window.location.href = `/launch-sites/${site.id}`}
           />
         </div>
 
@@ -508,10 +618,10 @@ export default function LaunchSiteListPage() {
                       <td className="px-4 py-3 text-right text-sm text-gray-600">{site.successRate?.toFixed(1) || 0}%</td>
                       <td className="px-4 py-3">
                         <div className="flex justify-center gap-1">
-                          {site.humanRated && <span title="Human Rated">👨‍🚀</span>}
-                          {site.geoCapable && <span title="GEO Capable">🌍</span>}
-                          {site.polarCapable && <span title="Polar Capable">❄️</span>}
-                          {site.hasLanding && <span title="Landing Capable">🛬</span>}
+                          {site.humanRated && <PersonOutline titleAccess="Human Rated" style={{ fontSize: '1.25rem' }} className="text-purple-600" />}
+                          {site.geoCapable && <Public titleAccess="GEO Capable" style={{ fontSize: '1.25rem' }} className="text-blue-600" />}
+                          {site.polarCapable && <AcUnit titleAccess="Polar Capable" style={{ fontSize: '1.25rem' }} className="text-cyan-600" />}
+                          {site.hasLanding && <FlightLand titleAccess="Landing Capable" style={{ fontSize: '1.25rem' }} className="text-green-600" />}
                         </div>
                       </td>
                     </tr>

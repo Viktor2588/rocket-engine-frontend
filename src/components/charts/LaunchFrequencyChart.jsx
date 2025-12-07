@@ -30,26 +30,16 @@ const COUNTRY_COLORS = {
   OTHER: { bg: 'rgba(156, 163, 175, 0.8)', border: 'rgb(156, 163, 175)' },
 };
 
-// Mock launch frequency data (would come from API)
-const MOCK_LAUNCH_DATA = {
-  2019: { USA: 21, RUS: 25, CHN: 34, EUR: 6, IND: 6, JPN: 2, OTHER: 8 },
-  2020: { USA: 44, RUS: 17, CHN: 39, EUR: 5, IND: 2, JPN: 4, OTHER: 6 },
-  2021: { USA: 51, RUS: 25, CHN: 55, EUR: 6, IND: 2, JPN: 3, OTHER: 8 },
-  2022: { USA: 87, RUS: 22, CHN: 64, EUR: 5, IND: 5, JPN: 1, OTHER: 9 },
-  2023: { USA: 109, RUS: 19, CHN: 67, EUR: 3, IND: 7, JPN: 2, OTHER: 11 },
-  2024: { USA: 125, RUS: 18, CHN: 72, EUR: 4, IND: 8, JPN: 3, OTHER: 12 },
-};
-
 /**
  * LaunchFrequencyChart - Stacked bar chart showing launch frequency by country over years
  *
  * @param {Object} props
- * @param {Object} props.launchData - Optional custom launch data (year -> country -> count)
+ * @param {Object} props.launchData - Launch data (year -> country -> count) - REQUIRED from API
  * @param {boolean} props.stacked - Whether to use stacked bars
  * @param {string} props.title - Chart title
  */
 export default function LaunchFrequencyChart({
-  launchData = MOCK_LAUNCH_DATA,
+  launchData = {},
   stacked = true,
   title = 'Annual Launch Frequency by Country',
 }) {
@@ -118,6 +108,20 @@ export default function LaunchFrequencyChart({
     },
   };
 
+  // Check if data is available
+  const hasData = Object.keys(launchData).length > 0;
+
+  if (!hasData) {
+    return (
+      <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="text-center text-gray-500 py-12">
+          <p className="text-lg font-medium">No launch data available</p>
+          <p className="text-sm mt-2">Launch frequency data is not available from the API</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <div style={{ height: '400px' }}>
@@ -161,7 +165,7 @@ export default function LaunchFrequencyChart({
  * LaunchTrendChart - Line chart showing launch trends over time
  */
 export function LaunchTrendChart({
-  launchData = MOCK_LAUNCH_DATA,
+  launchData = {},
   countries = ['USA', 'CHN', 'RUS'],
   title = 'Launch Trends Over Time',
 }) {
@@ -211,6 +215,20 @@ export function LaunchTrendChart({
       },
     },
   };
+
+  // Check if data is available
+  const hasData = Object.keys(launchData).length > 0;
+
+  if (!hasData) {
+    return (
+      <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="text-center text-gray-500 py-12">
+          <p className="text-lg font-medium">No launch trend data available</p>
+          <p className="text-sm mt-2">Launch trend data is not available from the API</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6">

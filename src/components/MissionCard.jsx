@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
 import { MISSION_TYPE_INFO, DESTINATION_INFO } from '../types';
+import SpaceIcon from './icons/SpaceIcons';
+import { Rocket, PersonOutline, EmojiEvents } from '@mui/icons-material';
 
 // Status badge colors and labels
 const STATUS_CONFIG = {
@@ -58,7 +60,7 @@ export function DestinationBadge({ destination }) {
 
   return (
     <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium bg-indigo-50 text-indigo-700 rounded-full">
-      <span>{info.icon}</span>
+      <SpaceIcon name={info.icon} size="sm" />
       <span>{info.label}</span>
     </span>
   );
@@ -71,7 +73,7 @@ export function MissionTypeBadge({ missionType }) {
 
   return (
     <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded-full">
-      <span>{info.icon}</span>
+      <SpaceIcon name={info.icon} size="sm" />
       <span>{info.label}</span>
     </span>
   );
@@ -100,7 +102,7 @@ export function MissionCardCompact({ mission, showCountry = true }) {
             {destInfo && (
               <>
                 <span>•</span>
-                <span>{destInfo.icon} {destInfo.label}</span>
+                <span className="flex items-center gap-1"><SpaceIcon name={destInfo.icon} size="sm" /> {destInfo.label}</span>
               </>
             )}
           </div>
@@ -108,8 +110,8 @@ export function MissionCardCompact({ mission, showCountry = true }) {
         <StatusBadge status={mission.status} />
       </div>
       {mission.crewed && (
-        <div className="mt-2 text-xs text-indigo-600">
-          👨‍🚀 Crewed ({mission.crewSize} astronauts)
+        <div className="mt-2 text-xs text-indigo-600 flex items-center gap-1">
+          <PersonOutline style={{ fontSize: '1rem' }} /> Crewed ({mission.crewSize} astronauts)
         </div>
       )}
     </Link>
@@ -153,12 +155,12 @@ export default function MissionCard({ mission, showCountry = true, className = '
           <DestinationBadge destination={mission.destination} />
           {mission.crewed && (
             <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium bg-purple-50 text-purple-700 rounded-full">
-              👨‍🚀 Crewed ({mission.crewSize})
+              <PersonOutline style={{ fontSize: '1rem' }} /> Crewed ({mission.crewSize})
             </span>
           )}
           {mission.historicFirst && (
             <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium bg-yellow-50 text-yellow-700 rounded-full">
-              🥇 Historic First
+              <EmojiEvents style={{ fontSize: '1rem' }} /> Historic First
             </span>
           )}
         </div>
@@ -197,8 +199,8 @@ export default function MissionCard({ mission, showCountry = true, className = '
         {/* Footer */}
         <div className="flex items-center justify-between pt-3 border-t border-gray-100">
           {mission.launchVehicle && (
-            <span className="text-xs text-gray-500">
-              🚀 {mission.launchVehicle}
+            <span className="text-xs text-gray-500 flex items-center gap-1">
+              <Rocket style={{ fontSize: '1rem' }} /> {mission.launchVehicle}
             </span>
           )}
           <Link
@@ -262,8 +264,8 @@ export function MissionStatsCard({ stats }) {
             {Object.entries(stats.byDestination).map(([dest, count]) => {
               const info = DESTINATION_INFO[dest];
               return (
-                <span key={dest} className="text-xs px-2 py-1 bg-gray-100 rounded">
-                  {info?.icon} {info?.label || dest}: {count}
+                <span key={dest} className="text-xs px-2 py-1 bg-gray-100 rounded inline-flex items-center gap-1">
+                  <SpaceIcon name={info?.icon} size="sm" /> {info?.label || dest}: {count}
                 </span>
               );
             })}
@@ -292,7 +294,7 @@ export function MissionTimelineItem({ mission, isFirst = false, isLast = false }
         mission.status === 'FAILED' ? 'bg-red-500 text-white' :
         'bg-indigo-500 text-white'
       }`}>
-        {destInfo?.icon || '🚀'}
+        <SpaceIcon name={destInfo?.icon || 'rocket'} size="xs" />
       </div>
 
       {/* Content */}

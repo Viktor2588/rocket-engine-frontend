@@ -117,7 +117,7 @@ export const CATEGORY_WEIGHTS: CategoryWeight[] = [
     weight: 0.20,
     label: 'Launch Capability',
     description: 'Ability to reach space independently with active rockets',
-    icon: '🚀',
+    icon: 'rocket',
     color: '#3B82F6'  // blue
   },
   {
@@ -125,7 +125,7 @@ export const CATEGORY_WEIGHTS: CategoryWeight[] = [
     weight: 0.15,
     label: 'Propulsion Technology',
     description: 'Engine sophistication, ISP, advanced cycles',
-    icon: '⚡',
+    icon: 'bolt',
     color: '#8B5CF6'  // purple
   },
   {
@@ -133,7 +133,7 @@ export const CATEGORY_WEIGHTS: CategoryWeight[] = [
     weight: 0.20,
     label: 'Human Spaceflight',
     description: 'Crewed mission capability and astronaut corps',
-    icon: '👨‍🚀',
+    icon: 'astronaut',
     color: '#10B981'  // green
   },
   {
@@ -141,7 +141,7 @@ export const CATEGORY_WEIGHTS: CategoryWeight[] = [
     weight: 0.15,
     label: 'Deep Space',
     description: 'Moon, Mars, and planetary exploration missions',
-    icon: '🌙',
+    icon: 'moon',
     color: '#F59E0B'  // amber
   },
   {
@@ -149,7 +149,7 @@ export const CATEGORY_WEIGHTS: CategoryWeight[] = [
     weight: 0.15,
     label: 'Satellite Infrastructure',
     description: 'Active satellites, constellations, GNSS systems',
-    icon: '🛰️',
+    icon: 'satellite',
     color: '#EF4444'  // red
   },
   {
@@ -157,7 +157,7 @@ export const CATEGORY_WEIGHTS: CategoryWeight[] = [
     weight: 0.10,
     label: 'Ground Infrastructure',
     description: 'Launch sites, tracking stations, manufacturing',
-    icon: '🏭',
+    icon: 'factory',
     color: '#6366F1'  // indigo
   },
   {
@@ -165,7 +165,7 @@ export const CATEGORY_WEIGHTS: CategoryWeight[] = [
     weight: 0.05,
     label: 'Tech Independence',
     description: 'Self-reliance in space technology development',
-    icon: '🔧',
+    icon: 'build',
     color: '#EC4899'  // pink
   }
 ];
@@ -598,51 +598,51 @@ export interface MilestoneTypeInfo {
 
 export const MILESTONE_TYPE_INFO: Record<MilestoneType, MilestoneTypeInfo> = {
   // Orbital Firsts
-  FIRST_SATELLITE: { type: 'FIRST_SATELLITE', category: 'orbital', title: 'First Satellite', description: 'Launch of first artificial satellite', icon: '🛰️', color: '#3B82F6' },
-  FIRST_ANIMAL_IN_SPACE: { type: 'FIRST_ANIMAL_IN_SPACE', category: 'orbital', title: 'First Animal in Space', description: 'First living animal to reach orbit', icon: '🐕', color: '#10B981' },
-  FIRST_HUMAN_IN_SPACE: { type: 'FIRST_HUMAN_IN_SPACE', category: 'human', title: 'First Human in Space', description: 'First crewed spaceflight', icon: '👨‍🚀', color: '#8B5CF6' },
-  FIRST_WOMAN_IN_SPACE: { type: 'FIRST_WOMAN_IN_SPACE', category: 'human', title: 'First Woman in Space', description: 'First female astronaut/cosmonaut', icon: '👩‍🚀', color: '#EC4899' },
-  FIRST_SPACEWALK: { type: 'FIRST_SPACEWALK', category: 'human', title: 'First Spacewalk', description: 'First extravehicular activity (EVA)', icon: '🚶', color: '#6366F1' },
-  FIRST_SPACE_STATION: { type: 'FIRST_SPACE_STATION', category: 'orbital', title: 'First Space Station', description: 'First orbital space station', icon: '🏠', color: '#F59E0B' },
-  FIRST_COMMERCIAL_CREW: { type: 'FIRST_COMMERCIAL_CREW', category: 'technology', title: 'First Commercial Crew', description: 'First commercially-operated crewed mission', icon: '💼', color: '#14B8A6' },
-  FIRST_SPACE_TOURIST: { type: 'FIRST_SPACE_TOURIST', category: 'human', title: 'First Space Tourist', description: 'First paying space tourist', icon: '🎫', color: '#F97316' },
+  FIRST_SATELLITE: { type: 'FIRST_SATELLITE', category: 'orbital', title: 'First Satellite', description: 'Launch of first artificial satellite', icon: 'satellite', color: '#3B82F6' },
+  FIRST_ANIMAL_IN_SPACE: { type: 'FIRST_ANIMAL_IN_SPACE', category: 'orbital', title: 'First Animal in Space', description: 'First living animal to reach orbit', icon: 'science', color: '#10B981' },
+  FIRST_HUMAN_IN_SPACE: { type: 'FIRST_HUMAN_IN_SPACE', category: 'human', title: 'First Human in Space', description: 'First crewed spaceflight', icon: 'astronaut', color: '#8B5CF6' },
+  FIRST_WOMAN_IN_SPACE: { type: 'FIRST_WOMAN_IN_SPACE', category: 'human', title: 'First Woman in Space', description: 'First female astronaut/cosmonaut', icon: 'astronaut', color: '#EC4899' },
+  FIRST_SPACEWALK: { type: 'FIRST_SPACEWALK', category: 'human', title: 'First Spacewalk', description: 'First extravehicular activity (EVA)', icon: 'astronaut', color: '#6366F1' },
+  FIRST_SPACE_STATION: { type: 'FIRST_SPACE_STATION', category: 'orbital', title: 'First Space Station', description: 'First orbital space station', icon: 'hub', color: '#F59E0B' },
+  FIRST_COMMERCIAL_CREW: { type: 'FIRST_COMMERCIAL_CREW', category: 'technology', title: 'First Commercial Crew', description: 'First commercially-operated crewed mission', icon: 'group', color: '#14B8A6' },
+  FIRST_SPACE_TOURIST: { type: 'FIRST_SPACE_TOURIST', category: 'human', title: 'First Space Tourist', description: 'First paying space tourist', icon: 'person', color: '#F97316' },
 
   // Lunar Firsts
-  FIRST_LUNAR_FLYBY: { type: 'FIRST_LUNAR_FLYBY', category: 'lunar', title: 'First Lunar Flyby', description: 'First spacecraft to fly by the Moon', icon: '🌙', color: '#94A3B8' },
-  FIRST_LUNAR_IMPACT: { type: 'FIRST_LUNAR_IMPACT', category: 'lunar', title: 'First Lunar Impact', description: 'First spacecraft to impact the Moon', icon: '💥', color: '#64748B' },
-  FIRST_LUNAR_ORBIT: { type: 'FIRST_LUNAR_ORBIT', category: 'lunar', title: 'First Lunar Orbit', description: 'First spacecraft to orbit the Moon', icon: '🔄', color: '#A3A3A3' },
-  FIRST_LUNAR_LANDING_ROBOTIC: { type: 'FIRST_LUNAR_LANDING_ROBOTIC', category: 'lunar', title: 'First Lunar Landing (Robotic)', description: 'First soft landing on the Moon', icon: '🤖', color: '#71717A' },
-  FIRST_HUMAN_LUNAR_ORBIT: { type: 'FIRST_HUMAN_LUNAR_ORBIT', category: 'lunar', title: 'First Human Lunar Orbit', description: 'First crewed mission to orbit the Moon', icon: '👨‍🚀🌙', color: '#D4D4D8' },
-  FIRST_HUMAN_LUNAR_LANDING: { type: 'FIRST_HUMAN_LUNAR_LANDING', category: 'lunar', title: 'First Human Lunar Landing', description: 'First humans to walk on the Moon', icon: '🚶‍♂️🌕', color: '#FFD700' },
-  FIRST_LUNAR_ROVER: { type: 'FIRST_LUNAR_ROVER', category: 'lunar', title: 'First Lunar Rover', description: 'First rover to drive on the Moon', icon: '🚗', color: '#9CA3AF' },
-  FIRST_LUNAR_SAMPLE_RETURN: { type: 'FIRST_LUNAR_SAMPLE_RETURN', category: 'lunar', title: 'First Lunar Sample Return', description: 'First robotic sample return from Moon', icon: '📦', color: '#78716C' },
-  FIRST_LUNAR_FAR_SIDE_LANDING: { type: 'FIRST_LUNAR_FAR_SIDE_LANDING', category: 'lunar', title: 'First Lunar Far Side Landing', description: 'First landing on lunar far side', icon: '🌑', color: '#44403C' },
+  FIRST_LUNAR_FLYBY: { type: 'FIRST_LUNAR_FLYBY', category: 'lunar', title: 'First Lunar Flyby', description: 'First spacecraft to fly by the Moon', icon: 'moon', color: '#94A3B8' },
+  FIRST_LUNAR_IMPACT: { type: 'FIRST_LUNAR_IMPACT', category: 'lunar', title: 'First Lunar Impact', description: 'First spacecraft to impact the Moon', icon: 'target', color: '#64748B' },
+  FIRST_LUNAR_ORBIT: { type: 'FIRST_LUNAR_ORBIT', category: 'lunar', title: 'First Lunar Orbit', description: 'First spacecraft to orbit the Moon', icon: 'radar', color: '#A3A3A3' },
+  FIRST_LUNAR_LANDING_ROBOTIC: { type: 'FIRST_LUNAR_LANDING_ROBOTIC', category: 'lunar', title: 'First Lunar Landing (Robotic)', description: 'First soft landing on the Moon', icon: 'engineering', color: '#71717A' },
+  FIRST_HUMAN_LUNAR_ORBIT: { type: 'FIRST_HUMAN_LUNAR_ORBIT', category: 'lunar', title: 'First Human Lunar Orbit', description: 'First crewed mission to orbit the Moon', icon: 'astronaut', color: '#D4D4D8' },
+  FIRST_HUMAN_LUNAR_LANDING: { type: 'FIRST_HUMAN_LUNAR_LANDING', category: 'lunar', title: 'First Human Lunar Landing', description: 'First humans to walk on the Moon', icon: 'trophy', color: '#FFD700' },
+  FIRST_LUNAR_ROVER: { type: 'FIRST_LUNAR_ROVER', category: 'lunar', title: 'First Lunar Rover', description: 'First rover to drive on the Moon', icon: 'explore', color: '#9CA3AF' },
+  FIRST_LUNAR_SAMPLE_RETURN: { type: 'FIRST_LUNAR_SAMPLE_RETURN', category: 'lunar', title: 'First Lunar Sample Return', description: 'First robotic sample return from Moon', icon: 'science', color: '#78716C' },
+  FIRST_LUNAR_FAR_SIDE_LANDING: { type: 'FIRST_LUNAR_FAR_SIDE_LANDING', category: 'lunar', title: 'First Lunar Far Side Landing', description: 'First landing on lunar far side', icon: 'moon', color: '#44403C' },
 
   // Planetary Firsts
-  FIRST_MARS_FLYBY: { type: 'FIRST_MARS_FLYBY', category: 'planetary', title: 'First Mars Flyby', description: 'First spacecraft to fly by Mars', icon: '🔴', color: '#DC2626' },
-  FIRST_MARS_ORBIT: { type: 'FIRST_MARS_ORBIT', category: 'planetary', title: 'First Mars Orbit', description: 'First spacecraft to orbit Mars', icon: '🔴🔄', color: '#B91C1C' },
-  FIRST_MARS_LANDING: { type: 'FIRST_MARS_LANDING', category: 'planetary', title: 'First Mars Landing', description: 'First soft landing on Mars', icon: '🔴⬇️', color: '#991B1B' },
-  FIRST_MARS_ROVER: { type: 'FIRST_MARS_ROVER', category: 'planetary', title: 'First Mars Rover', description: 'First rover to drive on Mars', icon: '🔴🚗', color: '#7F1D1D' },
-  FIRST_MARS_HELICOPTER: { type: 'FIRST_MARS_HELICOPTER', category: 'planetary', title: 'First Mars Helicopter', description: 'First powered flight on Mars', icon: '🚁', color: '#EF4444' },
-  FIRST_VENUS_FLYBY: { type: 'FIRST_VENUS_FLYBY', category: 'planetary', title: 'First Venus Flyby', description: 'First spacecraft to fly by Venus', icon: '🟡', color: '#FBBF24' },
-  FIRST_VENUS_LANDING: { type: 'FIRST_VENUS_LANDING', category: 'planetary', title: 'First Venus Landing', description: 'First soft landing on Venus', icon: '🟡⬇️', color: '#D97706' },
-  FIRST_MERCURY_ORBIT: { type: 'FIRST_MERCURY_ORBIT', category: 'planetary', title: 'First Mercury Orbit', description: 'First spacecraft to orbit Mercury', icon: '⚫', color: '#737373' },
-  FIRST_JUPITER_FLYBY: { type: 'FIRST_JUPITER_FLYBY', category: 'planetary', title: 'First Jupiter Flyby', description: 'First spacecraft to fly by Jupiter', icon: '🟠', color: '#EA580C' },
-  FIRST_SATURN_ORBIT: { type: 'FIRST_SATURN_ORBIT', category: 'planetary', title: 'First Saturn Orbit', description: 'First spacecraft to orbit Saturn', icon: '🪐', color: '#CA8A04' },
-  FIRST_OUTER_PLANET_PROBE: { type: 'FIRST_OUTER_PLANET_PROBE', category: 'planetary', title: 'First Outer Planet Probe', description: 'First spacecraft beyond Saturn', icon: '🌌', color: '#1E3A8A' },
+  FIRST_MARS_FLYBY: { type: 'FIRST_MARS_FLYBY', category: 'planetary', title: 'First Mars Flyby', description: 'First spacecraft to fly by Mars', icon: 'explore', color: '#DC2626' },
+  FIRST_MARS_ORBIT: { type: 'FIRST_MARS_ORBIT', category: 'planetary', title: 'First Mars Orbit', description: 'First spacecraft to orbit Mars', icon: 'radar', color: '#B91C1C' },
+  FIRST_MARS_LANDING: { type: 'FIRST_MARS_LANDING', category: 'planetary', title: 'First Mars Landing', description: 'First soft landing on Mars', icon: 'target', color: '#991B1B' },
+  FIRST_MARS_ROVER: { type: 'FIRST_MARS_ROVER', category: 'planetary', title: 'First Mars Rover', description: 'First rover to drive on Mars', icon: 'explore', color: '#7F1D1D' },
+  FIRST_MARS_HELICOPTER: { type: 'FIRST_MARS_HELICOPTER', category: 'planetary', title: 'First Mars Helicopter', description: 'First powered flight on Mars', icon: 'launch', color: '#EF4444' },
+  FIRST_VENUS_FLYBY: { type: 'FIRST_VENUS_FLYBY', category: 'planetary', title: 'First Venus Flyby', description: 'First spacecraft to fly by Venus', icon: 'explore', color: '#FBBF24' },
+  FIRST_VENUS_LANDING: { type: 'FIRST_VENUS_LANDING', category: 'planetary', title: 'First Venus Landing', description: 'First soft landing on Venus', icon: 'target', color: '#D97706' },
+  FIRST_MERCURY_ORBIT: { type: 'FIRST_MERCURY_ORBIT', category: 'planetary', title: 'First Mercury Orbit', description: 'First spacecraft to orbit Mercury', icon: 'radar', color: '#737373' },
+  FIRST_JUPITER_FLYBY: { type: 'FIRST_JUPITER_FLYBY', category: 'planetary', title: 'First Jupiter Flyby', description: 'First spacecraft to fly by Jupiter', icon: 'explore', color: '#EA580C' },
+  FIRST_SATURN_ORBIT: { type: 'FIRST_SATURN_ORBIT', category: 'planetary', title: 'First Saturn Orbit', description: 'First spacecraft to orbit Saturn', icon: 'radar', color: '#CA8A04' },
+  FIRST_OUTER_PLANET_PROBE: { type: 'FIRST_OUTER_PLANET_PROBE', category: 'planetary', title: 'First Outer Planet Probe', description: 'First spacecraft beyond Saturn', icon: 'explore', color: '#1E3A8A' },
 
   // Technology Firsts
-  FIRST_REUSABLE_ROCKET: { type: 'FIRST_REUSABLE_ROCKET', category: 'technology', title: 'First Reusable Rocket', description: 'First orbital-class reusable rocket', icon: '♻️', color: '#22C55E' },
-  FIRST_PROPULSIVE_LANDING: { type: 'FIRST_PROPULSIVE_LANDING', category: 'technology', title: 'First Propulsive Landing', description: 'First propulsive rocket landing', icon: '🎯', color: '#16A34A' },
-  FIRST_ROCKET_CATCH: { type: 'FIRST_ROCKET_CATCH', category: 'technology', title: 'First Rocket Catch', description: 'First rocket caught by launch tower', icon: '🏗️', color: '#15803D' },
-  FIRST_COMMERCIAL_SPACE_STATION: { type: 'FIRST_COMMERCIAL_SPACE_STATION', category: 'technology', title: 'First Commercial Space Station', description: 'First privately-operated space station', icon: '🏢', color: '#059669' },
-  FIRST_SPACE_TOURISM: { type: 'FIRST_SPACE_TOURISM', category: 'technology', title: 'First Space Tourism', description: 'First commercial space tourism operation', icon: '✈️', color: '#0D9488' },
+  FIRST_REUSABLE_ROCKET: { type: 'FIRST_REUSABLE_ROCKET', category: 'technology', title: 'First Reusable Rocket', description: 'First orbital-class reusable rocket', icon: 'recycling', color: '#22C55E' },
+  FIRST_PROPULSIVE_LANDING: { type: 'FIRST_PROPULSIVE_LANDING', category: 'technology', title: 'First Propulsive Landing', description: 'First propulsive rocket landing', icon: 'target', color: '#16A34A' },
+  FIRST_ROCKET_CATCH: { type: 'FIRST_ROCKET_CATCH', category: 'technology', title: 'First Rocket Catch', description: 'First rocket caught by launch tower', icon: 'engineering', color: '#15803D' },
+  FIRST_COMMERCIAL_SPACE_STATION: { type: 'FIRST_COMMERCIAL_SPACE_STATION', category: 'technology', title: 'First Commercial Space Station', description: 'First privately-operated space station', icon: 'hub', color: '#059669' },
+  FIRST_SPACE_TOURISM: { type: 'FIRST_SPACE_TOURISM', category: 'technology', title: 'First Space Tourism', description: 'First commercial space tourism operation', icon: 'launch', color: '#0D9488' },
 
   // Other
-  FIRST_ASTEROID_LANDING: { type: 'FIRST_ASTEROID_LANDING', category: 'other', title: 'First Asteroid Landing', description: 'First spacecraft to land on an asteroid', icon: '☄️', color: '#6B7280' },
-  FIRST_COMET_LANDING: { type: 'FIRST_COMET_LANDING', category: 'other', title: 'First Comet Landing', description: 'First spacecraft to land on a comet', icon: '💫', color: '#9333EA' },
-  FIRST_SAMPLE_RETURN_ASTEROID: { type: 'FIRST_SAMPLE_RETURN_ASTEROID', category: 'other', title: 'First Asteroid Sample Return', description: 'First sample return from an asteroid', icon: '🪨', color: '#7C3AED' },
-  FIRST_INTERSTELLAR_PROBE: { type: 'FIRST_INTERSTELLAR_PROBE', category: 'other', title: 'First Interstellar Probe', description: 'First spacecraft to enter interstellar space', icon: '🌟', color: '#4F46E5' }
+  FIRST_ASTEROID_LANDING: { type: 'FIRST_ASTEROID_LANDING', category: 'other', title: 'First Asteroid Landing', description: 'First spacecraft to land on an asteroid', icon: 'explore', color: '#6B7280' },
+  FIRST_COMET_LANDING: { type: 'FIRST_COMET_LANDING', category: 'other', title: 'First Comet Landing', description: 'First spacecraft to land on a comet', icon: 'star', color: '#9333EA' },
+  FIRST_SAMPLE_RETURN_ASTEROID: { type: 'FIRST_SAMPLE_RETURN_ASTEROID', category: 'other', title: 'First Asteroid Sample Return', description: 'First sample return from an asteroid', icon: 'science', color: '#7C3AED' },
+  FIRST_INTERSTELLAR_PROBE: { type: 'FIRST_INTERSTELLAR_PROBE', category: 'other', title: 'First Interstellar Probe', description: 'First spacecraft to enter interstellar space', icon: 'star', color: '#4F46E5' }
 };
 
 export interface CountryTimeline {
@@ -784,28 +784,28 @@ export interface MissionTypeInfo {
 }
 
 export const MISSION_TYPE_INFO: Record<MissionType, MissionTypeInfo> = {
-  CREWED_ORBITAL: { type: 'CREWED_ORBITAL', label: 'Crewed Orbital', description: 'Human spaceflight to Earth orbit', icon: '👨‍🚀', color: '#8B5CF6', category: 'crewed' },
-  CREWED_LUNAR: { type: 'CREWED_LUNAR', label: 'Crewed Lunar', description: 'Human spaceflight to the Moon', icon: '👨‍🚀🌙', color: '#6366F1', category: 'crewed' },
-  CREWED_PLANETARY: { type: 'CREWED_PLANETARY', label: 'Crewed Planetary', description: 'Human spaceflight to other planets', icon: '👨‍🚀🔴', color: '#4F46E5', category: 'crewed' },
-  CARGO_RESUPPLY: { type: 'CARGO_RESUPPLY', label: 'Cargo Resupply', description: 'Supply mission to space station', icon: '📦', color: '#10B981', category: 'robotic' },
-  SATELLITE_DEPLOYMENT: { type: 'SATELLITE_DEPLOYMENT', label: 'Satellite Deployment', description: 'Deploying satellites to orbit', icon: '🛰️', color: '#3B82F6', category: 'satellite' },
-  SPACE_STATION: { type: 'SPACE_STATION', label: 'Space Station', description: 'Space station construction or operation', icon: '🏠', color: '#F59E0B', category: 'crewed' },
-  LUNAR_ORBITER: { type: 'LUNAR_ORBITER', label: 'Lunar Orbiter', description: 'Robotic mission to lunar orbit', icon: '🌙🔄', color: '#94A3B8', category: 'exploration' },
-  LUNAR_LANDER: { type: 'LUNAR_LANDER', label: 'Lunar Lander', description: 'Robotic landing on the Moon', icon: '🌙⬇️', color: '#64748B', category: 'exploration' },
-  LUNAR_SAMPLE_RETURN: { type: 'LUNAR_SAMPLE_RETURN', label: 'Lunar Sample Return', description: 'Return samples from the Moon', icon: '🌙📦', color: '#475569', category: 'exploration' },
-  MARS_ORBITER: { type: 'MARS_ORBITER', label: 'Mars Orbiter', description: 'Robotic mission to Mars orbit', icon: '🔴🔄', color: '#DC2626', category: 'exploration' },
-  MARS_LANDER: { type: 'MARS_LANDER', label: 'Mars Lander', description: 'Robotic landing on Mars', icon: '🔴⬇️', color: '#B91C1C', category: 'exploration' },
-  MARS_ROVER: { type: 'MARS_ROVER', label: 'Mars Rover', description: 'Robotic rover on Mars', icon: '🔴🚗', color: '#991B1B', category: 'exploration' },
-  PLANETARY_PROBE: { type: 'PLANETARY_PROBE', label: 'Planetary Probe', description: 'Robotic probe to other planets', icon: '🪐', color: '#EA580C', category: 'exploration' },
-  DEEP_SPACE_PROBE: { type: 'DEEP_SPACE_PROBE', label: 'Deep Space Probe', description: 'Robotic probe to deep space', icon: '🌌', color: '#1E3A8A', category: 'exploration' },
-  ASTEROID_MISSION: { type: 'ASTEROID_MISSION', label: 'Asteroid Mission', description: 'Mission to asteroids', icon: '☄️', color: '#6B7280', category: 'exploration' },
-  SAMPLE_RETURN: { type: 'SAMPLE_RETURN', label: 'Sample Return', description: 'Return samples from space', icon: '🪨', color: '#7C3AED', category: 'exploration' },
-  TECHNOLOGY_DEMO: { type: 'TECHNOLOGY_DEMO', label: 'Technology Demo', description: 'Technology demonstration mission', icon: '⚡', color: '#14B8A6', category: 'robotic' },
-  EARTH_OBSERVATION: { type: 'EARTH_OBSERVATION', label: 'Earth Observation', description: 'Earth observation satellite', icon: '🌍', color: '#059669', category: 'satellite' },
-  COMMUNICATIONS: { type: 'COMMUNICATIONS', label: 'Communications', description: 'Communications satellite', icon: '📡', color: '#0EA5E9', category: 'satellite' },
-  NAVIGATION: { type: 'NAVIGATION', label: 'Navigation', description: 'Navigation satellite (GPS, etc.)', icon: '🧭', color: '#0284C7', category: 'satellite' },
-  SCIENTIFIC: { type: 'SCIENTIFIC', label: 'Scientific', description: 'Scientific research mission', icon: '🔬', color: '#9333EA', category: 'robotic' },
-  MILITARY: { type: 'MILITARY', label: 'Military', description: 'Military/Defense satellite', icon: '🎖️', color: '#374151', category: 'satellite' }
+  CREWED_ORBITAL: { type: 'CREWED_ORBITAL', label: 'Crewed Orbital', description: 'Human spaceflight to Earth orbit', icon: 'astronaut', color: '#8B5CF6', category: 'crewed' },
+  CREWED_LUNAR: { type: 'CREWED_LUNAR', label: 'Crewed Lunar', description: 'Human spaceflight to the Moon', icon: 'astronaut', color: '#6366F1', category: 'crewed' },
+  CREWED_PLANETARY: { type: 'CREWED_PLANETARY', label: 'Crewed Planetary', description: 'Human spaceflight to other planets', icon: 'astronaut', color: '#4F46E5', category: 'crewed' },
+  CARGO_RESUPPLY: { type: 'CARGO_RESUPPLY', label: 'Cargo Resupply', description: 'Supply mission to space station', icon: 'rocket', color: '#10B981', category: 'robotic' },
+  SATELLITE_DEPLOYMENT: { type: 'SATELLITE_DEPLOYMENT', label: 'Satellite Deployment', description: 'Deploying satellites to orbit', icon: 'satellite', color: '#3B82F6', category: 'satellite' },
+  SPACE_STATION: { type: 'SPACE_STATION', label: 'Space Station', description: 'Space station construction or operation', icon: 'hub', color: '#F59E0B', category: 'crewed' },
+  LUNAR_ORBITER: { type: 'LUNAR_ORBITER', label: 'Lunar Orbiter', description: 'Robotic mission to lunar orbit', icon: 'moon', color: '#94A3B8', category: 'exploration' },
+  LUNAR_LANDER: { type: 'LUNAR_LANDER', label: 'Lunar Lander', description: 'Robotic landing on the Moon', icon: 'moon', color: '#64748B', category: 'exploration' },
+  LUNAR_SAMPLE_RETURN: { type: 'LUNAR_SAMPLE_RETURN', label: 'Lunar Sample Return', description: 'Return samples from the Moon', icon: 'science', color: '#475569', category: 'exploration' },
+  MARS_ORBITER: { type: 'MARS_ORBITER', label: 'Mars Orbiter', description: 'Robotic mission to Mars orbit', icon: 'explore', color: '#DC2626', category: 'exploration' },
+  MARS_LANDER: { type: 'MARS_LANDER', label: 'Mars Lander', description: 'Robotic landing on Mars', icon: 'target', color: '#B91C1C', category: 'exploration' },
+  MARS_ROVER: { type: 'MARS_ROVER', label: 'Mars Rover', description: 'Robotic rover on Mars', icon: 'explore', color: '#991B1B', category: 'exploration' },
+  PLANETARY_PROBE: { type: 'PLANETARY_PROBE', label: 'Planetary Probe', description: 'Robotic probe to other planets', icon: 'explore', color: '#EA580C', category: 'exploration' },
+  DEEP_SPACE_PROBE: { type: 'DEEP_SPACE_PROBE', label: 'Deep Space Probe', description: 'Robotic probe to deep space', icon: 'explore', color: '#1E3A8A', category: 'exploration' },
+  ASTEROID_MISSION: { type: 'ASTEROID_MISSION', label: 'Asteroid Mission', description: 'Mission to asteroids', icon: 'explore', color: '#6B7280', category: 'exploration' },
+  SAMPLE_RETURN: { type: 'SAMPLE_RETURN', label: 'Sample Return', description: 'Return samples from space', icon: 'science', color: '#7C3AED', category: 'exploration' },
+  TECHNOLOGY_DEMO: { type: 'TECHNOLOGY_DEMO', label: 'Technology Demo', description: 'Technology demonstration mission', icon: 'bolt', color: '#14B8A6', category: 'robotic' },
+  EARTH_OBSERVATION: { type: 'EARTH_OBSERVATION', label: 'Earth Observation', description: 'Earth observation satellite', icon: 'globe', color: '#059669', category: 'satellite' },
+  COMMUNICATIONS: { type: 'COMMUNICATIONS', label: 'Communications', description: 'Communications satellite', icon: 'satellite', color: '#0EA5E9', category: 'satellite' },
+  NAVIGATION: { type: 'NAVIGATION', label: 'Navigation', description: 'Navigation satellite (GPS, etc.)', icon: 'explore', color: '#0284C7', category: 'satellite' },
+  SCIENTIFIC: { type: 'SCIENTIFIC', label: 'Scientific', description: 'Scientific research mission', icon: 'science', color: '#9333EA', category: 'robotic' },
+  MILITARY: { type: 'MILITARY', label: 'Military', description: 'Military/Defense satellite', icon: 'military', color: '#374151', category: 'satellite' }
 };
 
 export interface DestinationInfo {
@@ -817,26 +817,26 @@ export interface DestinationInfo {
 }
 
 export const DESTINATION_INFO: Record<MissionDestination, DestinationInfo> = {
-  LEO: { destination: 'LEO', label: 'Low Earth Orbit', description: '160-2,000 km altitude', icon: '🌍', distance: '~400 km' },
-  MEO: { destination: 'MEO', label: 'Medium Earth Orbit', description: '2,000-35,786 km altitude', icon: '🌍', distance: '~20,200 km' },
-  GEO: { destination: 'GEO', label: 'Geostationary Orbit', description: '35,786 km altitude', icon: '🌍', distance: '35,786 km' },
-  HEO: { destination: 'HEO', label: 'High Earth Orbit', description: 'Above 35,786 km altitude', icon: '🌍', distance: '>35,786 km' },
-  SSO: { destination: 'SSO', label: 'Sun-Synchronous Orbit', description: 'Polar orbit for Earth observation', icon: '☀️', distance: '~600-800 km' },
-  LUNAR_ORBIT: { destination: 'LUNAR_ORBIT', label: 'Lunar Orbit', description: 'Orbit around the Moon', icon: '🌙', distance: '384,400 km' },
-  LUNAR_SURFACE: { destination: 'LUNAR_SURFACE', label: 'Lunar Surface', description: 'Moon landing', icon: '🌕', distance: '384,400 km' },
-  EARTH_MOON_L1: { destination: 'EARTH_MOON_L1', label: 'Earth-Moon L1', description: 'Lagrange point 1', icon: '⚖️', distance: '~326,500 km' },
-  EARTH_MOON_L2: { destination: 'EARTH_MOON_L2', label: 'Earth-Moon L2', description: 'Lagrange point 2', icon: '⚖️', distance: '~448,900 km' },
-  MARS_ORBIT: { destination: 'MARS_ORBIT', label: 'Mars Orbit', description: 'Orbit around Mars', icon: '🔴', distance: '~225M km' },
-  MARS_SURFACE: { destination: 'MARS_SURFACE', label: 'Mars Surface', description: 'Mars landing', icon: '🔴', distance: '~225M km' },
-  VENUS: { destination: 'VENUS', label: 'Venus', description: 'Venus flyby, orbit, or landing', icon: '🟡', distance: '~41M km' },
-  MERCURY: { destination: 'MERCURY', label: 'Mercury', description: 'Mercury flyby or orbit', icon: '⚫', distance: '~77M km' },
-  JUPITER: { destination: 'JUPITER', label: 'Jupiter', description: 'Jupiter system', icon: '🟠', distance: '~628M km' },
-  SATURN: { destination: 'SATURN', label: 'Saturn', description: 'Saturn system', icon: '🪐', distance: '~1.2B km' },
-  OUTER_PLANETS: { destination: 'OUTER_PLANETS', label: 'Outer Planets', description: 'Uranus, Neptune, or beyond', icon: '🌌', distance: '>2.8B km' },
-  ASTEROID: { destination: 'ASTEROID', label: 'Asteroid', description: 'Asteroid belt or NEO', icon: '☄️', distance: 'Varies' },
-  COMET: { destination: 'COMET', label: 'Comet', description: 'Comet rendezvous', icon: '💫', distance: 'Varies' },
-  SUN: { destination: 'SUN', label: 'Sun', description: 'Solar observation', icon: '☀️', distance: '~150M km' },
-  INTERSTELLAR: { destination: 'INTERSTELLAR', label: 'Interstellar', description: 'Beyond the solar system', icon: '🌟', distance: '>18B km' }
+  LEO: { destination: 'LEO', label: 'Low Earth Orbit', description: '160-2,000 km altitude', icon: 'globe', distance: '~400 km' },
+  MEO: { destination: 'MEO', label: 'Medium Earth Orbit', description: '2,000-35,786 km altitude', icon: 'globe', distance: '~20,200 km' },
+  GEO: { destination: 'GEO', label: 'Geostationary Orbit', description: '35,786 km altitude', icon: 'globe', distance: '35,786 km' },
+  HEO: { destination: 'HEO', label: 'High Earth Orbit', description: 'Above 35,786 km altitude', icon: 'globe', distance: '>35,786 km' },
+  SSO: { destination: 'SSO', label: 'Sun-Synchronous Orbit', description: 'Polar orbit for Earth observation', icon: 'sun', distance: '~600-800 km' },
+  LUNAR_ORBIT: { destination: 'LUNAR_ORBIT', label: 'Lunar Orbit', description: 'Orbit around the Moon', icon: 'moon', distance: '384,400 km' },
+  LUNAR_SURFACE: { destination: 'LUNAR_SURFACE', label: 'Lunar Surface', description: 'Moon landing', icon: 'moon', distance: '384,400 km' },
+  EARTH_MOON_L1: { destination: 'EARTH_MOON_L1', label: 'Earth-Moon L1', description: 'Lagrange point 1', icon: 'radar', distance: '~326,500 km' },
+  EARTH_MOON_L2: { destination: 'EARTH_MOON_L2', label: 'Earth-Moon L2', description: 'Lagrange point 2', icon: 'radar', distance: '~448,900 km' },
+  MARS_ORBIT: { destination: 'MARS_ORBIT', label: 'Mars Orbit', description: 'Orbit around Mars', icon: 'explore', distance: '~225M km' },
+  MARS_SURFACE: { destination: 'MARS_SURFACE', label: 'Mars Surface', description: 'Mars landing', icon: 'explore', distance: '~225M km' },
+  VENUS: { destination: 'VENUS', label: 'Venus', description: 'Venus flyby, orbit, or landing', icon: 'explore', distance: '~41M km' },
+  MERCURY: { destination: 'MERCURY', label: 'Mercury', description: 'Mercury flyby or orbit', icon: 'explore', distance: '~77M km' },
+  JUPITER: { destination: 'JUPITER', label: 'Jupiter', description: 'Jupiter system', icon: 'explore', distance: '~628M km' },
+  SATURN: { destination: 'SATURN', label: 'Saturn', description: 'Saturn system', icon: 'explore', distance: '~1.2B km' },
+  OUTER_PLANETS: { destination: 'OUTER_PLANETS', label: 'Outer Planets', description: 'Uranus, Neptune, or beyond', icon: 'explore', distance: '>2.8B km' },
+  ASTEROID: { destination: 'ASTEROID', label: 'Asteroid', description: 'Asteroid belt or NEO', icon: 'explore', distance: 'Varies' },
+  COMET: { destination: 'COMET', label: 'Comet', description: 'Comet rendezvous', icon: 'star', distance: 'Varies' },
+  SUN: { destination: 'SUN', label: 'Sun', description: 'Solar observation', icon: 'sun', distance: '~150M km' },
+  INTERSTELLAR: { destination: 'INTERSTELLAR', label: 'Interstellar', description: 'Beyond the solar system', icon: 'star', distance: '>18B km' }
 };
 
 export interface MissionStatistics {

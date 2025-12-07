@@ -17,6 +17,8 @@ import CapabilityScoreCard, {
   CategoryScoreBar,
 } from '../components/CapabilityScoreCard';
 import { CATEGORY_WEIGHTS, SCI_TIER_THRESHOLDS } from '../types';
+import SpaceIcon from '../components/icons/SpaceIcons';
+import { EmojiEvents } from '@mui/icons-material';
 
 /**
  * Get flag emoji for country
@@ -415,7 +417,7 @@ function RankingRow({ breakdown, rank, isSelected, onToggleSelect, canSelect }) 
                     }}
                   />
                   <span className="absolute inset-0 flex items-center justify-center text-xs font-medium">
-                    {catInfo?.icon}
+                    <SpaceIcon name={catInfo?.icon} size="sm" />
                   </span>
                 </div>
               </div>
@@ -459,7 +461,7 @@ function RankingRow({ breakdown, rank, isSelected, onToggleSelect, canSelect }) 
                           key={s}
                           className="px-2 py-1 bg-green-100 text-green-800 rounded text-sm flex items-center gap-1"
                         >
-                          {catInfo?.icon} {catInfo?.label}
+                          <SpaceIcon name={catInfo?.icon} size="sm" /> {catInfo?.label}
                         </span>
                       );
                     })}
@@ -477,7 +479,7 @@ function RankingRow({ breakdown, rank, isSelected, onToggleSelect, canSelect }) 
                           key={w}
                           className="px-2 py-1 bg-amber-100 text-amber-800 rounded text-sm flex items-center gap-1"
                         >
-                          {catInfo?.icon} {catInfo?.label}
+                          <SpaceIcon name={catInfo?.icon} size="sm" /> {catInfo?.label}
                         </span>
                       );
                     })}
@@ -561,7 +563,7 @@ function ComparisonView({ comparison }) {
                 return (
                   <tr key={cw.category} className="border-b border-gray-100 hover:bg-gray-50">
                     <td className="py-3 px-4 flex items-center gap-2">
-                      <span>{cw.icon}</span>
+                      <SpaceIcon name={cw.icon} size="sm" />
                       {cw.label}
                     </td>
                     {comparison.countries.map((c, idx) => {
@@ -575,7 +577,7 @@ function ComparisonView({ comparison }) {
                             className={`text-lg font-semibold ${isMax ? 'text-green-600' : 'text-gray-700'}`}
                           >
                             {score.toFixed(1)}
-                            {isMax && <span className="ml-1">👑</span>}
+                            {isMax && <span className="ml-1"><EmojiEvents style={{ fontSize: '1rem', color: '#eab308' }} /></span>}
                           </span>
                         </td>
                       );
@@ -598,7 +600,7 @@ function ComparisonView({ comparison }) {
               return (
                 <div key={ga.category} className="border border-gray-200 rounded-lg p-4">
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="text-xl">{catInfo?.icon}</span>
+                    <SpaceIcon name={catInfo?.icon} size="lg" />
                     <span className="font-medium text-gray-800">{catInfo?.label}</span>
                   </div>
                   <div className="text-sm text-gray-600 mb-2">

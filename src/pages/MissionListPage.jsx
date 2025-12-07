@@ -3,6 +3,14 @@ import { Link } from 'react-router-dom';
 import { useAllMissions, useFilteredMissions, useMissionStatistics } from '../hooks/useMissions';
 import MissionCard, { StatusBadge, MissionTypeBadge, DestinationBadge } from '../components/MissionCard';
 import { MISSION_TYPE_INFO, DESTINATION_INFO } from '../types';
+import {
+  Rocket,
+  PersonOutline,
+  EmojiEvents,
+  Flag,
+  Circle,
+  NightlightRound,
+} from '@mui/icons-material';
 
 // Status options for filter
 const STATUS_OPTIONS = [
@@ -16,18 +24,6 @@ const STATUS_OPTIONS = [
   { value: 'FAILED', label: 'Failed' },
   { value: 'LOST', label: 'Lost' }
 ];
-
-// Country flags
-const COUNTRY_FLAGS = {
-  USA: '🇺🇸',
-  RUS: '🇷🇺',
-  CHN: '🇨🇳',
-  EUR: '🇪🇺',
-  JPN: '🇯🇵',
-  IND: '🇮🇳',
-  ISR: '🇮🇱',
-  UAE: '🇦🇪'
-};
 
 export default function MissionListPage() {
   const { missions: allMissions, loading, error } = useAllMissions();
@@ -258,7 +254,7 @@ export default function MissionListPage() {
         {/* Mission List */}
         {filteredMissions.length === 0 ? (
           <div className="bg-white rounded-lg shadow-md p-12 text-center">
-            <div className="text-6xl mb-4">🚀</div>
+            <div className="mb-4"><Rocket style={{ fontSize: '4rem' }} className="text-indigo-600" /></div>
             <h3 className="text-xl font-semibold text-gray-700 mb-2">No Missions Found</h3>
             <p className="text-gray-500">
               {hasActiveFilters
@@ -308,14 +304,14 @@ export default function MissionListPage() {
                         {mission.name}
                       </Link>
                       {mission.crewed && (
-                        <span className="ml-2 text-xs text-purple-600">👨‍🚀</span>
+                        <PersonOutline className="ml-2 text-purple-600" style={{ fontSize: '1rem' }} />
                       )}
                       {mission.historicFirst && (
-                        <span className="ml-1 text-xs text-yellow-600">🥇</span>
+                        <EmojiEvents className="ml-1 text-yellow-600" style={{ fontSize: '1rem' }} />
                       )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="text-lg">{COUNTRY_FLAGS[mission.countryId] || '🏳️'}</span>
+                      <Flag className="text-gray-600" style={{ fontSize: '1.25rem' }} />
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <MissionTypeBadge missionType={mission.missionType} />
@@ -342,7 +338,7 @@ export default function MissionListPage() {
             to="/missions?filter=crewed"
             className="bg-purple-50 hover:bg-purple-100 rounded-lg p-4 flex items-center gap-3 transition"
           >
-            <span className="text-3xl">👨‍🚀</span>
+            <PersonOutline style={{ fontSize: '2rem' }} className="text-purple-600" />
             <div>
               <h3 className="font-semibold text-purple-800">Crewed Missions</h3>
               <p className="text-sm text-purple-600">Explore human spaceflight</p>
@@ -352,7 +348,7 @@ export default function MissionListPage() {
             to="/missions?destination=MARS"
             className="bg-red-50 hover:bg-red-100 rounded-lg p-4 flex items-center gap-3 transition"
           >
-            <span className="text-3xl">🔴</span>
+            <Circle style={{ fontSize: '2rem' }} className="text-red-600" />
             <div>
               <h3 className="font-semibold text-red-800">Mars Missions</h3>
               <p className="text-sm text-red-600">Journey to the Red Planet</p>
@@ -362,7 +358,7 @@ export default function MissionListPage() {
             to="/missions?destination=MOON"
             className="bg-gray-50 hover:bg-gray-100 rounded-lg p-4 flex items-center gap-3 transition"
           >
-            <span className="text-3xl">🌙</span>
+            <NightlightRound style={{ fontSize: '2rem' }} className="text-gray-600" />
             <div>
               <h3 className="font-semibold text-gray-800">Lunar Missions</h3>
               <p className="text-sm text-gray-600">Return to the Moon</p>

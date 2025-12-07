@@ -3,14 +3,15 @@ import { Link } from 'react-router-dom';
 import { useEngines, useEngineStatistics } from '../hooks/useEngines';
 import EngineCard from '../components/EngineCard';
 import EngineChart from '../components/EngineChart';
+import { Rocket, Bolt, Recycling, Tune, Refresh } from '@mui/icons-material';
 
 const COUNTRIES = [
-  { code: 'USA', name: 'United States', flag: '🇺🇸' },
-  { code: 'RUS', name: 'Russia', flag: '🇷🇺' },
-  { code: 'CHN', name: 'China', flag: '🇨🇳' },
-  { code: 'FRA', name: 'France/ESA', flag: '🇫🇷' },
-  { code: 'JPN', name: 'Japan', flag: '🇯🇵' },
-  { code: 'IND', name: 'India', flag: '🇮🇳' },
+  { code: 'USA', name: 'United States' },
+  { code: 'RUS', name: 'Russia' },
+  { code: 'CHN', name: 'China' },
+  { code: 'FRA', name: 'France/ESA' },
+  { code: 'JPN', name: 'Japan' },
+  { code: 'IND', name: 'India' },
 ];
 
 const PROPELLANTS = [
@@ -134,7 +135,9 @@ export default function EngineListPage() {
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">🚀 Rocket Engines</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-2 flex items-center gap-3">
+            <Rocket style={{ fontSize: '2.5rem' }} className="text-blue-600" /> Rocket Engines
+          </h1>
           <p className="text-gray-600">
             Explore {engines.length} rocket engines from space agencies around the world
           </p>
@@ -391,10 +394,10 @@ export default function EngineListPage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex gap-1">
-                          {engine.reusable && <span title="Reusable">♻️</span>}
-                          {engine.advancedCycle && <span title="Advanced Cycle">⚡</span>}
-                          {engine.throttleCapable && <span title="Throttle">🎚️</span>}
-                          {engine.restartCapable && <span title="Restart">🔄</span>}
+                          {engine.reusable && <Recycling titleAccess="Reusable" className="text-green-600" style={{ fontSize: '1.25rem' }} />}
+                          {engine.advancedCycle && <Bolt titleAccess="Advanced Cycle" className="text-purple-600" style={{ fontSize: '1.25rem' }} />}
+                          {engine.throttleCapable && <Tune titleAccess="Throttle" className="text-blue-600" style={{ fontSize: '1.25rem' }} />}
+                          {engine.restartCapable && <Refresh titleAccess="Restart" className="text-orange-600" style={{ fontSize: '1.25rem' }} />}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm">

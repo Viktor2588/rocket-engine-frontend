@@ -7,6 +7,7 @@ import { useWorldRecords, useTechnologyTrends, useEmergingNations, useLaunchesPe
 import LaunchFrequencyChart from '../components/charts/LaunchFrequencyChart';
 import EngineBubbleChart from '../components/charts/EngineBubbleChart';
 import CapabilityRadarChart from '../components/charts/CapabilityRadarChart';
+import SpaceIcon from '../components/icons/SpaceIcons';
 
 // Record Card Component
 function RecordCard({ title, value, subtitle, icon, link, color = 'indigo' }) {
@@ -22,7 +23,7 @@ function RecordCard({ title, value, subtitle, icon, link, color = 'indigo' }) {
   const content = (
     <div className={`${colorClasses[color]} rounded-lg border-2 p-4 transition hover:shadow-md`}>
       <div className="flex items-center gap-2 mb-2">
-        <span className="text-2xl">{icon}</span>
+        <SpaceIcon name={icon} size="xl" />
         <span className="text-sm font-medium text-gray-600">{title}</span>
       </div>
       <div className="text-xl font-bold">{value || 'N/A'}</div>
@@ -166,12 +167,12 @@ export default function AnalyticsPage() {
         <div className="bg-white rounded-lg shadow-md mb-6">
           <div className="flex overflow-x-auto border-b">
             {[
-              { id: 'launches', label: 'Launch Activity', icon: '🚀' },
-              { id: 'records', label: 'World Records', icon: '🏆' },
-              { id: 'trends', label: 'Technology Trends', icon: '📈' },
-              { id: 'emerging', label: 'Emerging Nations', icon: '🌍' },
-              { id: 'engines', label: 'Engine Analysis', icon: '🔥' },
-              { id: 'capabilities', label: 'Capabilities', icon: '⭐' },
+              { id: 'launches', label: 'Launch Activity', icon: 'rocket' },
+              { id: 'records', label: 'World Records', icon: 'trophy' },
+              { id: 'trends', label: 'Technology Trends', icon: 'trend-up' },
+              { id: 'emerging', label: 'Emerging Nations', icon: 'globe' },
+              { id: 'engines', label: 'Engine Analysis', icon: 'engine' },
+              { id: 'capabilities', label: 'Capabilities', icon: 'star' },
             ].map(tab => (
               <button
                 key={tab.id}
@@ -182,7 +183,7 @@ export default function AnalyticsPage() {
                     : 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
-                <span>{tab.icon}</span>
+                <SpaceIcon name={tab.icon} size="md" />
                 {tab.label}
               </button>
             ))}
@@ -280,7 +281,7 @@ export default function AnalyticsPage() {
                   title="Most Powerful Engine"
                   value={records.mostPowerfulEngine?.name}
                   subtitle={records.mostPowerfulEngine?.thrustKn ? `${records.mostPowerfulEngine.thrustKn.toLocaleString()} kN` : undefined}
-                  icon="💪"
+                  icon="speed"
                   color="orange"
                   link={records.mostPowerfulEngine ? `/engines/${records.mostPowerfulEngine.id}` : undefined}
                 />
@@ -288,7 +289,7 @@ export default function AnalyticsPage() {
                   title="Most Efficient Engine"
                   value={records.mostEfficientEngine?.name}
                   subtitle={records.mostEfficientEngine?.specificImpulseS ? `${records.mostEfficientEngine.specificImpulseS} s ISP` : undefined}
-                  icon="⚡"
+                  icon="bolt"
                   color="green"
                   link={records.mostEfficientEngine ? `/engines/${records.mostEfficientEngine.id}` : undefined}
                 />
@@ -296,7 +297,7 @@ export default function AnalyticsPage() {
                   title="Highest Chamber Pressure"
                   value={records.highestPressureEngine?.name}
                   subtitle={records.highestPressureEngine?.chamberPressureBar ? `${records.highestPressureEngine.chamberPressureBar} bar` : undefined}
-                  icon="🔥"
+                  icon="engine"
                   color="purple"
                   link={records.highestPressureEngine ? `/engines/${records.highestPressureEngine.id}` : undefined}
                 />
@@ -311,7 +312,7 @@ export default function AnalyticsPage() {
                   title="Most Capable Space Program"
                   value={records.mostCapableCountry?.name}
                   subtitle={records.mostCapableCountry?.overallCapabilityScore ? `SCI: ${records.mostCapableCountry.overallCapabilityScore.toFixed(1)}` : undefined}
-                  icon="🏆"
+                  icon="trophy"
                   color="yellow"
                   link={records.mostCapableCountry ? `/countries/${records.mostCapableCountry.isoCode}` : undefined}
                 />
@@ -319,7 +320,7 @@ export default function AnalyticsPage() {
                   title="Most Launches"
                   value={records.mostLaunchesCountry?.name}
                   subtitle={records.mostLaunchesCountry?.totalLaunches ? `${records.mostLaunchesCountry.totalLaunches.toLocaleString()} total` : undefined}
-                  icon="🚀"
+                  icon="rocket"
                   color="indigo"
                   link={records.mostLaunchesCountry ? `/countries/${records.mostLaunchesCountry.isoCode}` : undefined}
                 />
@@ -327,7 +328,7 @@ export default function AnalyticsPage() {
                   title="Highest Success Rate"
                   value={records.highestSuccessRate?.name}
                   subtitle={records.highestSuccessRate?.launchSuccessRate ? `${records.highestSuccessRate.launchSuccessRate.toFixed(1)}%` : undefined}
-                  icon="✅"
+                  icon="check"
                   color="green"
                   link={records.highestSuccessRate ? `/countries/${records.highestSuccessRate.isoCode}` : undefined}
                 />
@@ -342,7 +343,7 @@ export default function AnalyticsPage() {
                   title="Largest Payload to LEO"
                   value={records.largestPayload?.name}
                   subtitle={records.largestPayload?.payloadToLeoKg ? `${(records.largestPayload.payloadToLeoKg / 1000).toFixed(0)} tons` : undefined}
-                  icon="📦"
+                  icon="rocket"
                   color="blue"
                   link={records.largestPayload ? `/vehicles/${records.largestPayload.id}` : undefined}
                 />
@@ -350,7 +351,7 @@ export default function AnalyticsPage() {
                   title="Most Reusable Vehicle"
                   value={records.mostReusable?.name}
                   subtitle={records.mostReusable?.totalLaunches ? `${records.mostReusable.totalLaunches} flights` : undefined}
-                  icon="♻️"
+                  icon="recycling"
                   color="green"
                   link={records.mostReusable ? `/vehicles/${records.mostReusable.id}` : undefined}
                 />
@@ -358,7 +359,7 @@ export default function AnalyticsPage() {
                   title="Busiest Launch Site"
                   value={records.busiestSite?.name}
                   subtitle={records.busiestSite?.totalLaunches ? `${records.busiestSite.totalLaunches.toLocaleString()} launches` : undefined}
-                  icon="🏗️"
+                  icon="construction"
                   color="orange"
                   link={records.busiestSite ? `/launch-sites/${records.busiestSite.id}` : undefined}
                 />
@@ -366,7 +367,7 @@ export default function AnalyticsPage() {
                   title="Oldest Active Site"
                   value={records.oldestSite?.name}
                   subtitle={records.oldestSite?.established ? `Since ${records.oldestSite.established}` : undefined}
-                  icon="🏛️"
+                  icon="location"
                   color="purple"
                   link={records.oldestSite ? `/launch-sites/${records.oldestSite.id}` : undefined}
                 />
@@ -488,7 +489,7 @@ export default function AnalyticsPage() {
               {/* Established Powers */}
               <div className="bg-white rounded-lg shadow-md p-6">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                  <span className="text-2xl">🏆</span> Established Powers
+                  <SpaceIcon name="trophy" size="xl" /> Established Powers
                 </h3>
                 <div className="space-y-3">
                   {analysis.established.map((country, idx) => (
@@ -514,7 +515,7 @@ export default function AnalyticsPage() {
               {/* Emerging Powers */}
               <div className="bg-white rounded-lg shadow-md p-6">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                  <span className="text-2xl">🚀</span> Emerging Powers
+                  <SpaceIcon name="rocket" size="xl" /> Emerging Powers
                 </h3>
                 <div className="space-y-3">
                   {analysis.emerging.length > 0 ? analysis.emerging.slice(0, 5).map(country => (
@@ -545,7 +546,7 @@ export default function AnalyticsPage() {
               {/* Rising Contenders */}
               <div className="bg-white rounded-lg shadow-md p-6">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                  <span className="text-2xl">⭐</span> Rising Contenders
+                  <SpaceIcon name="star" size="xl" /> Rising Contenders
                 </h3>
                 <div className="space-y-3">
                   {analysis.rising.length > 0 ? analysis.rising.slice(0, 5).map(country => (
@@ -579,15 +580,15 @@ export default function AnalyticsPage() {
               <h3 className="text-lg font-semibold text-gray-800 mb-4">Capability Achievement Distribution</h3>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                 {[
-                  { key: 'crewedSpaceflight', label: 'Human Spaceflight', icon: '👨‍🚀', color: 'purple' },
-                  { key: 'reusableRockets', label: 'Reusable Rockets', icon: '♻️', color: 'green' },
-                  { key: 'deepSpaceProbes', label: 'Deep Space', icon: '🌙', color: 'indigo' },
-                  { key: 'spaceStations', label: 'Space Station', icon: '🛰️', color: 'blue' },
-                  { key: 'lunarLanding', label: 'Lunar Landing', icon: '🌕', color: 'yellow' },
-                  { key: 'marsLanding', label: 'Mars Landing', icon: '🔴', color: 'orange' },
+                  { key: 'crewedSpaceflight', label: 'Human Spaceflight', icon: 'astronaut', color: 'purple' },
+                  { key: 'reusableRockets', label: 'Reusable Rockets', icon: 'recycling', color: 'green' },
+                  { key: 'deepSpaceProbes', label: 'Deep Space', icon: 'moon', color: 'indigo' },
+                  { key: 'spaceStations', label: 'Space Station', icon: 'satellite', color: 'blue' },
+                  { key: 'lunarLanding', label: 'Lunar Landing', icon: 'moon', color: 'yellow' },
+                  { key: 'marsLanding', label: 'Mars Landing', icon: 'globe', color: 'orange' },
                 ].map(item => (
                   <div key={item.key} className="text-center p-4 bg-gray-50 rounded-lg">
-                    <div className="text-3xl mb-2">{item.icon}</div>
+                    <div className="mb-2"><SpaceIcon name={item.icon} size="2xl" /></div>
                     <div className={`text-2xl font-bold text-${item.color}-600`}>
                       {analysis.achievements[item.key]?.length || 0}
                     </div>
@@ -705,10 +706,10 @@ export default function AnalyticsPage() {
                           <span className="font-medium">{country.name}</span>
                         </div>
                         <div className="flex gap-2 mt-1">
-                          {country.humanSpaceflightCapable && <span title="Human Spaceflight">👨‍🚀</span>}
-                          {country.independentLaunchCapable && <span title="Launch">🚀</span>}
-                          {country.reusableRocketCapable && <span title="Reusable">♻️</span>}
-                          {country.deepSpaceCapable && <span title="Deep Space">🌙</span>}
+                          {country.humanSpaceflightCapable && <SpaceIcon name="astronaut" size="sm" title="Human Spaceflight" />}
+                          {country.independentLaunchCapable && <SpaceIcon name="rocket" size="sm" title="Launch" />}
+                          {country.reusableRocketCapable && <SpaceIcon name="recycling" size="sm" title="Reusable" />}
+                          {country.deepSpaceCapable && <SpaceIcon name="moon" size="sm" title="Deep Space" />}
                         </div>
                       </div>
                       <div className="text-right">
@@ -728,17 +729,17 @@ export default function AnalyticsPage() {
               <h3 className="text-lg font-semibold text-gray-800 mb-4">Global Capability Distribution</h3>
               <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                 {[
-                  { key: 'humanSpaceflightCapable', label: 'Human Spaceflight', icon: '👨‍🚀', color: 'green' },
-                  { key: 'independentLaunchCapable', label: 'Independent Launch', icon: '🚀', color: 'blue' },
-                  { key: 'reusableRocketCapable', label: 'Reusable Rockets', icon: '♻️', color: 'purple' },
-                  { key: 'deepSpaceCapable', label: 'Deep Space', icon: '🌙', color: 'indigo' },
-                  { key: 'spaceStationCapable', label: 'Space Station', icon: '🛰️', color: 'orange' },
+                  { key: 'humanSpaceflightCapable', label: 'Human Spaceflight', icon: 'astronaut', color: 'green' },
+                  { key: 'independentLaunchCapable', label: 'Independent Launch', icon: 'rocket', color: 'blue' },
+                  { key: 'reusableRocketCapable', label: 'Reusable Rockets', icon: 'recycling', color: 'purple' },
+                  { key: 'deepSpaceCapable', label: 'Deep Space', icon: 'moon', color: 'indigo' },
+                  { key: 'spaceStationCapable', label: 'Space Station', icon: 'satellite', color: 'orange' },
                 ].map(cap => {
                   const count = countries.filter(c => c[cap.key]).length;
                   const percentage = ((count / countries.length) * 100).toFixed(0);
                   return (
                     <div key={cap.key} className="text-center p-4 bg-gray-50 rounded-lg">
-                      <div className="text-3xl mb-2">{cap.icon}</div>
+                      <div className="mb-2"><SpaceIcon name={cap.icon} size="2xl" /></div>
                       <div className={`text-2xl font-bold text-${cap.color}-600`}>{count}</div>
                       <div className="text-xs text-gray-500">{cap.label}</div>
                       <div className="text-xs text-gray-400">({percentage}% of programs)</div>
