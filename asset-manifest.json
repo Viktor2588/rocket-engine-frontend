@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/rocket-engine-frontend/static/css/main.a08c0b28.css",
-    "main.js": "/rocket-engine-frontend/static/js/main.289a5032.js",
+    "main.css": "/rocket-engine-frontend/static/css/main.a1ed0a28.css",
+    "main.js": "/rocket-engine-frontend/static/js/main.892f2294.js",
     "static/js/835.100b8648.chunk.js": "/rocket-engine-frontend/static/js/835.100b8648.chunk.js",
     "index.html": "/rocket-engine-frontend/index.html",
-    "main.a08c0b28.css.map": "/rocket-engine-frontend/static/css/main.a08c0b28.css.map",
-    "main.289a5032.js.map": "/rocket-engine-frontend/static/js/main.289a5032.js.map",
+    "main.a1ed0a28.css.map": "/rocket-engine-frontend/static/css/main.a1ed0a28.css.map",
+    "main.892f2294.js.map": "/rocket-engine-frontend/static/js/main.892f2294.js.map",
     "835.100b8648.chunk.js.map": "/rocket-engine-frontend/static/js/835.100b8648.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.a08c0b28.css",
-    "static/js/main.289a5032.js"
+    "static/css/main.a1ed0a28.css",
+    "static/js/main.892f2294.js"
   ]
 }
