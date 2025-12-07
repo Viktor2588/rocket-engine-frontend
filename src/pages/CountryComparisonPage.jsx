@@ -35,10 +35,10 @@ function CountrySelector({ countries, selectedIds, onToggle, maxSelections }) {
   const isSelected = (id) => selectedIds.includes(id);
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-4">
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-semibold text-gray-800">Select Countries</h3>
-        <span className="text-sm text-gray-500">
+        <h3 className="text-lg font-semibold text-gray-800 dark:text-white">Select Countries</h3>
+        <span className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">
           {selectedIds.length} / {maxSelections} selected
         </span>
       </div>
@@ -49,7 +49,7 @@ function CountrySelector({ countries, selectedIds, onToggle, maxSelections }) {
         placeholder="Search countries or agencies..."
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
-        className="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg mb-4 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
       />
 
       {/* Country grid */}
@@ -84,7 +84,7 @@ function CountrySelector({ countries, selectedIds, onToggle, maxSelections }) {
                 <div className="text-sm font-medium text-gray-800 truncate">
                   {country.name}
                 </div>
-                <div className="text-xs text-gray-500">
+                <div className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-400">
                   {country.spaceAgencyAcronym || country.isoCode}
                 </div>
               </div>
@@ -97,7 +97,7 @@ function CountrySelector({ countries, selectedIds, onToggle, maxSelections }) {
       </div>
 
       {filteredCountries.length === 0 && (
-        <div className="text-center text-gray-500 py-4">
+        <div className="text-center text-gray-500 dark:text-gray-400 py-4">
           No countries match your search
         </div>
       )}
@@ -110,7 +110,7 @@ function CountrySelector({ countries, selectedIds, onToggle, maxSelections }) {
  */
 function ComparisonCard({ country, rank }) {
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden">
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
       {/* Header with flag and name */}
       <div className="bg-gradient-to-r from-indigo-500 to-purple-500 p-4 text-white">
         <div className="flex items-center gap-3">
@@ -131,11 +131,11 @@ function ComparisonCard({ country, rank }) {
       </div>
 
       {/* Score */}
-      <div className="p-4 text-center border-b">
+      <div className="p-4 text-center border-b dark:border-gray-700">
         <div className="text-4xl font-bold text-indigo-600">
           {(country.overallCapabilityScore || 0).toFixed(0)}
         </div>
-        <div className="text-sm text-gray-500">Space Capability Index</div>
+        <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Space Capability Index</div>
         {rank && (
           <div className="mt-2">
             <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-bold ${
@@ -153,28 +153,28 @@ function ComparisonCard({ country, rank }) {
       {/* Key Stats */}
       <div className="p-4 grid grid-cols-2 gap-4 text-sm">
         <div>
-          <div className="text-gray-500">Founded</div>
+          <div className="text-gray-500 dark:text-gray-400 dark:text-gray-400">Founded</div>
           <div className="font-semibold">{country.spaceAgencyFounded || '—'}</div>
         </div>
         <div>
-          <div className="text-gray-500">Launches</div>
+          <div className="text-gray-500 dark:text-gray-400 dark:text-gray-400">Launches</div>
           <div className="font-semibold">{country.totalLaunches ?? '—'}</div>
         </div>
         <div>
-          <div className="text-gray-500">Success Rate</div>
+          <div className="text-gray-500 dark:text-gray-400 dark:text-gray-400">Success Rate</div>
           <div className="font-semibold">
             {country.launchSuccessRate ? `${country.launchSuccessRate.toFixed(1)}%` : '—'}
           </div>
         </div>
         <div>
-          <div className="text-gray-500">Astronauts</div>
+          <div className="text-gray-500 dark:text-gray-400 dark:text-gray-400">Astronauts</div>
           <div className="font-semibold">{country.activeAstronauts ?? '—'}</div>
         </div>
       </div>
 
       {/* Capabilities */}
       <div className="px-4 pb-4">
-        <div className="text-sm text-gray-500 mb-2">Capabilities</div>
+        <div className="text-sm text-gray-500 dark:text-gray-400 mb-2">Capabilities</div>
         <div className="flex flex-wrap gap-2">
           {country.humanSpaceflightCapable && (
             <span className="inline-flex items-center px-2 py-1 rounded bg-green-100 text-green-800 text-xs">
@@ -202,7 +202,7 @@ function ComparisonCard({ country, rank }) {
             </span>
           )}
           {!country.humanSpaceflightCapable && !country.independentLaunchCapable && (
-            <span className="inline-flex items-center px-2 py-1 rounded bg-gray-100 text-gray-600 text-xs">
+            <span className="inline-flex items-center px-2 py-1 rounded bg-gray-100 text-gray-600 dark:text-gray-400 text-xs">
               Developing Program
             </span>
           )}
@@ -213,7 +213,7 @@ function ComparisonCard({ country, rank }) {
       <div className="border-t p-4">
         <Link
           to={`/countries/${country.isoCode}`}
-          className="block text-center text-indigo-600 hover:text-indigo-800 font-medium text-sm"
+          className="block text-center text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium text-sm"
         >
           View Full Profile
         </Link>
@@ -227,7 +227,7 @@ function ComparisonCard({ country, rank }) {
  */
 function TabNavigation({ activeTab, onTabChange, selectedCount }) {
   return (
-    <div className="flex border-b border-gray-200 mb-6">
+    <div className="flex border-b border-gray-200 dark:border-gray-700 mb-6">
       {TABS.map(tab => {
         // Disable certain tabs based on selection count
         const isDisabled =
@@ -244,7 +244,7 @@ function TabNavigation({ activeTab, onTabChange, selectedCount }) {
                 ? 'border-indigo-500 text-indigo-600'
                 : isDisabled
                 ? 'border-transparent text-gray-300 cursor-not-allowed'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
             <SpaceIcon name={tab.icon} size="sm" />
@@ -267,12 +267,12 @@ function TabNavigation({ activeTab, onTabChange, selectedCount }) {
 function OverviewTab({ selectedCountries }) {
   if (selectedCountries.length === 0) {
     return (
-      <div className="bg-white rounded-lg shadow-md p-12 text-center">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-12 text-center">
         <div className="text-6xl mb-4"><SpaceIcon name="satellite" size="4xl" /></div>
-        <h2 className="text-xl font-semibold text-gray-800 mb-2">
+        <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-2">
           Select Countries to Compare
         </h2>
-        <p className="text-gray-600 max-w-md mx-auto">
+        <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
           Choose up to {MAX_COMPARE_COUNTRIES} countries from the selector above to see a
           detailed comparison of their space capabilities.
         </p>
@@ -284,7 +284,7 @@ function OverviewTab({ selectedCountries }) {
     <div className="space-y-8">
       {/* Radar Chart */}
       <div>
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">
+        <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
           Capability Comparison
         </h2>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -299,7 +299,7 @@ function OverviewTab({ selectedCountries }) {
 
       {/* Side-by-side Cards */}
       <div>
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">
+        <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
           Country Profiles
         </h2>
         <div className={`grid gap-4 ${
@@ -315,8 +315,8 @@ function OverviewTab({ selectedCountries }) {
       </div>
 
       {/* Summary Stats */}
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+        <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
           Comparison Summary
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -324,25 +324,25 @@ function OverviewTab({ selectedCountries }) {
             <div className="text-2xl font-bold text-indigo-600">
               {selectedCountries[0]?.name || '—'}
             </div>
-            <div className="text-sm text-gray-500">Highest Score</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Highest Score</div>
           </div>
           <div className="text-center p-4 bg-green-50 rounded-lg">
             <div className="text-2xl font-bold text-green-600">
               {selectedCountries.filter(c => c.humanSpaceflightCapable).length}
             </div>
-            <div className="text-sm text-gray-500">Human Spaceflight</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Human Spaceflight</div>
           </div>
           <div className="text-center p-4 bg-blue-50 rounded-lg">
             <div className="text-2xl font-bold text-blue-600">
               {selectedCountries.filter(c => c.independentLaunchCapable).length}
             </div>
-            <div className="text-sm text-gray-500">Independent Launch</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Independent Launch</div>
           </div>
           <div className="text-center p-4 bg-purple-50 rounded-lg">
             <div className="text-2xl font-bold text-purple-600">
               {selectedCountries.filter(c => c.reusableRocketCapable).length}
             </div>
-            <div className="text-sm text-gray-500">Reusable Rockets</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Reusable Rockets</div>
           </div>
         </div>
       </div>
@@ -430,11 +430,11 @@ export default function CountryComparisonPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
         <div className="container mx-auto px-4">
           <div className="text-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading countries...</p>
+            <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Loading countries...</p>
           </div>
         </div>
       </div>
@@ -443,11 +443,11 @@ export default function CountryComparisonPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
         <div className="container mx-auto px-4">
-          <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-            <h2 className="text-lg font-semibold text-red-800 mb-2">Error Loading Data</h2>
-            <p className="text-red-600">{error}</p>
+          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 text-center">
+            <h2 className="text-lg font-semibold text-red-800 dark:text-red-400 mb-2">Error Loading Data</h2>
+            <p className="text-red-600 dark:text-red-400">{error}</p>
           </div>
         </div>
       </div>
@@ -455,14 +455,14 @@ export default function CountryComparisonPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
             Country Comparison Tool
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400">
             Compare space capabilities across nations with detailed gap analysis and SWOT assessments
           </p>
         </div>
@@ -470,7 +470,7 @@ export default function CountryComparisonPage() {
         {/* Quick Select Buttons */}
         <div className="mb-6">
           <div className="flex flex-wrap gap-2 items-center">
-            <span className="text-sm text-gray-500 mr-2">Quick Select:</span>
+            <span className="text-sm text-gray-500 dark:text-gray-400 mr-2">Quick Select:</span>
             <button
               onClick={() => handleQuickSelect('top4')}
               className="px-3 py-1 rounded-full bg-indigo-100 text-indigo-700 text-sm hover:bg-indigo-200 transition"
@@ -496,7 +496,7 @@ export default function CountryComparisonPage() {
               European Programs
             </button>
             <span className="text-gray-300 mx-2">|</span>
-            <span className="text-sm text-gray-500">Gap Analysis:</span>
+            <span className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Gap Analysis:</span>
             <button
               onClick={() => handleQuickSelect('usa-china')}
               className="px-3 py-1 rounded-full bg-red-100 text-red-700 text-sm hover:bg-red-200 transition"
@@ -550,12 +550,12 @@ export default function CountryComparisonPage() {
             )}
 
             {activeTab === 'gap-analysis' && selectedCountries.length !== 2 && (
-              <div className="bg-white rounded-lg shadow-md p-12 text-center">
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-12 text-center">
                 <div className="text-6xl mb-4"><SpaceIcon name="chart" size="4xl" /></div>
-                <h2 className="text-xl font-semibold text-gray-800 mb-2">
+                <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-2">
                   Select Exactly Two Countries
                 </h2>
-                <p className="text-gray-600 max-w-md mx-auto">
+                <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
                   Gap Analysis compares two countries head-to-head. Please select exactly 2 countries
                   to see a detailed gap analysis.
                 </p>
@@ -570,12 +570,12 @@ export default function CountryComparisonPage() {
             )}
 
             {activeTab === 'swot' && selectedCountries.length !== 1 && (
-              <div className="bg-white rounded-lg shadow-md p-12 text-center">
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-12 text-center">
                 <div className="text-6xl mb-4"><SpaceIcon name="target" size="4xl" /></div>
-                <h2 className="text-xl font-semibold text-gray-800 mb-2">
+                <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-2">
                   Select One Country
                 </h2>
-                <p className="text-gray-600 max-w-md mx-auto">
+                <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
                   SWOT Analysis provides an in-depth look at a single country's strengths,
                   weaknesses, opportunities, and threats. Please select exactly 1 country.
                 </p>
@@ -586,16 +586,16 @@ export default function CountryComparisonPage() {
 
         {/* Empty State */}
         {selectedCountries.length === 0 && (
-          <div className="mt-8 bg-white rounded-lg shadow-md p-12 text-center">
+          <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-md p-12 text-center">
             <div className="text-6xl mb-4"><SpaceIcon name="satellite" size="4xl" /></div>
-            <h2 className="text-xl font-semibold text-gray-800 mb-2">
+            <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-2">
               Select Countries to Compare
             </h2>
-            <p className="text-gray-600 max-w-md mx-auto mb-6">
+            <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto mb-6">
               Choose up to {MAX_COMPARE_COUNTRIES} countries from the selector above to see a
               detailed comparison of their space capabilities.
             </p>
-            <div className="text-sm text-gray-500">
+            <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">
               <p className="mb-2"><strong>Tip:</strong> Use the quick select buttons above for common comparisons</p>
               <ul className="space-y-1">
                 <li>Select 1 country for SWOT Analysis</li>

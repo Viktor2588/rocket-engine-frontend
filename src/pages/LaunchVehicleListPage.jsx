@@ -73,7 +73,7 @@ export default function LaunchVehicleListPage() {
       <div className="container mx-auto px-4 py-12">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading launch vehicles...</p>
+          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Loading launch vehicles...</p>
         </div>
       </div>
     );
@@ -82,23 +82,23 @@ export default function LaunchVehicleListPage() {
   if (error) {
     return (
       <div className="container mx-auto px-4 py-12">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-          <h2 className="text-lg font-semibold text-red-800 mb-2">Error Loading Data</h2>
-          <p className="text-red-600">{error}</p>
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 text-center">
+          <h2 className="text-lg font-semibold text-red-800 dark:text-red-400 mb-2">Error Loading Data</h2>
+          <p className="text-red-600 dark:text-red-400">{error}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2 flex items-center gap-3">
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-3">
             <Rocket style={{ fontSize: '2.5rem' }} className="text-blue-600" /> Launch Vehicles
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400">
             Explore {vehicles.length} launch vehicles from space agencies around the world
           </p>
         </div>
@@ -106,44 +106,44 @@ export default function LaunchVehicleListPage() {
         {/* Quick Stats */}
         {stats && (
           <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mb-8">
-            <div className="bg-white rounded-lg shadow p-4 text-center">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
               <p className="text-3xl font-bold text-indigo-600">{stats.total}</p>
-              <p className="text-sm text-gray-500">Total Vehicles</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Total Vehicles</p>
             </div>
-            <div className="bg-white rounded-lg shadow p-4 text-center">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
               <p className="text-3xl font-bold text-green-600">{stats.active}</p>
-              <p className="text-sm text-gray-500">Active</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Active</p>
             </div>
-            <div className="bg-white rounded-lg shadow p-4 text-center">
-              <p className="text-3xl font-bold text-gray-600">{stats.retired}</p>
-              <p className="text-sm text-gray-500">Retired</p>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
+              <p className="text-3xl font-bold text-gray-600 dark:text-gray-400 dark:text-gray-400">{stats.retired}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Retired</p>
             </div>
-            <div className="bg-white rounded-lg shadow p-4 text-center">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
               <p className="text-3xl font-bold text-blue-600">{stats.development}</p>
-              <p className="text-sm text-gray-500">In Development</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">In Development</p>
             </div>
-            <div className="bg-white rounded-lg shadow p-4 text-center">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
               <p className="text-3xl font-bold text-purple-600">{stats.reusable}</p>
-              <p className="text-sm text-gray-500">Reusable</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Reusable</p>
             </div>
-            <div className="bg-white rounded-lg shadow p-4 text-center">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
               <p className="text-3xl font-bold text-orange-600">{stats.humanRated}</p>
-              <p className="text-sm text-gray-500">Human-Rated</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Human-Rated</p>
             </div>
           </div>
         )}
 
         {/* Filters & Controls */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
           <div className="flex flex-col lg:flex-row gap-4 justify-between items-start lg:items-center">
             <div className="flex flex-wrap gap-4">
               {/* Sort */}
               <label className="flex items-center gap-2">
-                <span className="text-gray-700 font-semibold text-sm">Sort:</span>
+                <span className="text-gray-700 dark:text-gray-300 font-semibold text-sm">Sort:</span>
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
                 >
                   <option value="payload">Payload Capacity</option>
                   <option value="name">Name</option>
@@ -155,11 +155,11 @@ export default function LaunchVehicleListPage() {
 
               {/* Status Filter */}
               <label className="flex items-center gap-2">
-                <span className="text-gray-700 font-semibold text-sm">Status:</span>
+                <span className="text-gray-700 dark:text-gray-300 font-semibold text-sm">Status:</span>
                 <select
                   value={filterStatus}
                   onChange={(e) => setFilterStatus(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
                 >
                   <option value="all">All Status</option>
                   <option value="Active">Active</option>
@@ -171,11 +171,11 @@ export default function LaunchVehicleListPage() {
 
               {/* Country Filter */}
               <label className="flex items-center gap-2">
-                <span className="text-gray-700 font-semibold text-sm">Country:</span>
+                <span className="text-gray-700 dark:text-gray-300 font-semibold text-sm">Country:</span>
                 <select
                   value={filterCountry}
                   onChange={(e) => setFilterCountry(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
                 >
                   <option value="all">All Countries</option>
                   {COUNTRIES.map(c => (
@@ -186,11 +186,11 @@ export default function LaunchVehicleListPage() {
 
               {/* Capability Filter */}
               <label className="flex items-center gap-2">
-                <span className="text-gray-700 font-semibold text-sm">Capability:</span>
+                <span className="text-gray-700 dark:text-gray-300 font-semibold text-sm">Capability:</span>
                 <select
                   value={filterCapability}
                   onChange={(e) => setFilterCapability(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
                 >
                   <option value="all">All Capabilities</option>
                   <option value="reusable">Reusable</option>
@@ -206,7 +206,7 @@ export default function LaunchVehicleListPage() {
                 className={`px-4 py-2 rounded-md font-semibold transition text-sm ${
                   viewMode === 'grid'
                     ? 'bg-indigo-500 text-white'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
                 }`}
               >
                 Grid
@@ -216,7 +216,7 @@ export default function LaunchVehicleListPage() {
                 className={`px-4 py-2 rounded-md font-semibold transition text-sm ${
                   viewMode === 'table'
                     ? 'bg-indigo-500 text-white'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
                 }`}
               >
                 Table
@@ -239,47 +239,47 @@ export default function LaunchVehicleListPage() {
             ))}
           </div>
         ) : (
-          <div className="bg-white rounded-lg shadow-md overflow-hidden">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead className="bg-gray-50 dark:bg-gray-700">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                       Vehicle
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                       Manufacturer
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                       Status
                     </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                       Payload (LEO)
                     </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                       Launches
                     </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                       Success Rate
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                       Capabilities
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-white divide-y divide-gray-200 dark:divide-gray-700">
                   {filteredAndSortedVehicles.map((vehicle, index) => (
                     <tr key={vehicle.id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="font-medium text-gray-900">{vehicle.name}</div>
+                        <div className="font-medium text-gray-900 dark:text-white">{vehicle.name}</div>
                         {vehicle.variant && (
-                          <div className="text-sm text-gray-500">{vehicle.variant}</div>
+                          <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">{vehicle.variant}</div>
                         )}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">
                         {vehicle.manufacturer}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -310,7 +310,7 @@ export default function LaunchVehicleListPage() {
                       <td className="px-6 py-4 whitespace-nowrap text-sm">
                         <Link
                           to={`/vehicles/${vehicle.id}`}
-                          className="text-indigo-600 hover:text-indigo-900"
+                          className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300"
                         >
                           View Details
                         </Link>
@@ -326,14 +326,14 @@ export default function LaunchVehicleListPage() {
         {/* No results */}
         {filteredAndSortedVehicles.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">No vehicles match your filters</p>
+            <p className="text-gray-500 dark:text-gray-400 text-lg">No vehicles match your filters</p>
             <button
               onClick={() => {
                 setFilterStatus('all');
                 setFilterCountry('all');
                 setFilterCapability('all');
               }}
-              className="mt-4 text-indigo-600 hover:text-indigo-800"
+              className="mt-4 text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300"
             >
               Clear filters
             </button>
@@ -341,7 +341,7 @@ export default function LaunchVehicleListPage() {
         )}
 
         {/* Footer note */}
-        <div className="mt-8 text-center text-sm text-gray-500">
+        <div className="mt-8 text-center text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">
           <p>
             Data includes orbital launch vehicles. Payload capacities are typical values.
           </p>

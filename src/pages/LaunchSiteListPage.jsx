@@ -25,7 +25,7 @@ const GEO_URL = 'https://unpkg.com/world-atlas@2.0.2/countries-110m.json';
 // Status colors
 const STATUS_COLORS = {
   Active: 'bg-green-100 text-green-800 border-green-200',
-  Inactive: 'bg-gray-100 text-gray-800 border-gray-200',
+  Inactive: 'bg-gray-100 text-gray-800 border-gray-200 dark:border-gray-700',
   Under_Construction: 'bg-yellow-100 text-yellow-800 border-yellow-200',
   Decommissioned: 'bg-red-100 text-red-800 border-red-200',
 };
@@ -65,7 +65,7 @@ function LaunchSiteCard({ site }) {
   return (
     <Link
       to={`/launch-sites/${site.id}`}
-      className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-200 overflow-hidden group"
+      className="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 overflow-hidden group"
     >
       <div className="p-4">
         <div className="flex items-start justify-between mb-3">
@@ -73,28 +73,28 @@ function LaunchSiteCard({ site }) {
             <h3 className="font-bold text-gray-800 group-hover:text-indigo-600 transition">
               {site.name}
             </h3>
-            <p className="text-sm text-gray-500">{site.countryId} | {site.region}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">{site.countryId} | {site.region}</p>
           </div>
           <span className={`px-2 py-1 rounded-full text-xs font-medium border ${statusClass}`}>
             {site.status}
           </span>
         </div>
 
-        <p className="text-sm text-gray-600 mb-3 line-clamp-2">{site.operator}</p>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">{site.operator}</p>
 
         {/* Stats Row */}
         <div className="grid grid-cols-3 gap-2 text-center text-xs">
           <div className="bg-gray-50 rounded p-2">
             <div className="font-bold text-indigo-600">{site.totalLaunches || 0}</div>
-            <div className="text-gray-500">Launches</div>
+            <div className="text-gray-500 dark:text-gray-400 dark:text-gray-400">Launches</div>
           </div>
           <div className="bg-gray-50 rounded p-2">
             <div className="font-bold text-green-600">{site.successRate?.toFixed(1) || 0}%</div>
-            <div className="text-gray-500">Success</div>
+            <div className="text-gray-500 dark:text-gray-400 dark:text-gray-400">Success</div>
           </div>
           <div className="bg-gray-50 rounded p-2">
             <div className="font-bold text-blue-600">{site.established || '-'}</div>
-            <div className="text-gray-500">Est.</div>
+            <div className="text-gray-500 dark:text-gray-400 dark:text-gray-400">Est.</div>
           </div>
         </div>
 
@@ -381,20 +381,20 @@ export default function LaunchSiteListPage() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">Error Loading Launch Sites</h2>
-          <p className="text-gray-600">{error}</p>
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">Error Loading Launch Sites</h2>
+          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400">{error}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-800">Launch Sites</h1>
-          <p className="text-gray-600 mt-2">
+          <h1 className="text-3xl font-bold text-gray-800 dark:text-white">Launch Sites</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-2">
             Explore spaceports and launch facilities around the world
           </p>
         </div>
@@ -440,7 +440,7 @@ export default function LaunchSiteListPage() {
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-lg shadow-md p-4 mb-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 mb-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Search */}
             <div>
@@ -450,7 +450,7 @@ export default function LaunchSiteListPage() {
                 placeholder="Search launch sites..."
                 value={filters.search}
                 onChange={(e) => handleFilterChange('search', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
               />
             </div>
 
@@ -460,7 +460,7 @@ export default function LaunchSiteListPage() {
               <select
                 value={filters.status}
                 onChange={(e) => handleFilterChange('status', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
               >
                 <option value="">All Status</option>
                 <option value="Active">Active</option>
@@ -475,7 +475,7 @@ export default function LaunchSiteListPage() {
               <select
                 value={filters.countryId}
                 onChange={(e) => handleFilterChange('countryId', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
               >
                 <option value="">All Countries</option>
                 {uniqueCountries.map(country => (
@@ -490,7 +490,7 @@ export default function LaunchSiteListPage() {
               <select
                 value={filters.region}
                 onChange={(e) => handleFilterChange('region', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
               >
                 <option value="">All Regions</option>
                 {uniqueRegions.map(region => (
@@ -534,17 +534,17 @@ export default function LaunchSiteListPage() {
 
         {/* Sort and View Controls */}
         <div className="flex items-center justify-between mb-4">
-          <div className="text-sm text-gray-600">
+          <div className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">
             Showing {sortedSites.length} of {launchSites.length} launch sites
           </div>
           <div className="flex items-center gap-4">
             {/* Sort */}
             <div className="flex items-center gap-2">
-              <label className="text-sm text-gray-600">Sort by:</label>
+              <label className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">Sort by:</label>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="px-2 py-1 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-indigo-500"
+                className="px-2 py-1 border border-gray-300 dark:border-gray-600 rounded text-sm focus:ring-2 focus:ring-indigo-500"
               >
                 <option value="name">Name</option>
                 <option value="totalLaunches">Total Launches</option>
@@ -553,23 +553,23 @@ export default function LaunchSiteListPage() {
               </select>
               <button
                 onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
-                className="px-2 py-1 border border-gray-300 rounded text-sm hover:bg-gray-100"
+                className="px-2 py-1 border border-gray-300 dark:border-gray-600 rounded text-sm hover:bg-gray-100"
               >
                 {sortOrder === 'asc' ? '↑' : '↓'}
               </button>
             </div>
 
             {/* View Mode */}
-            <div className="flex border border-gray-300 rounded overflow-hidden">
+            <div className="flex border border-gray-300 dark:border-gray-600 rounded overflow-hidden">
               <button
                 onClick={() => setViewMode('grid')}
-                className={`px-3 py-1 text-sm ${viewMode === 'grid' ? 'bg-indigo-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-100'}`}
+                className={`px-3 py-1 text-sm ${viewMode === 'grid' ? 'bg-indigo-600 text-white' : 'bg-white text-gray-600 dark:text-gray-400 hover:bg-gray-100'}`}
               >
                 Grid
               </button>
               <button
                 onClick={() => setViewMode('list')}
-                className={`px-3 py-1 text-sm ${viewMode === 'list' ? 'bg-indigo-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-100'}`}
+                className={`px-3 py-1 text-sm ${viewMode === 'list' ? 'bg-indigo-600 text-white' : 'bg-white text-gray-600 dark:text-gray-400 hover:bg-gray-100'}`}
               >
                 List
               </button>
@@ -585,37 +585,37 @@ export default function LaunchSiteListPage() {
             ))}
           </div>
         ) : (
-          <div className="bg-white rounded-lg shadow-md overflow-hidden">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
             <table className="w-full">
-              <thead className="bg-gray-50">
+              <thead className="bg-gray-50 dark:bg-gray-700">
                 <tr>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">Name</th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">Country</th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">Status</th>
-                  <th className="px-4 py-3 text-right text-sm font-semibold text-gray-600">Launches</th>
-                  <th className="px-4 py-3 text-right text-sm font-semibold text-gray-600">Success Rate</th>
-                  <th className="px-4 py-3 text-center text-sm font-semibold text-gray-600">Capabilities</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600 dark:text-gray-400 dark:text-gray-400">Name</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600 dark:text-gray-400 dark:text-gray-400">Country</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600 dark:text-gray-400 dark:text-gray-400">Status</th>
+                  <th className="px-4 py-3 text-right text-sm font-semibold text-gray-600 dark:text-gray-400 dark:text-gray-400">Launches</th>
+                  <th className="px-4 py-3 text-right text-sm font-semibold text-gray-600 dark:text-gray-400 dark:text-gray-400">Success Rate</th>
+                  <th className="px-4 py-3 text-center text-sm font-semibold text-gray-600 dark:text-gray-400 dark:text-gray-400">Capabilities</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                 {sortedSites.map(site => {
                   const statusClass = STATUS_COLORS[site.status?.replace(' ', '_')] || STATUS_COLORS.Active;
                   return (
-                    <tr key={site.id} className="hover:bg-gray-50">
+                    <tr key={site.id} className="hover:bg-gray-50 dark:bg-gray-700">
                       <td className="px-4 py-3">
-                        <Link to={`/launch-sites/${site.id}`} className="text-indigo-600 hover:text-indigo-800 font-medium">
+                        <Link to={`/launch-sites/${site.id}`} className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium">
                           {site.name}
                         </Link>
-                        <div className="text-xs text-gray-500">{site.operator}</div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-400">{site.operator}</div>
                       </td>
-                      <td className="px-4 py-3 text-sm text-gray-600">{site.countryId}</td>
+                      <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">{site.countryId}</td>
                       <td className="px-4 py-3">
                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusClass}`}>
                           {site.status}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-right text-sm text-gray-600">{site.totalLaunches || 0}</td>
-                      <td className="px-4 py-3 text-right text-sm text-gray-600">{site.successRate?.toFixed(1) || 0}%</td>
+                      <td className="px-4 py-3 text-right text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">{site.totalLaunches || 0}</td>
+                      <td className="px-4 py-3 text-right text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">{site.successRate?.toFixed(1) || 0}%</td>
                       <td className="px-4 py-3">
                         <div className="flex justify-center gap-1">
                           {site.humanRated && <PersonOutline titleAccess="Human Rated" style={{ fontSize: '1.25rem' }} className="text-purple-600" />}
@@ -634,7 +634,7 @@ export default function LaunchSiteListPage() {
 
         {sortedSites.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-500">No launch sites found matching your filters.</p>
+            <p className="text-gray-500 dark:text-gray-400 dark:text-gray-400">No launch sites found matching your filters.</p>
           </div>
         )}
       </div>

@@ -24,10 +24,10 @@ function RecordCard({ title, value, subtitle, icon, link, color = 'indigo' }) {
     <div className={`${colorClasses[color]} rounded-lg border-2 p-4 transition hover:shadow-md`}>
       <div className="flex items-center gap-2 mb-2">
         <SpaceIcon name={icon} size="xl" />
-        <span className="text-sm font-medium text-gray-600">{title}</span>
+        <span className="text-sm font-medium text-gray-600 dark:text-gray-400 dark:text-gray-400">{title}</span>
       </div>
       <div className="text-xl font-bold">{value || 'N/A'}</div>
-      {subtitle && <div className="text-sm text-gray-500 mt-1">{subtitle}</div>}
+      {subtitle && <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">{subtitle}</div>}
     </div>
   );
 
@@ -50,7 +50,7 @@ function TrendBar({ label, value, maxValue, color = 'indigo' }) {
 
   return (
     <div className="flex items-center gap-3">
-      <span className="w-32 text-sm text-gray-600 truncate">{label}</span>
+      <span className="w-32 text-sm text-gray-600 dark:text-gray-400 truncate">{label}</span>
       <div className="flex-1 bg-gray-200 rounded-full h-4">
         <div
           className={`${colorClasses[color]} h-4 rounded-full transition-all duration-500`}
@@ -81,11 +81,11 @@ export default function AnalyticsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
         <div className="container mx-auto px-4">
           <div className="text-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading analytics data...</p>
+            <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Loading analytics data...</p>
           </div>
         </div>
       </div>
@@ -93,79 +93,79 @@ export default function AnalyticsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
             Space Analytics Dashboard
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400">
             Explore trends, records, and insights across global space programs
           </p>
         </div>
 
         {/* Quick Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white rounded-lg shadow p-4 text-center">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
             <div className="text-3xl font-bold text-indigo-600">
               {statsOverview?.totalCountries || countries.length}
             </div>
-            <div className="text-sm text-gray-500">Space Programs</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Space Programs</div>
           </div>
-          <div className="bg-white rounded-lg shadow p-4 text-center">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
             <div className="text-3xl font-bold text-green-600">
               {statsOverview?.totalEngines || engines.length}
             </div>
-            <div className="text-sm text-gray-500">Rocket Engines</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Rocket Engines</div>
           </div>
-          <div className="bg-white rounded-lg shadow p-4 text-center">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
             <div className="text-3xl font-bold text-purple-600">
               {statsOverview?.humanSpaceflightCapable || countries.filter(c => c.humanSpaceflightCapable).length}
             </div>
-            <div className="text-sm text-gray-500">Human Spaceflight</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Human Spaceflight</div>
           </div>
-          <div className="bg-white rounded-lg shadow p-4 text-center">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
             <div className="text-3xl font-bold text-orange-600">
               {statsOverview?.reusableRocketCapable || countries.filter(c => c.reusableRocketCapable).length}
             </div>
-            <div className="text-sm text-gray-500">Reusable Rockets</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Reusable Rockets</div>
           </div>
         </div>
 
         {/* Additional Stats Row */}
         {statsOverview && (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <div className="bg-white rounded-lg shadow p-4 text-center">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
               <div className="text-3xl font-bold text-blue-600">
                 {statsOverview.totalLaunchVehicles || 0}
               </div>
-              <div className="text-sm text-gray-500">Launch Vehicles</div>
+              <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Launch Vehicles</div>
             </div>
-            <div className="bg-white rounded-lg shadow p-4 text-center">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
               <div className="text-3xl font-bold text-cyan-600">
                 {statsOverview.totalSatellites || 0}
               </div>
-              <div className="text-sm text-gray-500">Satellites</div>
+              <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Satellites</div>
             </div>
-            <div className="bg-white rounded-lg shadow p-4 text-center">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
               <div className="text-3xl font-bold text-pink-600">
                 {statsOverview.totalMissions || 0}
               </div>
-              <div className="text-sm text-gray-500">Missions</div>
+              <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Missions</div>
             </div>
-            <div className="bg-white rounded-lg shadow p-4 text-center">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
               <div className="text-3xl font-bold text-yellow-600">
                 {statsOverview.totalLaunchSites || 0}
               </div>
-              <div className="text-sm text-gray-500">Launch Sites</div>
+              <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Launch Sites</div>
             </div>
           </div>
         )}
 
         {/* Tab Navigation */}
-        <div className="bg-white rounded-lg shadow-md mb-6">
-          <div className="flex overflow-x-auto border-b">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md mb-6">
+          <div className="flex overflow-x-auto border-b dark:border-gray-700">
             {[
               { id: 'launches', label: 'Launch Activity', icon: 'rocket' },
               { id: 'records', label: 'World Records', icon: 'trophy' },
@@ -180,7 +180,7 @@ export default function AnalyticsPage() {
                 className={`flex items-center gap-2 px-6 py-4 text-sm font-medium whitespace-nowrap transition border-b-2 ${
                   activeTab === tab.id
                     ? 'text-indigo-600 border-indigo-600'
-                    : 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300'
+                    : 'text-gray-500 dark:text-gray-400 border-transparent hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
                 <SpaceIcon name={tab.icon} size="md" />
@@ -200,8 +200,8 @@ export default function AnalyticsPage() {
 
             {/* Launch Summary Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">2024 Launch Leaders</h3>
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">2024 Launch Leaders</h3>
                 <div className="space-y-3">
                   {Object.entries(launchData.byCountry)
                     .map(([country, values]) => ({ country, launches: values[values.length - 1] }))
@@ -221,8 +221,8 @@ export default function AnalyticsPage() {
                 </div>
               </div>
 
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">Year-over-Year Growth</h3>
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Year-over-Year Growth</h3>
                 <div className="space-y-3">
                   {Object.entries(launchData.byCountry)
                     .map(([country, values]) => {
@@ -244,9 +244,9 @@ export default function AnalyticsPage() {
                 </div>
               </div>
 
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">Key Insights</h3>
-                <ul className="space-y-2 text-sm text-gray-600">
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Key Insights</h3>
+                <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">
                   <li className="flex items-start gap-2">
                     <span className="text-green-500">↑</span>
                     USA dominates with SpaceX's high cadence
@@ -271,11 +271,11 @@ export default function AnalyticsPage() {
 
         {activeTab === 'records' && (
           <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-800">World Records & Achievements</h2>
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-white">World Records & Achievements</h2>
 
             {/* Engine Records */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">Engine Records</h3>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Engine Records</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <RecordCard
                   title="Most Powerful Engine"
@@ -305,8 +305,8 @@ export default function AnalyticsPage() {
             </div>
 
             {/* Country Records */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">Country Records</h3>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Country Records</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <RecordCard
                   title="Most Capable Space Program"
@@ -336,8 +336,8 @@ export default function AnalyticsPage() {
             </div>
 
             {/* Vehicle & Infrastructure Records */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">Vehicle & Infrastructure Records</h3>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Vehicle & Infrastructure Records</h3>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <RecordCard
                   title="Largest Payload to LEO"
@@ -378,12 +378,12 @@ export default function AnalyticsPage() {
 
         {activeTab === 'trends' && (
           <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-800">Technology Trends</h2>
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Technology Trends</h2>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Propellant Trends */}
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">Propellant Distribution</h3>
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Propellant Distribution</h3>
                 <div className="space-y-4">
                   <TrendBar
                     label="Kerosene/LOX"
@@ -410,14 +410,14 @@ export default function AnalyticsPage() {
                     color="purple"
                   />
                 </div>
-                <p className="text-sm text-gray-500 mt-4">
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-4">
                   Methane engines are the future - cleaner, reusable-friendly, and can be produced on Mars.
                 </p>
               </div>
 
               {/* Engine Cycle Trends */}
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">Engine Cycle Distribution</h3>
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Engine Cycle Distribution</h3>
                 <div className="space-y-4">
                   <TrendBar
                     label="Gas Generator"
@@ -444,30 +444,30 @@ export default function AnalyticsPage() {
                     color="cyan"
                   />
                 </div>
-                <p className="text-sm text-gray-500 mt-4">
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-4">
                   Full-flow staged combustion represents the pinnacle of engine efficiency.
                 </p>
               </div>
 
               {/* Reusability Trends */}
-              <div className="bg-white rounded-lg shadow-md p-6 lg:col-span-2">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">Reusability Revolution</h3>
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 lg:col-span-2">
+                <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Reusability Revolution</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div className="text-center p-4 bg-green-50 rounded-lg">
                     <div className="text-3xl font-bold text-green-600">{trends.reusabilityTrend.reusableVehicles}</div>
-                    <div className="text-sm text-gray-600">Reusable Vehicles</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">Reusable Vehicles</div>
                   </div>
                   <div className="text-center p-4 bg-gray-50 rounded-lg">
-                    <div className="text-3xl font-bold text-gray-600">{trends.reusabilityTrend.expendableVehicles}</div>
-                    <div className="text-sm text-gray-600">Expendable Vehicles</div>
+                    <div className="text-3xl font-bold text-gray-600 dark:text-gray-400 dark:text-gray-400">{trends.reusabilityTrend.expendableVehicles}</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">Expendable Vehicles</div>
                   </div>
                   <div className="text-center p-4 bg-green-50 rounded-lg">
                     <div className="text-3xl font-bold text-green-600">{trends.reusabilityTrend.reusableEngines}</div>
-                    <div className="text-sm text-gray-600">Reusable Engines</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">Reusable Engines</div>
                   </div>
                   <div className="text-center p-4 bg-gray-50 rounded-lg">
-                    <div className="text-3xl font-bold text-gray-600">{trends.reusabilityTrend.expendableEngines}</div>
-                    <div className="text-sm text-gray-600">Expendable Engines</div>
+                    <div className="text-3xl font-bold text-gray-600 dark:text-gray-400 dark:text-gray-400">{trends.reusabilityTrend.expendableEngines}</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">Expendable Engines</div>
                   </div>
                 </div>
                 <div className="mt-4 p-4 bg-indigo-50 rounded-lg">
@@ -483,12 +483,12 @@ export default function AnalyticsPage() {
 
         {activeTab === 'emerging' && (
           <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-800">Emerging Space Nations</h2>
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Emerging Space Nations</h2>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Established Powers */}
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
                   <SpaceIcon name="trophy" size="xl" /> Established Powers
                 </h3>
                 <div className="space-y-3">
@@ -513,8 +513,8 @@ export default function AnalyticsPage() {
               </div>
 
               {/* Emerging Powers */}
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
                   <SpaceIcon name="rocket" size="xl" /> Emerging Powers
                 </h3>
                 <div className="space-y-3">
@@ -535,17 +535,17 @@ export default function AnalyticsPage() {
                       </span>
                     </Link>
                   )) : (
-                    <p className="text-gray-500 text-sm">No emerging powers in current data</p>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm">No emerging powers in current data</p>
                   )}
                 </div>
-                <p className="text-xs text-gray-500 mt-3">
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-3">
                   Nations with launch capability developing advanced capabilities
                 </p>
               </div>
 
               {/* Rising Contenders */}
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
                   <SpaceIcon name="star" size="xl" /> Rising Contenders
                 </h3>
                 <div className="space-y-3">
@@ -566,18 +566,18 @@ export default function AnalyticsPage() {
                       </span>
                     </Link>
                   )) : (
-                    <p className="text-gray-500 text-sm">No rising contenders in current data</p>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm">No rising contenders in current data</p>
                   )}
                 </div>
-                <p className="text-xs text-gray-500 mt-3">
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-3">
                   Nations building space capabilities
                 </p>
               </div>
             </div>
 
             {/* Achievement Distribution */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">Capability Achievement Distribution</h3>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Capability Achievement Distribution</h3>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                 {[
                   { key: 'crewedSpaceflight', label: 'Human Spaceflight', icon: 'astronaut', color: 'purple' },
@@ -592,7 +592,7 @@ export default function AnalyticsPage() {
                     <div className={`text-2xl font-bold text-${item.color}-600`}>
                       {analysis.achievements[item.key]?.length || 0}
                     </div>
-                    <div className="text-xs text-gray-500">{item.label}</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-400">{item.label}</div>
                   </div>
                 ))}
               </div>
@@ -610,8 +610,8 @@ export default function AnalyticsPage() {
               title="Engine Performance: Thrust vs Specific Impulse"
             />
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-3">High Thrust Engines</h3>
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-3">High Thrust Engines</h3>
                 <div className="space-y-2">
                   {[...engines]
                     .sort((a, b) => (b.thrustKn || 0) - (a.thrustKn || 0))
@@ -622,14 +622,14 @@ export default function AnalyticsPage() {
                         to={`/engines/${engine.id}`}
                         className="flex justify-between text-sm hover:text-indigo-600"
                       >
-                        <span className="text-gray-600">{engine.name}</span>
+                        <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">{engine.name}</span>
                         <span className="font-semibold">{engine.thrustKn?.toLocaleString()} kN</span>
                       </Link>
                     ))}
                 </div>
               </div>
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-3">High Efficiency Engines</h3>
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-3">High Efficiency Engines</h3>
                 <div className="space-y-2">
                   {[...engines]
                     .sort((a, b) => (b.specificImpulseS || 0) - (a.specificImpulseS || 0))
@@ -640,14 +640,14 @@ export default function AnalyticsPage() {
                         to={`/engines/${engine.id}`}
                         className="flex justify-between text-sm hover:text-indigo-600"
                       >
-                        <span className="text-gray-600">{engine.name}</span>
+                        <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">{engine.name}</span>
                         <span className="font-semibold">{engine.specificImpulseS} s</span>
                       </Link>
                     ))}
                 </div>
               </div>
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-3">Engine by Cycle Type</h3>
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-3">Engine by Cycle Type</h3>
                 <div className="space-y-2">
                   {Object.entries(
                     engines.reduce((acc, e) => {
@@ -660,7 +660,7 @@ export default function AnalyticsPage() {
                     .slice(0, 5)
                     .map(([cycle, count]) => (
                       <div key={cycle} className="flex justify-between text-sm">
-                        <span className="text-gray-600">{cycle}</span>
+                        <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">{cycle}</span>
                         <span className="font-semibold">{count} engines</span>
                       </div>
                     ))}
@@ -674,15 +674,15 @@ export default function AnalyticsPage() {
           <div className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div>
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">Top 4 Space Powers</h3>
+                <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Top 4 Space Powers</h3>
                 <CapabilityRadarChart
                   countries={topCountries}
                   size="large"
                   showLegend={true}
                 />
               </div>
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">Capability Rankings</h3>
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Capability Rankings</h3>
                 <div className="space-y-4">
                   {topCountries.map((country, idx) => (
                     <Link
@@ -716,7 +716,7 @@ export default function AnalyticsPage() {
                         <div className="text-2xl font-bold text-indigo-600">
                           {(country.overallCapabilityScore || 0).toFixed(0)}
                         </div>
-                        <div className="text-xs text-gray-500">SCI Score</div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-400">SCI Score</div>
                       </div>
                     </Link>
                   ))}
@@ -725,8 +725,8 @@ export default function AnalyticsPage() {
             </div>
 
             {/* Capability Distribution */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">Global Capability Distribution</h3>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Global Capability Distribution</h3>
               <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                 {[
                   { key: 'humanSpaceflightCapable', label: 'Human Spaceflight', icon: 'astronaut', color: 'green' },
@@ -741,7 +741,7 @@ export default function AnalyticsPage() {
                     <div key={cap.key} className="text-center p-4 bg-gray-50 rounded-lg">
                       <div className="mb-2"><SpaceIcon name={cap.icon} size="2xl" /></div>
                       <div className={`text-2xl font-bold text-${cap.color}-600`}>{count}</div>
-                      <div className="text-xs text-gray-500">{cap.label}</div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-400">{cap.label}</div>
                       <div className="text-xs text-gray-400">({percentage}% of programs)</div>
                     </div>
                   );

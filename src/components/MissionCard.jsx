@@ -13,7 +13,7 @@ const STATUS_CONFIG = {
   COMPLETED: { color: 'bg-teal-100 text-teal-800', label: 'Completed' },
   PARTIAL_SUCCESS: { color: 'bg-amber-100 text-amber-800', label: 'Partial Success' },
   FAILED: { color: 'bg-red-100 text-red-800', label: 'Failed' },
-  LOST: { color: 'bg-gray-100 text-gray-800', label: 'Lost' }
+  LOST: { color: 'bg-gray-100 dark:bg-gray-700 text-gray-800', label: 'Lost' }
 };
 
 // Country flags
@@ -45,7 +45,7 @@ function formatDate(dateString) {
 
 // Status Badge Component
 export function StatusBadge({ status }) {
-  const config = STATUS_CONFIG[status] || { color: 'bg-gray-100 text-gray-800', label: status };
+  const config = STATUS_CONFIG[status] || { color: 'bg-gray-100 dark:bg-gray-700 text-gray-800', label: status };
   return (
     <span className={`px-2 py-1 text-xs font-semibold rounded-full ${config.color}`}>
       {config.label}
@@ -72,7 +72,7 @@ export function MissionTypeBadge({ missionType }) {
   if (!info) return null;
 
   return (
-    <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded-full">
+    <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 rounded-full">
       <SpaceIcon name={info.icon} size="sm" />
       <span>{info.label}</span>
     </span>
@@ -87,7 +87,7 @@ export function MissionCardCompact({ mission, showCountry = true }) {
   return (
     <Link
       to={`/missions/${mission.id}`}
-      className="block p-3 bg-white rounded-lg border border-gray-200 hover:border-indigo-300 hover:shadow-md transition-all"
+      className="block p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-indigo-300 hover:shadow-md transition-all"
     >
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
@@ -97,7 +97,7 @@ export function MissionCardCompact({ mission, showCountry = true }) {
             )}
             <h4 className="font-semibold text-gray-900 truncate">{mission.name}</h4>
           </div>
-          <div className="flex items-center gap-2 text-xs text-gray-500">
+          <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500">
             <span>{formatDate(mission.launchDate)}</span>
             {destInfo && (
               <>
@@ -142,8 +142,8 @@ export default function MissionCard({ mission, showCountry = true, className = '
               <span className="text-2xl">{COUNTRY_FLAGS[mission.countryId] || '🏳️'}</span>
             )}
             <div>
-              <h3 className="font-bold text-lg text-gray-900">{mission.name}</h3>
-              <p className="text-sm text-gray-500">{formatDate(mission.launchDate)}</p>
+              <h3 className="font-bold text-lg text-gray-900 dark:text-white">{mission.name}</h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500">{formatDate(mission.launchDate)}</p>
             </div>
           </div>
           <StatusBadge status={mission.status} />
@@ -166,26 +166,26 @@ export default function MissionCard({ mission, showCountry = true, className = '
         </div>
 
         {/* Description */}
-        <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
           {mission.description}
         </p>
 
         {/* Crew names if crewed */}
         {mission.crewed && Array.isArray(mission.crewNames) && mission.crewNames.length > 0 && (
-          <div className="mb-3 p-2 bg-gray-50 rounded text-sm">
-            <span className="font-medium text-gray-700">Crew: </span>
-            <span className="text-gray-600">{mission.crewNames.join(', ')}</span>
+          <div className="mb-3 p-2 bg-gray-50 dark:bg-gray-700 rounded text-sm">
+            <span className="font-medium text-gray-700 dark:text-gray-300">Crew: </span>
+            <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500">{mission.crewNames.join(', ')}</span>
           </div>
         )}
 
         {/* Objectives preview */}
         {Array.isArray(mission.objectives) && mission.objectives.length > 0 && (
           <div className="mb-3">
-            <h4 className="text-xs font-semibold text-gray-500 uppercase mb-1">Objectives</h4>
-            <ul className="text-sm text-gray-600 space-y-1">
+            <h4 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase mb-1">Objectives</h4>
+            <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
               {mission.objectives.slice(0, 2).map((obj, idx) => (
                 <li key={idx} className="flex items-start gap-1">
-                  <span className="text-indigo-500">•</span>
+                  <span className="text-indigo-500 dark:text-indigo-400">•</span>
                   <span className="line-clamp-1">{typeof obj === 'string' ? obj : obj?.name || obj?.description || String(obj)}</span>
                 </li>
               ))}
@@ -199,13 +199,13 @@ export default function MissionCard({ mission, showCountry = true, className = '
         {/* Footer */}
         <div className="flex items-center justify-between pt-3 border-t border-gray-100">
           {mission.launchVehicle && (
-            <span className="text-xs text-gray-500 flex items-center gap-1">
+            <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
               <Rocket style={{ fontSize: '1rem' }} /> {mission.launchVehicle}
             </span>
           )}
           <Link
             to={`/missions/${mission.id}`}
-            className="text-sm text-indigo-600 hover:text-indigo-800 font-medium"
+            className="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 font-medium"
           >
             View Details →
           </Link>
@@ -220,25 +220,25 @@ export function MissionStatsCard({ stats }) {
   if (!stats) return null;
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
-      <h3 className="text-lg font-bold text-gray-800 mb-4">Mission Statistics</h3>
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+      <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4">Mission Statistics</h3>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         <div className="text-center p-3 bg-indigo-50 rounded-lg">
           <div className="text-2xl font-bold text-indigo-600">{stats.totalMissions}</div>
-          <div className="text-xs text-gray-500">Total Missions</div>
+          <div className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500">Total Missions</div>
         </div>
         <div className="text-center p-3 bg-green-50 rounded-lg">
           <div className="text-2xl font-bold text-green-600">{stats.activeMissions}</div>
-          <div className="text-xs text-gray-500">Active</div>
+          <div className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500">Active</div>
         </div>
         <div className="text-center p-3 bg-purple-50 rounded-lg">
           <div className="text-2xl font-bold text-purple-600">{stats.crewedMissions}</div>
-          <div className="text-xs text-gray-500">Crewed Missions</div>
+          <div className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500">Crewed Missions</div>
         </div>
         <div className="text-center p-3 bg-teal-50 rounded-lg">
           <div className="text-2xl font-bold text-teal-600">{stats.successRate}%</div>
-          <div className="text-xs text-gray-500">Success Rate</div>
+          <div className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500">Success Rate</div>
         </div>
       </div>
 
@@ -248,7 +248,7 @@ export function MissionStatsCard({ stats }) {
           <h4 className="text-sm font-semibold text-gray-700 mb-2">By Status</h4>
           <div className="flex flex-wrap gap-2">
             {Object.entries(stats.byStatus).map(([status, count]) => (
-              <span key={status} className="text-xs px-2 py-1 bg-gray-100 rounded">
+              <span key={status} className="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded">
                 {STATUS_CONFIG[status]?.label || status}: {count}
               </span>
             ))}
@@ -264,7 +264,7 @@ export function MissionStatsCard({ stats }) {
             {Object.entries(stats.byDestination).map(([dest, count]) => {
               const info = DESTINATION_INFO[dest];
               return (
-                <span key={dest} className="text-xs px-2 py-1 bg-gray-100 rounded inline-flex items-center gap-1">
+                <span key={dest} className="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded inline-flex items-center gap-1">
                   <SpaceIcon name={info?.icon} size="sm" /> {info?.label || dest}: {count}
                 </span>
               );
@@ -298,7 +298,7 @@ export function MissionTimelineItem({ mission, isFirst = false, isLast = false }
       </div>
 
       {/* Content */}
-      <div className="bg-white rounded-lg border border-gray-200 p-3 hover:shadow-md transition-shadow">
+      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-3 hover:shadow-md transition-shadow">
         <div className="flex items-start justify-between gap-2">
           <div>
             <Link
@@ -307,11 +307,11 @@ export function MissionTimelineItem({ mission, isFirst = false, isLast = false }
             >
               {mission.name}
             </Link>
-            <p className="text-xs text-gray-500">{formatDate(mission.launchDate)}</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500">{formatDate(mission.launchDate)}</p>
           </div>
           <StatusBadge status={mission.status} />
         </div>
-        <p className="text-sm text-gray-600 mt-1 line-clamp-2">{mission.description}</p>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 line-clamp-2">{mission.description}</p>
       </div>
     </div>
   );

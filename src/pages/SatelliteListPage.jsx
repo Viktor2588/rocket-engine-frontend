@@ -52,7 +52,7 @@ function SatelliteCard({ satellite }) {
   return (
     <Link
       to={`/satellites/${satellite.id}`}
-      className="block bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-indigo-200"
+      className="block bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-indigo-200"
     >
       <div className="p-5">
         {/* Header */}
@@ -63,7 +63,7 @@ function SatelliteCard({ satellite }) {
             </div>
             <div>
               <h3 className="font-bold text-gray-900 text-lg">{satellite.name}</h3>
-              <p className="text-sm text-gray-500">{satellite.operator || 'Unknown operator'}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">{satellite.operator || 'Unknown operator'}</p>
             </div>
           </div>
           <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusColor}`}>
@@ -90,8 +90,8 @@ function SatelliteCard({ satellite }) {
         <div className="grid grid-cols-2 gap-3 text-sm">
           {satellite.altitude && (
             <div className="bg-gray-50 rounded-lg p-2">
-              <span className="text-gray-500 text-xs">Altitude</span>
-              <p className="font-semibold text-gray-800">
+              <span className="text-gray-500 dark:text-gray-400 text-xs">Altitude</span>
+              <p className="font-semibold text-gray-800 dark:text-white">
                 {satellite.altitude >= 1000
                   ? `${(satellite.altitude / 1000).toFixed(1)}K km`
                   : `${satellite.altitude} km`}
@@ -100,8 +100,8 @@ function SatelliteCard({ satellite }) {
           )}
           {satellite.massKg && (
             <div className="bg-gray-50 rounded-lg p-2">
-              <span className="text-gray-500 text-xs">Mass</span>
-              <p className="font-semibold text-gray-800">
+              <span className="text-gray-500 dark:text-gray-400 text-xs">Mass</span>
+              <p className="font-semibold text-gray-800 dark:text-white">
                 {satellite.massKg >= 1000
                   ? `${(satellite.massKg / 1000).toFixed(1)} t`
                   : `${satellite.massKg} kg`}
@@ -110,26 +110,26 @@ function SatelliteCard({ satellite }) {
           )}
           {satellite.launchYear && (
             <div className="bg-gray-50 rounded-lg p-2">
-              <span className="text-gray-500 text-xs">Launched</span>
-              <p className="font-semibold text-gray-800">{satellite.launchYear}</p>
+              <span className="text-gray-500 dark:text-gray-400 text-xs">Launched</span>
+              <p className="font-semibold text-gray-800 dark:text-white">{satellite.launchYear}</p>
             </div>
           )}
           {satellite.inclination && (
             <div className="bg-gray-50 rounded-lg p-2">
-              <span className="text-gray-500 text-xs">Inclination</span>
-              <p className="font-semibold text-gray-800">{satellite.inclination}°</p>
+              <span className="text-gray-500 dark:text-gray-400 text-xs">Inclination</span>
+              <p className="font-semibold text-gray-800 dark:text-white">{satellite.inclination}°</p>
             </div>
           )}
         </div>
 
         {/* Purpose */}
         {satellite.purpose && (
-          <p className="mt-3 text-sm text-gray-600 line-clamp-2">{satellite.purpose}</p>
+          <p className="mt-3 text-sm text-gray-600 dark:text-gray-400 line-clamp-2">{satellite.purpose}</p>
         )}
 
         {/* Country flag */}
         <div className="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between">
-          <span className="text-sm font-medium text-gray-600">{satellite.countryId}</span>
+          <span className="text-sm font-medium text-gray-600 dark:text-gray-400 dark:text-gray-400">{satellite.countryId}</span>
           {satellite.noradId && (
             <span className="text-xs text-gray-400">NORAD: {satellite.noradId}</span>
           )}
@@ -143,24 +143,24 @@ function StatisticsCard({ statistics }) {
   if (!statistics) return null;
 
   return (
-    <div className="bg-white rounded-xl shadow-md p-6 mb-6">
-      <h3 className="text-lg font-semibold text-gray-800 mb-4">Satellite Statistics</h3>
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mb-6">
+      <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Satellite Statistics</h3>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="text-center p-4 bg-indigo-50 rounded-lg">
           <p className="text-3xl font-bold text-indigo-600">{statistics.total}</p>
-          <p className="text-sm text-gray-600">Total Satellites</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">Total Satellites</p>
         </div>
         <div className="text-center p-4 bg-green-50 rounded-lg">
           <p className="text-3xl font-bold text-green-600">{statistics.active}</p>
-          <p className="text-sm text-gray-600">Active</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">Active</p>
         </div>
         <div className="text-center p-4 bg-purple-50 rounded-lg">
           <p className="text-3xl font-bold text-purple-600">{statistics.byType?.length || 0}</p>
-          <p className="text-sm text-gray-600">Types</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">Types</p>
         </div>
         <div className="text-center p-4 bg-amber-50 rounded-lg">
           <p className="text-3xl font-bold text-amber-600">{statistics.byCountry?.length || 0}</p>
-          <p className="text-sm text-gray-600">Countries</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">Countries</p>
         </div>
       </div>
     </div>
@@ -241,8 +241,8 @@ export default function SatelliteListPage() {
   if (error) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-          <p className="text-red-600">{error}</p>
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 text-center">
+          <p className="text-red-600 dark:text-red-400">{error}</p>
         </div>
       </div>
     );
@@ -252,8 +252,8 @@ export default function SatelliteListPage() {
     <div className="container mx-auto px-4 py-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Satellites</h1>
-        <p className="text-gray-600">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Satellites</h1>
+        <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400">
           Explore satellites and space assets from around the world
         </p>
       </div>
@@ -262,13 +262,13 @@ export default function SatelliteListPage() {
       <StatisticsCard statistics={statistics} />
 
       {/* Filters */}
-      <div className="bg-white rounded-xl shadow-md p-6 mb-6">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mb-6">
         <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
-          <h3 className="text-lg font-semibold text-gray-800">Filters</h3>
+          <h3 className="text-lg font-semibold text-gray-800 dark:text-white">Filters</h3>
           {activeFilterCount > 0 && (
             <button
               onClick={clearFilters}
-              className="text-sm text-indigo-600 hover:text-indigo-800"
+              className="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300"
             >
               Clear all ({activeFilterCount})
             </button>
@@ -284,7 +284,7 @@ export default function SatelliteListPage() {
               value={filters.search}
               onChange={(e) => handleFilterChange('search', e.target.value)}
               placeholder="Search satellites..."
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             />
           </div>
 
@@ -294,7 +294,7 @@ export default function SatelliteListPage() {
             <select
               value={filters.type}
               onChange={(e) => handleFilterChange('type', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             >
               <option value="">All Types</option>
               {filterOptions.types.map(type => (
@@ -309,7 +309,7 @@ export default function SatelliteListPage() {
             <select
               value={filters.orbitType}
               onChange={(e) => handleFilterChange('orbitType', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             >
               <option value="">All Orbits</option>
               {filterOptions.orbits.map(orbit => (
@@ -324,7 +324,7 @@ export default function SatelliteListPage() {
             <select
               value={filters.status}
               onChange={(e) => handleFilterChange('status', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             >
               <option value="">All Statuses</option>
               {filterOptions.statuses.map(status => (
@@ -339,7 +339,7 @@ export default function SatelliteListPage() {
             <select
               value={filters.countryId}
               onChange={(e) => handleFilterChange('countryId', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             >
               <option value="">All Countries</option>
               {filterOptions.countries.map(country => (
@@ -354,7 +354,7 @@ export default function SatelliteListPage() {
             <select
               value={filters.constellation}
               onChange={(e) => handleFilterChange('constellation', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             >
               <option value="">All Constellations</option>
               {filterOptions.constellations.map(constellation => (
@@ -369,7 +369,7 @@ export default function SatelliteListPage() {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             >
               <option value="name">Name</option>
               <option value="launchYear">Launch Year</option>
@@ -400,17 +400,17 @@ export default function SatelliteListPage() {
       </div>
 
       {/* Results count */}
-      <div className="mb-4 text-gray-600">
+      <div className="mb-4 text-gray-600 dark:text-gray-400 dark:text-gray-400">
         Showing {sortedSatellites.length} of {satellites.length} satellites
       </div>
 
       {/* Satellite grid/list */}
       {sortedSatellites.length === 0 ? (
         <div className="bg-gray-50 rounded-xl p-12 text-center">
-          <p className="text-gray-500 text-lg">No satellites found matching your criteria</p>
+          <p className="text-gray-500 dark:text-gray-400 text-lg">No satellites found matching your criteria</p>
           <button
             onClick={clearFilters}
-            className="mt-4 text-indigo-600 hover:text-indigo-800"
+            className="mt-4 text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300"
           >
             Clear filters
           </button>
@@ -422,9 +422,9 @@ export default function SatelliteListPage() {
           ))}
         </div>
       ) : (
-        <div className="bg-white rounded-xl shadow-md overflow-hidden">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
           <table className="w-full">
-            <thead className="bg-gray-50">
+            <thead className="bg-gray-50 dark:bg-gray-700">
               <tr>
                 <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Name</th>
                 <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Type</th>
@@ -436,14 +436,14 @@ export default function SatelliteListPage() {
             </thead>
             <tbody className="divide-y divide-gray-100">
               {sortedSatellites.map(satellite => (
-                <tr key={satellite.id} className="hover:bg-gray-50">
+                <tr key={satellite.id} className="hover:bg-gray-50 dark:bg-gray-700">
                   <td className="px-4 py-3">
-                    <Link to={`/satellites/${satellite.id}`} className="font-medium text-indigo-600 hover:text-indigo-800">
+                    <Link to={`/satellites/${satellite.id}`} className="font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300">
                       {satellite.name}
                     </Link>
-                    <p className="text-sm text-gray-500">{satellite.operator}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">{satellite.operator}</p>
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-600">{satellite.type}</td>
+                  <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">{satellite.type}</td>
                   <td className="px-4 py-3">
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${ORBIT_COLORS[satellite.orbitType] || 'bg-gray-100'}`}>
                       {satellite.orbitType}
@@ -454,8 +454,8 @@ export default function SatelliteListPage() {
                       {satellite.status}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-600">{satellite.countryId}</td>
-                  <td className="px-4 py-3 text-sm text-gray-600">{satellite.launchYear || '-'}</td>
+                  <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">{satellite.countryId}</td>
+                  <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">{satellite.launchYear || '-'}</td>
                 </tr>
               ))}
             </tbody>

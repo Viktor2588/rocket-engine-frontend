@@ -26,13 +26,13 @@ function getStatusColor(status) {
     case 'Active':
       return 'bg-green-100 text-green-800';
     case 'Retired':
-      return 'bg-gray-100 text-gray-800';
+      return 'bg-gray-100 dark:bg-gray-700 text-gray-800';
     case 'Development':
       return 'bg-blue-100 text-blue-800';
     case 'Planned':
       return 'bg-purple-100 text-purple-800';
     default:
-      return 'bg-gray-100 text-gray-800';
+      return 'bg-gray-100 dark:bg-gray-700 text-gray-800';
   }
 }
 
@@ -70,7 +70,7 @@ export default function LaunchVehicleCard({ vehicle }) {
   return (
     <Link
       to={`/vehicles/${vehicle.id}`}
-      className="block bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow overflow-hidden"
+      className="block bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow overflow-hidden"
     >
       {/* Header with status */}
       <div className="bg-gradient-to-r from-slate-700 to-slate-900 p-4 text-white">
@@ -95,23 +95,23 @@ export default function LaunchVehicleCard({ vehicle }) {
       <div className="p-4 grid grid-cols-2 gap-4">
         {/* Payload to LEO */}
         <div>
-          <p className="text-xs text-gray-500 uppercase">Payload (LEO)</p>
-          <p className="text-lg font-bold text-gray-800">
+          <p className="text-xs text-gray-500 dark:text-gray-400 uppercase">Payload (LEO)</p>
+          <p className="text-lg font-bold text-gray-800 dark:text-white dark:text-white">
             {vehicle.payloadToLeoKg ? `${formatNumber(vehicle.payloadToLeoKg)} kg` : '—'}
           </p>
         </div>
 
         {/* Launch Count */}
         <div>
-          <p className="text-xs text-gray-500 uppercase">Launches</p>
-          <p className="text-lg font-bold text-gray-800">
+          <p className="text-xs text-gray-500 dark:text-gray-400 uppercase">Launches</p>
+          <p className="text-lg font-bold text-gray-800 dark:text-white dark:text-white">
             {vehicle.totalLaunches ?? '—'}
           </p>
         </div>
 
         {/* Success Rate */}
         <div>
-          <p className="text-xs text-gray-500 uppercase">Success Rate</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400 uppercase">Success Rate</p>
           <p className={`text-lg font-bold ${
             successRate >= 95 ? 'text-green-600' :
             successRate >= 85 ? 'text-blue-600' :
@@ -124,8 +124,8 @@ export default function LaunchVehicleCard({ vehicle }) {
 
         {/* Cost per Launch */}
         <div>
-          <p className="text-xs text-gray-500 uppercase">Cost/Launch</p>
-          <p className="text-lg font-bold text-gray-800">
+          <p className="text-xs text-gray-500 dark:text-gray-400 uppercase">Cost/Launch</p>
+          <p className="text-lg font-bold text-gray-800 dark:text-white dark:text-white">
             {formatCurrency(vehicle.costPerLaunchUsd)}
           </p>
         </div>
@@ -144,14 +144,14 @@ export default function LaunchVehicleCard({ vehicle }) {
           </span>
         )}
         {vehicle.stages && (
-          <span className="inline-flex items-center px-2 py-1 rounded bg-gray-100 text-gray-700 text-xs">
+          <span className="inline-flex items-center px-2 py-1 rounded bg-gray-100 dark:bg-gray-700 text-gray-700 text-xs">
             {vehicle.stages} Stage{vehicle.stages > 1 ? 's' : ''}
           </span>
         )}
       </div>
 
       {/* Footer with height */}
-      <div className="bg-gray-50 px-4 py-2 border-t flex justify-between text-xs text-gray-500">
+      <div className="bg-gray-50 dark:bg-gray-700 px-4 py-2 border-t flex justify-between text-xs text-gray-500 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500">
         <span>
           {vehicle.heightMeters ? `${vehicle.heightMeters}m tall` : ''}
         </span>
@@ -172,27 +172,27 @@ export function LaunchVehicleCompactCard({ vehicle, onClick }) {
   return (
     <div
       onClick={() => onClick?.(vehicle)}
-      className={`bg-white rounded-lg border p-3 cursor-pointer hover:bg-gray-50 transition ${
+      className={`bg-white rounded-lg border p-3 cursor-pointer hover:bg-gray-50 dark:bg-gray-700 transition ${
         onClick ? 'cursor-pointer' : ''
       }`}
     >
       <div className="flex justify-between items-start">
         <div>
-          <h4 className="font-semibold text-gray-800">
+          <h4 className="font-semibold text-gray-800 dark:text-white dark:text-white">
             {vehicle.name}
-            {vehicle.variant && <span className="text-gray-500 text-sm ml-1">({vehicle.variant})</span>}
+            {vehicle.variant && <span className="text-gray-500 dark:text-gray-400 text-sm ml-1">({vehicle.variant})</span>}
           </h4>
-          <p className="text-sm text-gray-500">{vehicle.manufacturer}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500">{vehicle.manufacturer}</p>
         </div>
         <span className={`px-2 py-0.5 rounded text-xs ${getStatusColor(vehicle.status)}`}>
           {vehicle.status}
         </span>
       </div>
       <div className="mt-2 flex gap-4 text-sm">
-        <span className="text-gray-600">
+        <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500">
           <span className="font-medium">{formatNumber(vehicle.payloadToLeoKg)}</span> kg LEO
         </span>
-        <span className="text-gray-600">
+        <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400 dark:text-gray-500">
           <span className="font-medium">{vehicle.totalLaunches || 0}</span> launches
         </span>
       </div>

@@ -58,7 +58,7 @@ export default function CountryTimelinePage() {
       <div className="container mx-auto px-4 py-12">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading timeline...</p>
+          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Loading timeline...</p>
         </div>
       </div>
     );
@@ -67,9 +67,9 @@ export default function CountryTimelinePage() {
   if (error) {
     return (
       <div className="container mx-auto px-4 py-12">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-          <h2 className="text-lg font-semibold text-red-800 mb-2">Error Loading Timeline</h2>
-          <p className="text-red-600">{error}</p>
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 text-center">
+          <h2 className="text-lg font-semibold text-red-800 dark:text-red-400 mb-2">Error Loading Timeline</h2>
+          <p className="text-red-600 dark:text-red-400">{error}</p>
           <Link
             to={`/countries/${code}`}
             className="mt-4 inline-block text-indigo-500 hover:text-indigo-700 font-semibold"
@@ -86,10 +86,10 @@ export default function CountryTimelinePage() {
       <div className="container mx-auto px-4 py-12">
         <div className="text-center">
           <div className="text-6xl mb-4">{COUNTRY_FLAGS[code] || '🏳️'}</div>
-          <h1 className="text-2xl font-bold text-gray-800 mb-2">
+          <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">
             {country?.name || code} Space Timeline
           </h1>
-          <p className="text-gray-500 text-lg mb-6">No milestones recorded yet</p>
+          <p className="text-gray-500 dark:text-gray-400 text-lg mb-6">No milestones recorded yet</p>
           <Link
             to={`/countries/${code}`}
             className="text-indigo-500 hover:text-indigo-700 font-semibold"
@@ -102,7 +102,7 @@ export default function CountryTimelinePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
       <div className="container mx-auto px-4">
         {/* Breadcrumb & Back */}
         <div className="mb-6">
@@ -115,15 +115,15 @@ export default function CountryTimelinePage() {
         </div>
 
         {/* Header */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div className="flex items-center gap-4">
               <span className="text-5xl">{COUNTRY_FLAGS[code] || '🏳️'}</span>
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
                   {country?.name || timeline.countryName} Space Timeline
                 </h1>
-                <p className="text-gray-600">
+                <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400">
                   Historical milestones and achievements in space exploration
                 </p>
               </div>
@@ -133,18 +133,18 @@ export default function CountryTimelinePage() {
             <div className="flex gap-4">
               <div className="text-center px-4 py-2 bg-indigo-50 rounded-lg">
                 <div className="text-2xl font-bold text-indigo-600">{timeline.totalMilestones}</div>
-                <div className="text-xs text-gray-500">Milestones</div>
+                <div className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-400">Milestones</div>
               </div>
               <div className="text-center px-4 py-2 bg-yellow-50 rounded-lg">
                 <div className="text-2xl font-bold text-yellow-600">{timeline.totalFirsts}</div>
-                <div className="text-xs text-gray-500">World Firsts</div>
+                <div className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-400">World Firsts</div>
               </div>
               {timeline.earliestMilestone && (
                 <div className="text-center px-4 py-2 bg-green-50 rounded-lg">
                   <div className="text-2xl font-bold text-green-600">
                     {timeline.earliestMilestone.year}
                   </div>
-                  <div className="text-xs text-gray-500">First Achievement</div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-400">First Achievement</div>
                 </div>
               )}
             </div>
@@ -152,7 +152,7 @@ export default function CountryTimelinePage() {
         </div>
 
         {/* Controls */}
-        <div className="bg-white rounded-lg shadow-md p-4 mb-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 mb-6">
           <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
             {/* Category Filter */}
             <CategoryFilter
@@ -177,7 +177,7 @@ export default function CountryTimelinePage() {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500"
+                className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500"
               >
                 <option value="date">Sort by Date</option>
                 <option value="significance">Sort by Significance</option>
@@ -211,7 +211,7 @@ export default function CountryTimelinePage() {
           {/* Active filters indicator */}
           {(filters.category || filters.firstsOnly) && (
             <div className="mt-3 flex items-center gap-2">
-              <span className="text-sm text-gray-500">Active filters:</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Active filters:</span>
               {filters.category && (
                 <span className="px-2 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs">
                   {filters.category}
@@ -235,11 +235,11 @@ export default function CountryTimelinePage() {
         {/* Timeline Content */}
         <div className="mb-8">
           {filteredMilestones.length === 0 ? (
-            <div className="bg-white rounded-lg shadow-md p-8 text-center text-gray-500">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 text-center text-gray-500 dark:text-gray-400 dark:text-gray-400">
               No milestones match the current filters
             </div>
           ) : viewMode === 'horizontal' ? (
-            <div className="bg-white rounded-lg shadow-md p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
               <HorizontalTimeline
                 milestones={filteredMilestones}
                 onMilestoneClick={setSelectedMilestone}
@@ -253,7 +253,7 @@ export default function CountryTimelinePage() {
               )}
             </div>
           ) : viewMode === 'vertical' ? (
-            <div className="bg-white rounded-lg shadow-md p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
               <VerticalTimeline milestones={filteredMilestones} showCountry={false} />
             </div>
           ) : (
@@ -268,7 +268,7 @@ export default function CountryTimelinePage() {
         {/* First Achievements Highlight */}
         {timeline.firstAchievements && timeline.firstAchievements.length > 0 && (
           <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg shadow-md p-6 mb-8">
-            <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
               <span>🥇</span>
               World First Achievements
             </h2>
@@ -283,7 +283,7 @@ export default function CountryTimelinePage() {
         {/* Global Context */}
         {stats && (
           <div className="mt-8">
-            <h2 className="text-xl font-bold text-gray-800 mb-4">Global Context</h2>
+            <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Global Context</h2>
             <MilestoneStatsCard stats={stats} />
           </div>
         )}

@@ -114,7 +114,7 @@ export default function EngineListPage() {
       <div className="container mx-auto px-4 py-12">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading engines...</p>
+          <p className="text-gray-600 dark:text-gray-400">Loading engines...</p>
         </div>
       </div>
     );
@@ -123,23 +123,23 @@ export default function EngineListPage() {
   if (error) {
     return (
       <div className="container mx-auto px-4 py-12">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-          <h2 className="text-lg font-semibold text-red-800 mb-2">Error Loading Engines</h2>
-          <p className="text-red-600">{error}</p>
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 text-center">
+          <h2 className="text-lg font-semibold text-red-800 dark:text-red-400 mb-2">Error Loading Engines</h2>
+          <p className="text-red-600 dark:text-red-400">{error}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2 flex items-center gap-3">
-            <Rocket style={{ fontSize: '2.5rem' }} className="text-blue-600" /> Rocket Engines
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-3">
+            <Rocket style={{ fontSize: '2.5rem' }} className="text-blue-600 dark:text-blue-400" /> Rocket Engines
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400">
             Explore {engines.length} rocket engines from space agencies around the world
           </p>
         </div>
@@ -147,48 +147,48 @@ export default function EngineListPage() {
         {/* Quick Stats */}
         {statistics && (
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-8">
-            <div className="bg-white rounded-lg shadow p-4 text-center">
-              <p className="text-3xl font-bold text-indigo-600">{statistics.total}</p>
-              <p className="text-sm text-gray-500">Total Engines</p>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
+              <p className="text-3xl font-bold text-indigo-600 dark:text-indigo-400">{statistics.total}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Total Engines</p>
             </div>
-            <div className="bg-white rounded-lg shadow p-4 text-center">
-              <p className="text-3xl font-bold text-green-600">{statistics.activeCount}</p>
-              <p className="text-sm text-gray-500">Active</p>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
+              <p className="text-3xl font-bold text-green-600 dark:text-green-400">{statistics.activeCount}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Active</p>
             </div>
-            <div className="bg-white rounded-lg shadow p-4 text-center">
-              <p className="text-3xl font-bold text-purple-600">{statistics.reusableCount}</p>
-              <p className="text-sm text-gray-500">Reusable</p>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
+              <p className="text-3xl font-bold text-purple-600 dark:text-purple-400">{statistics.reusableCount}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Reusable</p>
             </div>
-            <div className="bg-white rounded-lg shadow p-4 text-center">
-              <p className="text-3xl font-bold text-blue-600">{statistics.averageIsp}</p>
-              <p className="text-sm text-gray-500">Avg ISP (s)</p>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
+              <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">{statistics.averageIsp}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Avg ISP (s)</p>
             </div>
-            <div className="bg-white rounded-lg shadow p-4 text-center">
-              <p className="text-3xl font-bold text-orange-600">{statistics.averageThrust}</p>
-              <p className="text-sm text-gray-500">Avg Thrust (kN)</p>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
+              <p className="text-3xl font-bold text-orange-600 dark:text-orange-400">{statistics.averageThrust}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Avg Thrust (kN)</p>
             </div>
-            <div className="bg-white rounded-lg shadow p-4 text-center">
-              <p className="text-3xl font-bold text-cyan-600">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
+              <p className="text-3xl font-bold text-cyan-600 dark:text-cyan-400">
                 {statistics.byCountry?.length || 0}
               </p>
-              <p className="text-sm text-gray-500">Countries</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Countries</p>
             </div>
           </div>
         )}
 
         {/* Filters & Controls */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
           <div className="flex flex-col gap-4">
             {/* First Row: Sort and View */}
             <div className="flex flex-col lg:flex-row gap-4 justify-between items-start lg:items-center">
               <div className="flex flex-wrap gap-4">
                 {/* Sort */}
                 <label className="flex items-center gap-2">
-                  <span className="text-gray-700 font-semibold text-sm">Sort:</span>
+                  <span className="text-gray-700 dark:text-gray-300 font-semibold text-sm">Sort:</span>
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+                    className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   >
                     <option value="sophistication">Technology Score</option>
                     <option value="isp">ISP (High to Low)</option>
@@ -201,11 +201,11 @@ export default function EngineListPage() {
 
                 {/* Status Filter */}
                 <label className="flex items-center gap-2">
-                  <span className="text-gray-700 font-semibold text-sm">Status:</span>
+                  <span className="text-gray-700 dark:text-gray-300 font-semibold text-sm">Status:</span>
                   <select
                     value={filterStatus}
                     onChange={(e) => setFilterStatus(e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+                    className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   >
                     <option value="all">All Status</option>
                     <option value="Active">Active</option>
@@ -216,11 +216,11 @@ export default function EngineListPage() {
 
                 {/* Country Filter */}
                 <label className="flex items-center gap-2">
-                  <span className="text-gray-700 font-semibold text-sm">Country:</span>
+                  <span className="text-gray-700 dark:text-gray-300 font-semibold text-sm">Country:</span>
                   <select
                     value={filterCountry}
                     onChange={(e) => setFilterCountry(e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+                    className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   >
                     <option value="all">All Countries</option>
                     {COUNTRIES.map(c => (
@@ -236,7 +236,7 @@ export default function EngineListPage() {
                   className={`px-4 py-2 rounded-md font-semibold transition text-sm ${
                     viewMode === 'grid'
                       ? 'bg-indigo-500 text-white'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                      : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
                   }`}
                 >
                   Grid
@@ -246,7 +246,7 @@ export default function EngineListPage() {
                   className={`px-4 py-2 rounded-md font-semibold transition text-sm ${
                     viewMode === 'table'
                       ? 'bg-indigo-500 text-white'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                      : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
                   }`}
                 >
                   Table
@@ -256,7 +256,7 @@ export default function EngineListPage() {
                   className={`px-4 py-2 rounded-md font-semibold transition text-sm ${
                     viewMode === 'chart'
                       ? 'bg-indigo-500 text-white'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                      : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
                   }`}
                 >
                   Chart
@@ -271,14 +271,14 @@ export default function EngineListPage() {
             </div>
 
             {/* Second Row: Technical Filters */}
-            <div className="flex flex-wrap gap-4 pt-4 border-t">
+            <div className="flex flex-wrap gap-4 pt-4 border-t dark:border-gray-700">
               {/* Propellant Filter */}
               <label className="flex items-center gap-2">
-                <span className="text-gray-700 font-semibold text-sm">Propellant:</span>
+                <span className="text-gray-700 dark:text-gray-300 font-semibold text-sm">Propellant:</span>
                 <select
                   value={filterPropellant}
                   onChange={(e) => setFilterPropellant(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 >
                   <option value="all">All Propellants</option>
                   {PROPELLANTS.map(p => (
@@ -289,11 +289,11 @@ export default function EngineListPage() {
 
               {/* Power Cycle Filter */}
               <label className="flex items-center gap-2">
-                <span className="text-gray-700 font-semibold text-sm">Cycle:</span>
+                <span className="text-gray-700 dark:text-gray-300 font-semibold text-sm">Cycle:</span>
                 <select
                   value={filterCycle}
                   onChange={(e) => setFilterCycle(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 >
                   <option value="all">All Cycles</option>
                   {POWER_CYCLES.map(c => (
@@ -304,11 +304,11 @@ export default function EngineListPage() {
 
               {/* Capability Filter */}
               <label className="flex items-center gap-2">
-                <span className="text-gray-700 font-semibold text-sm">Capability:</span>
+                <span className="text-gray-700 dark:text-gray-300 font-semibold text-sm">Capability:</span>
                 <select
                   value={filterCapability}
                   onChange={(e) => setFilterCapability(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 >
                   <option value="all">All Capabilities</option>
                   <option value="reusable">Reusable</option>
@@ -331,47 +331,47 @@ export default function EngineListPage() {
         )}
 
         {viewMode === 'table' && (
-          <div className="bg-white rounded-lg shadow-md overflow-hidden">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead className="bg-gray-50 dark:bg-gray-700">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                       Engine
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                       Designer
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                       Status
                     </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                       ISP (Vac)
                     </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                       Thrust
                     </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                       Reliability
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                       Capabilities
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                   {filteredAndSortedEngines.map((engine, index) => (
-                    <tr key={engine.id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                    <tr key={engine.id} className={index % 2 === 0 ? 'bg-white dark:bg-gray-800' : 'bg-gray-50 dark:bg-gray-700'}>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="font-medium text-gray-900">{engine.name}</div>
+                        <div className="font-medium text-gray-900 dark:text-white">{engine.name}</div>
                         {engine.variant && (
-                          <div className="text-sm text-gray-500">{engine.variant}</div>
+                          <div className="text-sm text-gray-500 dark:text-gray-400">{engine.variant}</div>
                         )}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                         {engine.designer}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -384,13 +384,13 @@ export default function EngineListPage() {
                           {engine.status}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-900 dark:text-gray-200">
                         {engine.ispVacuum || engine.isp_s || engine.isp || '—'} s
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-900 dark:text-gray-200">
                         {engine.thrustKn ? `${engine.thrustKn.toLocaleString()} kN` : '—'}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-900 dark:text-gray-200">
                         {engine.reliabilityRate ? `${engine.reliabilityRate.toFixed(1)}%` : '—'}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -404,7 +404,7 @@ export default function EngineListPage() {
                       <td className="px-6 py-4 whitespace-nowrap text-sm">
                         <Link
                           to={`/engines/${engine.id}`}
-                          className="text-indigo-600 hover:text-indigo-900"
+                          className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300"
                         >
                           View Details
                         </Link>
@@ -427,7 +427,7 @@ export default function EngineListPage() {
         {/* No results */}
         {filteredAndSortedEngines.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">No engines match your filters</p>
+            <p className="text-gray-500 dark:text-gray-400 text-lg">No engines match your filters</p>
             <button
               onClick={() => {
                 setFilterStatus('all');
@@ -436,7 +436,7 @@ export default function EngineListPage() {
                 setFilterCycle('all');
                 setFilterCapability('all');
               }}
-              className="mt-4 text-indigo-600 hover:text-indigo-800"
+              className="mt-4 text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300"
             >
               Clear filters
             </button>
@@ -444,7 +444,7 @@ export default function EngineListPage() {
         )}
 
         {/* Footer note */}
-        <div className="mt-8 text-center text-sm text-gray-500">
+        <div className="mt-8 text-center text-sm text-gray-500 dark:text-gray-400">
           <p>
             Data includes liquid rocket engines from major space agencies and manufacturers.
           </p>

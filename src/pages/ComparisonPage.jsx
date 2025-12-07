@@ -52,20 +52,20 @@ export default function ComparisonPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">🔍 Compare Engines</h1>
-          <p className="text-gray-600">Select two engines to compare their specifications</p>
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">🔍 Compare Engines</h1>
+          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Select two engines to compare their specifications</p>
         </div>
 
         {/* Engine Selection */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Select Engines</h2>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Select Engines</h2>
 
           {loadingEngines ? (
-            <div className="text-center text-gray-500">Loading engines...</div>
+            <div className="text-center text-gray-500 dark:text-gray-400 dark:text-gray-400">Loading engines...</div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {engines.map((engine) => (
@@ -78,9 +78,9 @@ export default function ComparisonPage() {
                       : 'border-gray-300 bg-white hover:border-gray-400'
                   }`}
                 >
-                  <div className="font-semibold text-gray-900">{engine.name}</div>
-                  <div className="text-xs text-gray-500">{engine.designer}</div>
-                  <div className="text-xs text-gray-500 mt-1">
+                  <div className="font-semibold text-gray-900 dark:text-white">{engine.name}</div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-400">{engine.designer}</div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     T/W: {engine.calculateThrustToWeightRatio ? engine.calculateThrustToWeightRatio.toFixed(2) : 'N/A'} • Cycle: {engine.powerCycle || 'N/A'}
                   </div>
                 </button>
@@ -103,26 +103,26 @@ export default function ComparisonPage() {
           <>
             {/* Comparison Table */}
             <div className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Specifications Comparison</h2>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Specifications Comparison</h2>
               <ComparisonTable engines={selectedEngines} />
             </div>
 
             {/* Charts */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div>
-                <h3 className="text-xl font-bold text-gray-900 mb-4">Thrust-to-Weight Ratio Comparison</h3>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Thrust-to-Weight Ratio Comparison</h3>
                 <EngineChart engines={selectedEngines} type="twr" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-gray-900 mb-4">ISP Comparison</h3>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">ISP Comparison</h3>
                 <EngineChart engines={selectedEngines} type="isp" />
               </div>
             </div>
 
             {/* Comparison Insights */}
             {comparisonData && (
-              <div className="mt-8 bg-white rounded-lg shadow-md p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-4">Comparison Summary</h3>
+              <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Comparison Summary</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="bg-blue-50 p-4 rounded-lg">
                     <h4 className="font-semibold text-blue-900 mb-2">T/W Ratio Difference</h4>
@@ -162,13 +162,13 @@ export default function ComparisonPage() {
         )}
 
         {selectedEngineIds.length < 2 && selectedEngineIds.length > 0 && (
-          <div className="text-center py-12 text-gray-500">
+          <div className="text-center py-12 text-gray-500 dark:text-gray-400 dark:text-gray-400">
             <p>Select {2 - selectedEngineIds.length} more engine(s) to compare</p>
           </div>
         )}
 
         {selectedEngineIds.length === 0 && !loadingEngines && (
-          <div className="text-center py-12 text-gray-500">
+          <div className="text-center py-12 text-gray-500 dark:text-gray-400 dark:text-gray-400">
             <p>Select two engines to compare their specifications</p>
           </div>
         )}

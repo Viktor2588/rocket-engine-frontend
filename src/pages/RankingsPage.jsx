@@ -95,9 +95,9 @@ export default function RankingsPage() {
   if (error) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 text-center">
           <h2 className="text-xl font-bold text-red-700 mb-2">Error Loading Rankings</h2>
-          <p className="text-red-600">{error}</p>
+          <p className="text-red-600 dark:text-red-400">{error}</p>
         </div>
       </div>
     );
@@ -107,8 +107,8 @@ export default function RankingsPage() {
     <div className="container mx-auto px-4 py-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Space Capability Index Rankings</h1>
-        <p className="text-gray-600">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Space Capability Index Rankings</h1>
+        <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400">
           Global rankings of national space programs based on comprehensive capability scoring
         </p>
       </div>
@@ -116,55 +116,55 @@ export default function RankingsPage() {
       {/* Global Statistics */}
       {rankings?.globalStatistics && (
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 mb-8">
-          <div className="bg-white rounded-lg shadow p-4 text-center">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
             <div className="text-2xl font-bold text-indigo-600">
               {rankings.globalStatistics.totalCountries}
             </div>
-            <div className="text-sm text-gray-500">Countries</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Countries</div>
           </div>
-          <div className="bg-white rounded-lg shadow p-4 text-center">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
             <div className="text-2xl font-bold text-green-600">
               {rankings.globalStatistics.countriesWithLaunchCapability}
             </div>
-            <div className="text-sm text-gray-500">Launch Capable</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Launch Capable</div>
           </div>
-          <div className="bg-white rounded-lg shadow p-4 text-center">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
             <div className="text-2xl font-bold text-purple-600">
               {rankings.globalStatistics.countriesWithHumanSpaceflight}
             </div>
-            <div className="text-sm text-gray-500">Human Spaceflight</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Human Spaceflight</div>
           </div>
-          <div className="bg-white rounded-lg shadow p-4 text-center">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
             <div className="text-2xl font-bold text-blue-600">
               {rankings.globalStatistics.averageScore?.toFixed(1)}
             </div>
-            <div className="text-sm text-gray-500">Avg Score</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Avg Score</div>
           </div>
-          <div className="bg-white rounded-lg shadow p-4 text-center">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
             <div className="text-2xl font-bold text-amber-600">
               {rankings.globalStatistics.topScore?.toFixed(1)}
             </div>
-            <div className="text-sm text-gray-500">Top Score</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Top Score</div>
           </div>
-          <div className="bg-white rounded-lg shadow p-4 text-center">
-            <div className="text-2xl font-bold text-gray-600">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
+            <div className="text-2xl font-bold text-gray-600 dark:text-gray-400 dark:text-gray-400">
               {rankings.globalStatistics.medianScore?.toFixed(1)}
             </div>
-            <div className="text-sm text-gray-500">Median</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Median</div>
           </div>
-          <div className="bg-white rounded-lg shadow p-4 text-center">
-            <div className="text-2xl font-bold text-red-600">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
+            <div className="text-2xl font-bold text-red-600 dark:text-red-400">
               {rankings.globalStatistics.bottomScore?.toFixed(1)}
             </div>
-            <div className="text-sm text-gray-500">Bottom Score</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Bottom Score</div>
           </div>
         </div>
       )}
 
       {/* Tier Distribution Chart */}
       {statistics?.tierDistribution && (
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">Tier Distribution</h2>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
+          <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Tier Distribution</h2>
           <div className="flex flex-wrap items-center justify-between gap-6">
             <TierDistributionChart tierCounts={statistics.tierDistribution} size={180} />
             <div className="flex-1 grid grid-cols-2 md:grid-cols-5 gap-4">
@@ -180,12 +180,12 @@ export default function RankingsPage() {
                       className="w-3 h-3 rounded-full"
                       style={{ backgroundColor: tier.color }}
                     />
-                    <span className="font-semibold text-gray-800">{tier.tier}</span>
+                    <span className="font-semibold text-gray-800 dark:text-white">{tier.tier}</span>
                   </div>
                   <div className="text-2xl font-bold" style={{ color: tier.color }}>
                     {statistics.tierDistribution[tier.tier] || 0}
                   </div>
-                  <div className="text-xs text-gray-500">{tier.minScore}+ points</div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-400">{tier.minScore}+ points</div>
                 </div>
               ))}
             </div>
@@ -194,7 +194,7 @@ export default function RankingsPage() {
       )}
 
       {/* Controls Bar */}
-      <div className="bg-white rounded-lg shadow-md p-4 mb-6">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 mb-6">
         <div className="flex flex-wrap items-center gap-4">
           {/* Search */}
           <div className="flex-1 min-w-[200px]">
@@ -203,7 +203,7 @@ export default function RankingsPage() {
               placeholder="Search countries..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             />
           </div>
 
@@ -211,7 +211,7 @@ export default function RankingsPage() {
           <select
             value={tierFilter || ''}
             onChange={(e) => setTierFilter(e.target.value || null)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500"
           >
             <option value="">All Tiers</option>
             {SCI_TIER_THRESHOLDS.map(tier => (
@@ -223,7 +223,7 @@ export default function RankingsPage() {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500"
           >
             <option value="overall">Overall Score</option>
             <option value="rank">Global Rank</option>
@@ -238,13 +238,13 @@ export default function RankingsPage() {
           {/* Sort Order */}
           <button
             onClick={() => setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc')}
-            className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 transition"
           >
             {sortOrder === 'desc' ? '↓ Desc' : '↑ Asc'}
           </button>
 
           {/* View Mode */}
-          <div className="flex border border-gray-300 rounded-lg overflow-hidden">
+          <div className="flex border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
             <button
               onClick={() => setViewMode('list')}
               className={`px-4 py-2 ${viewMode === 'list' ? 'bg-indigo-600 text-white' : 'bg-white hover:bg-gray-50'}`}
@@ -274,7 +274,7 @@ export default function RankingsPage() {
             </span>
             <button
               onClick={clearSelection}
-              className="text-sm text-indigo-600 hover:text-indigo-800"
+              className="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300"
             >
               Clear Selection
             </button>
@@ -324,14 +324,14 @@ export default function RankingsPage() {
 
       {/* Empty State */}
       {filteredRankings.length === 0 && (
-        <div className="bg-white rounded-lg shadow-md p-8 text-center">
-          <p className="text-gray-500">No countries match your filters.</p>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 text-center">
+          <p className="text-gray-500 dark:text-gray-400 dark:text-gray-400">No countries match your filters.</p>
           <button
             onClick={() => {
               setTierFilter(null);
               setSearchQuery('');
             }}
-            className="mt-4 text-indigo-600 hover:text-indigo-800"
+            className="mt-4 text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300"
           >
             Clear Filters
           </button>
@@ -391,7 +391,7 @@ function RankingRow({ breakdown, rank, isSelected, onToggleSelect, canSelect }) 
                 <span className="text-xs text-green-600">↑ Improving</span>
               )}
               {breakdown.trend === 'declining' && (
-                <span className="text-xs text-red-600">↓ Declining</span>
+                <span className="text-xs text-red-600 dark:text-red-400">↓ Declining</span>
               )}
             </div>
           </div>
@@ -440,7 +440,7 @@ function RankingRow({ breakdown, rank, isSelected, onToggleSelect, canSelect }) 
           <div className="pt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Category Scores */}
             <div>
-              <h4 className="text-sm font-semibold text-gray-600 mb-3">Category Scores</h4>
+              <h4 className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-3">Category Scores</h4>
               <div className="space-y-2">
                 {breakdown.categoryScores?.map((cs) => (
                   <CategoryScoreBar key={cs.category} category={cs.category} score={cs.score} />
@@ -489,7 +489,7 @@ function RankingRow({ breakdown, rank, isSelected, onToggleSelect, canSelect }) 
 
               <Link
                 to={`/countries/${breakdown.countryId}`}
-                className="mt-4 inline-block text-indigo-600 hover:text-indigo-800 text-sm font-medium"
+                className="mt-4 inline-block text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 text-sm font-medium"
               >
                 View Full Profile →
               </Link>
@@ -507,8 +507,8 @@ function RankingRow({ breakdown, rank, isSelected, onToggleSelect, canSelect }) 
 function ComparisonView({ comparison }) {
   if (!comparison || !comparison.countries || comparison.countries.length < 2) {
     return (
-      <div className="bg-white rounded-lg shadow-md p-8 text-center">
-        <p className="text-gray-500">Select at least 2 countries to compare.</p>
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 text-center">
+        <p className="text-gray-500 dark:text-gray-400 dark:text-gray-400">Select at least 2 countries to compare.</p>
       </div>
     );
   }
@@ -516,21 +516,21 @@ function ComparisonView({ comparison }) {
   return (
     <div className="space-y-6">
       {/* Radar Chart */}
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">Capability Comparison</h2>
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+        <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Capability Comparison</h2>
         <ComparisonRadarChart breakdowns={comparison.countries} height={400} />
       </div>
 
       {/* Side by Side Scores */}
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">Score Comparison</h2>
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+        <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Score Comparison</h2>
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-gray-200">
-                <th className="text-left py-3 px-4 font-medium text-gray-600">Category</th>
+              <tr className="border-b border-gray-200 dark:border-gray-700">
+                <th className="text-left py-3 px-4 font-medium text-gray-600 dark:text-gray-400 dark:text-gray-400">Category</th>
                 {comparison.countries.map((c) => (
-                  <th key={c.countryId} className="text-center py-3 px-4 font-medium text-gray-600">
+                  <th key={c.countryId} className="text-center py-3 px-4 font-medium text-gray-600 dark:text-gray-400 dark:text-gray-400">
                     <div className="flex items-center justify-center gap-2">
                       <span className="text-xl">{getCountryFlag(c.countryId)}</span>
                       {c.countryName}
@@ -561,7 +561,7 @@ function ComparisonView({ comparison }) {
                 const maxScore = Math.max(...scores);
 
                 return (
-                  <tr key={cw.category} className="border-b border-gray-100 hover:bg-gray-50">
+                  <tr key={cw.category} className="border-b border-gray-100 hover:bg-gray-50 dark:bg-gray-700">
                     <td className="py-3 px-4 flex items-center gap-2">
                       <SpaceIcon name={cw.icon} size="sm" />
                       {cw.label}
@@ -592,18 +592,18 @@ function ComparisonView({ comparison }) {
 
       {/* Gap Analysis */}
       {comparison.gapAnalysis && (
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">Gap Analysis</h2>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+          <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Gap Analysis</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {comparison.gapAnalysis.map((ga) => {
               const catInfo = CATEGORY_WEIGHTS?.find(cw => cw.category === ga.category);
               return (
-                <div key={ga.category} className="border border-gray-200 rounded-lg p-4">
+                <div key={ga.category} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                   <div className="flex items-center gap-2 mb-2">
                     <SpaceIcon name={catInfo?.icon} size="lg" />
-                    <span className="font-medium text-gray-800">{catInfo?.label}</span>
+                    <span className="font-medium text-gray-800 dark:text-white">{catInfo?.label}</span>
                   </div>
-                  <div className="text-sm text-gray-600 mb-2">
+                  <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">
                     Leader: <span className="font-semibold">{ga.leader}</span>
                     <span className="ml-2 text-green-600">({ga.leaderScore?.toFixed(1)})</span>
                   </div>
@@ -612,8 +612,8 @@ function ComparisonView({ comparison }) {
                       const country = comparison.countries.find(c => c.countryId === gap.countryId);
                       return (
                         <div key={gap.countryId} className="flex justify-between text-sm">
-                          <span className="text-gray-600">{country?.countryName}</span>
-                          <span className="text-red-600">-{gap.gap?.toFixed(1)} pts</span>
+                          <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">{country?.countryName}</span>
+                          <span className="text-red-600 dark:text-red-400">-{gap.gap?.toFixed(1)} pts</span>
                         </div>
                       );
                     })}

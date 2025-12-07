@@ -46,7 +46,7 @@ export default function MissionListPage() {
       <div className="container mx-auto px-4 py-12">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading missions...</p>
+          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Loading missions...</p>
         </div>
       </div>
     );
@@ -55,9 +55,9 @@ export default function MissionListPage() {
   if (error) {
     return (
       <div className="container mx-auto px-4 py-12">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-          <h2 className="text-lg font-semibold text-red-800 mb-2">Error Loading Missions</h2>
-          <p className="text-red-600">{error}</p>
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 text-center">
+          <h2 className="text-lg font-semibold text-red-800 dark:text-red-400 mb-2">Error Loading Missions</h2>
+          <p className="text-red-600 dark:text-red-400">{error}</p>
         </div>
       </div>
     );
@@ -66,12 +66,12 @@ export default function MissionListPage() {
   const hasActiveFilters = filters.status || filters.missionType || filters.destination || filters.crewedOnly || filters.searchQuery;
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Space Missions</h1>
-          <p className="text-gray-600">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Space Missions</h1>
+          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400">
             Explore humanity's missions to space, from historic firsts to ongoing explorations
           </p>
         </div>
@@ -79,31 +79,31 @@ export default function MissionListPage() {
         {/* Stats Overview */}
         {stats && (
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
-            <div className="bg-white rounded-lg shadow p-4 text-center">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
               <div className="text-3xl font-bold text-indigo-600">{stats.totalMissions}</div>
-              <div className="text-sm text-gray-500">Total Missions</div>
+              <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Total Missions</div>
             </div>
-            <div className="bg-white rounded-lg shadow p-4 text-center">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
               <div className="text-3xl font-bold text-green-600">{stats.activeMissions}</div>
-              <div className="text-sm text-gray-500">Active</div>
+              <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Active</div>
             </div>
-            <div className="bg-white rounded-lg shadow p-4 text-center">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
               <div className="text-3xl font-bold text-purple-600">{stats.crewedMissions}</div>
-              <div className="text-sm text-gray-500">Crewed</div>
+              <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Crewed</div>
             </div>
-            <div className="bg-white rounded-lg shadow p-4 text-center">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
               <div className="text-3xl font-bold text-yellow-600">{stats.historicFirsts}</div>
-              <div className="text-sm text-gray-500">Historic Firsts</div>
+              <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Historic Firsts</div>
             </div>
-            <div className="bg-white rounded-lg shadow p-4 text-center">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
               <div className="text-3xl font-bold text-teal-600">{stats.successRate}%</div>
-              <div className="text-sm text-gray-500">Success Rate</div>
+              <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Success Rate</div>
             </div>
           </div>
         )}
 
         {/* Filters and Controls */}
-        <div className="bg-white rounded-lg shadow-md p-4 mb-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 mb-6">
           <div className="flex flex-col lg:flex-row gap-4">
             {/* Search */}
             <div className="flex-1">
@@ -112,7 +112,7 @@ export default function MissionListPage() {
                 placeholder="Search missions..."
                 value={filters.searchQuery}
                 onChange={(e) => updateFilter('searchQuery', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
               />
             </div>
 
@@ -120,7 +120,7 @@ export default function MissionListPage() {
             <select
               value={filters.status || ''}
               onChange={(e) => updateFilter('status', e.target.value || null)}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+              className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500"
             >
               <option value="">All Statuses</option>
               {STATUS_OPTIONS.map(opt => (
@@ -132,7 +132,7 @@ export default function MissionListPage() {
             <select
               value={filters.missionType || ''}
               onChange={(e) => updateFilter('missionType', e.target.value || null)}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+              className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500"
             >
               <option value="">All Types</option>
               {Object.entries(MISSION_TYPE_INFO).map(([key, info]) => (
@@ -144,7 +144,7 @@ export default function MissionListPage() {
             <select
               value={filters.destination || ''}
               onChange={(e) => updateFilter('destination', e.target.value || null)}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+              className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500"
             >
               <option value="">All Destinations</option>
               {Object.entries(DESTINATION_INFO).map(([key, info]) => (
@@ -184,7 +184,7 @@ export default function MissionListPage() {
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-indigo-500"
+                  className="px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-2 focus:ring-indigo-500"
                 >
                   <option value="launchDate">Launch Date</option>
                   <option value="name">Name</option>
@@ -193,7 +193,7 @@ export default function MissionListPage() {
                 </select>
                 <button
                   onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-                  className="p-1 text-gray-500 hover:text-gray-700"
+                  className="p-1 text-gray-500 dark:text-gray-400 hover:text-gray-700"
                   title={sortOrder === 'asc' ? 'Ascending' : 'Descending'}
                 >
                   {sortOrder === 'asc' ? '↑' : '↓'}
@@ -221,7 +221,7 @@ export default function MissionListPage() {
           {/* Active filters indicator */}
           {hasActiveFilters && (
             <div className="mt-3 flex items-center gap-2 flex-wrap">
-              <span className="text-sm text-gray-500">Showing {filteredMissions.length} of {allMissions.length} missions:</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Showing {filteredMissions.length} of {allMissions.length} missions:</span>
               {filters.status && (
                 <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs">
                   {STATUS_OPTIONS.find(s => s.value === filters.status)?.label}
@@ -253,10 +253,10 @@ export default function MissionListPage() {
 
         {/* Mission List */}
         {filteredMissions.length === 0 ? (
-          <div className="bg-white rounded-lg shadow-md p-12 text-center">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-12 text-center">
             <div className="mb-4"><Rocket style={{ fontSize: '4rem' }} className="text-indigo-600" /></div>
             <h3 className="text-xl font-semibold text-gray-700 mb-2">No Missions Found</h3>
-            <p className="text-gray-500">
+            <p className="text-gray-500 dark:text-gray-400 dark:text-gray-400">
               {hasActiveFilters
                 ? 'Try adjusting your filters to see more missions.'
                 : 'No missions available at this time.'}
@@ -269,37 +269,37 @@ export default function MissionListPage() {
             ))}
           </div>
         ) : (
-          <div className="bg-white rounded-lg shadow-md overflow-hidden">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+              <thead className="bg-gray-50 dark:bg-gray-700">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Mission
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Country
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Type
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Destination
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Launch Date
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Status
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-white divide-y divide-gray-200 dark:divide-gray-700">
                 {filteredMissions.map(mission => (
-                  <tr key={mission.id} className="hover:bg-gray-50">
+                  <tr key={mission.id} className="hover:bg-gray-50 dark:bg-gray-700">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <Link
                         to={`/missions/${mission.id}`}
-                        className="font-medium text-indigo-600 hover:text-indigo-900"
+                        className="font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300"
                       >
                         {mission.name}
                       </Link>
@@ -319,7 +319,7 @@ export default function MissionListPage() {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <DestinationBadge destination={mission.destination} />
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">
                       {new Date(mission.launchDate).toLocaleDateString()}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -351,7 +351,7 @@ export default function MissionListPage() {
             <Circle style={{ fontSize: '2rem' }} className="text-red-600" />
             <div>
               <h3 className="font-semibold text-red-800">Mars Missions</h3>
-              <p className="text-sm text-red-600">Journey to the Red Planet</p>
+              <p className="text-sm text-red-600 dark:text-red-400">Journey to the Red Planet</p>
             </div>
           </Link>
           <Link
@@ -360,8 +360,8 @@ export default function MissionListPage() {
           >
             <NightlightRound style={{ fontSize: '2rem' }} className="text-gray-600" />
             <div>
-              <h3 className="font-semibold text-gray-800">Lunar Missions</h3>
-              <p className="text-sm text-gray-600">Return to the Moon</p>
+              <h3 className="font-semibold text-gray-800 dark:text-white">Lunar Missions</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">Return to the Moon</p>
             </div>
           </Link>
         </div>
