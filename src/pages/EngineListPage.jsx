@@ -137,7 +137,7 @@ export default function EngineListPage() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-3">
-            <Rocket style={{ fontSize: '2.5rem' }} className="text-blue-600 dark:text-blue-400" /> Rocket Engines
+            <Rocket style={{ fontSize: '2.5rem' }} className="text-gray-900 dark:text-white" /> Rocket Engines
           </h1>
           <p className="text-gray-600 dark:text-gray-400">
             Explore {engines.length} rocket engines from space agencies around the world

@@ -115,7 +115,7 @@ export default function CountryListPage() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-3">
-            <Public style={{ fontSize: '2.5rem' }} className="text-indigo-600 dark:text-indigo-400" /> Global Space Programs
+            <Public style={{ fontSize: '2.5rem' }} className="text-gray-900 dark:text-white" /> Global Space Programs
           </h1>
           <p className="text-gray-600 dark:text-gray-400">
             Explore and compare space capabilities across {stats.totalCountries} nations

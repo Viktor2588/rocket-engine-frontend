@@ -96,7 +96,7 @@ export default function LaunchVehicleListPage() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-3">
-            <Rocket style={{ fontSize: '2.5rem' }} className="text-blue-600" /> Launch Vehicles
+            <Rocket style={{ fontSize: '2.5rem' }} className="text-gray-900 dark:text-white" /> Launch Vehicles
           </h1>
           <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400">
             Explore {vehicles.length} launch vehicles from space agencies around the world

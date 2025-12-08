@@ -103,14 +103,14 @@ export function useWorldRecords() {
   const { launchSites } = useLaunchSites();
 
   const records = useMemo(() => {
-    // Most powerful engine
+    // Most powerful engine (API returns thrustN in Newtons, convert to kN for display)
     const mostPowerfulEngine = [...engines].sort((a, b) =>
-      (b.thrustKn || 0) - (a.thrustKn || 0)
+      (b.thrustN || b.thrustKn * 1000 || 0) - (a.thrustN || a.thrustKn * 1000 || 0)
     )[0];
 
-    // Most efficient engine (highest ISP)
+    // Most efficient engine (highest ISP) - API returns isp_s
     const mostEfficientEngine = [...engines].sort((a, b) =>
-      (b.specificImpulseS || 0) - (a.specificImpulseS || 0)
+      (b.isp_s || b.specificImpulseS || 0) - (a.isp_s || a.specificImpulseS || 0)
     )[0];
 
     // Highest chamber pressure
@@ -194,22 +194,23 @@ export function useTechnologyTrends() {
       ).length,
     };
 
-    // Cycle type distribution
+    // Cycle type distribution (API uses powerCycle field)
     const cycleTrend = {
       gasGenerator: engines.filter(e =>
-        e.cycle?.toLowerCase().includes('gas generator')
+        (e.powerCycle || e.cycle)?.toLowerCase().includes('gas generator')
       ).length,
       stagedCombustion: engines.filter(e =>
-        e.cycle?.toLowerCase().includes('staged combustion')
+        (e.powerCycle || e.cycle)?.toLowerCase().includes('staged combustion')
       ).length,
       fullFlow: engines.filter(e =>
-        e.cycle?.toLowerCase().includes('full-flow')
+        (e.powerCycle || e.cycle)?.toLowerCase().includes('full-flow')
       ).length,
       expander: engines.filter(e =>
-        e.cycle?.toLowerCase().includes('expander')
+        (e.powerCycle || e.cycle)?.toLowerCase().includes('expander')
       ).length,
       pressureFed: engines.filter(e =>
-        e.cycle?.toLowerCase().includes('pressure')
+        (e.powerCycle || e.cycle)?.toLowerCase().includes('pressure') ||
+        (e.powerCycle || e.cycle)?.toLowerCase().includes('pump-fed')
       ).length,
     };
 

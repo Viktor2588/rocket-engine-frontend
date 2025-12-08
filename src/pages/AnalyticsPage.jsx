@@ -295,7 +295,11 @@ export default function AnalyticsPage() {
                 <RecordCard
                   title="Most Powerful Engine"
                   value={records.mostPowerfulEngine?.name}
-                  subtitle={records.mostPowerfulEngine?.thrustKn ? `${records.mostPowerfulEngine.thrustKn.toLocaleString()} kN` : undefined}
+                  subtitle={records.mostPowerfulEngine?.thrustN
+                    ? `${Math.round(records.mostPowerfulEngine.thrustN / 1000).toLocaleString()} kN`
+                    : records.mostPowerfulEngine?.thrustKn
+                      ? `${records.mostPowerfulEngine.thrustKn.toLocaleString()} kN`
+                      : undefined}
                   icon="speed"
                   color="orange"
                   link={records.mostPowerfulEngine ? `/engines/${records.mostPowerfulEngine.id}` : undefined}
@@ -303,7 +307,11 @@ export default function AnalyticsPage() {
                 <RecordCard
                   title="Most Efficient Engine"
                   value={records.mostEfficientEngine?.name}
-                  subtitle={records.mostEfficientEngine?.specificImpulseS ? `${records.mostEfficientEngine.specificImpulseS} s ISP` : undefined}
+                  subtitle={records.mostEfficientEngine?.isp_s
+                    ? `${records.mostEfficientEngine.isp_s} s ISP`
+                    : records.mostEfficientEngine?.specificImpulseS
+                      ? `${records.mostEfficientEngine.specificImpulseS} s ISP`
+                      : undefined}
                   icon="bolt"
                   color="green"
                   link={records.mostEfficientEngine ? `/engines/${records.mostEfficientEngine.id}` : undefined}

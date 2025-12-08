@@ -402,12 +402,14 @@ export default function LaunchVehicleDetailPage() {
               📖 Wikipedia
             </a>
           )}
-          <Link
-            to={`/countries/${vehicle.countryId}`}
-            className="inline-flex items-center px-4 py-2 bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200 transition"
-          >
-            {getCountryFlag(vehicle.countryId)} View Country Profile
-          </Link>
+          {vehicle.country?.isoCode && (
+            <Link
+              to={`/countries/${vehicle.country.isoCode}`}
+              className="inline-flex items-center px-4 py-2 bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200 transition"
+            >
+              {getCountryFlag(vehicle.country.isoCode)} View Country Profile
+            </Link>
+          )}
         </div>
       </div>
     </div>
