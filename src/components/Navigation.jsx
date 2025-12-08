@@ -50,8 +50,8 @@ export default function Navigation() {
             <span className="md:hidden">Space</span>
           </Link>
 
-          {/* Search Bar - Desktop */}
-          <div className="hidden lg:block flex-1 max-w-md mx-4">
+          {/* Search Bar - Desktop (pushed right with ml-auto) */}
+          <div className="hidden lg:block w-64 xl:w-80 ml-auto mr-4">
             <GlobalSearch />
           </div>
 

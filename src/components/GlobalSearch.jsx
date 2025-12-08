@@ -107,11 +107,12 @@ export default function GlobalSearch() {
   // Handle keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e) => {
-      // Cmd/Ctrl + K to open search
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      // Cmd/Ctrl + K to open search (check both lowercase and uppercase)
+      if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) {
         e.preventDefault();
+        e.stopPropagation();
         setIsOpen(true);
-        inputRef.current?.focus();
+        setTimeout(() => inputRef.current?.focus(), 0);
       }
       // Escape to close
       if (e.key === 'Escape') {
@@ -119,8 +120,8 @@ export default function GlobalSearch() {
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    document.addEventListener('keydown', handleKeyDown, true);
+    return () => document.removeEventListener('keydown', handleKeyDown, true);
   }, [setIsOpen, clearSearch]);
 
   // Close on click outside
@@ -173,16 +174,25 @@ export default function GlobalSearch() {
           onChange={handleInputChange}
           onFocus={() => query.length >= 2 && setIsOpen(true)}
           onKeyDown={handleKeyDown}
-          placeholder="Search countries, engines, missions... (Ctrl+K)"
-          className="w-full pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm"
+          placeholder="Search..."
+          className="w-full pl-10 pr-16 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm truncate"
           aria-label="Global search"
           aria-expanded={isOpen}
           aria-haspopup="listbox"
         />
+        {/* Keyboard shortcut hint - shown when no query */}
+        {!query && (
+          <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
+            <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-xs text-gray-400 bg-gray-700 border border-gray-600 rounded font-mono">
+              <span>⌘</span><span>K</span>
+            </kbd>
+          </div>
+        )}
+        {/* Clear button - shown when there is a query */}
         {query && (
           <button
             onClick={clearSearch}
-            className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-white"
+            className="absolute inset-y-0 right-2 flex items-center text-gray-400 hover:text-white"
             aria-label="Clear search"
           >
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -190,13 +200,6 @@ export default function GlobalSearch() {
             </svg>
           </button>
         )}
-      </div>
-
-      {/* Keyboard shortcut hint */}
-      <div className="absolute inset-y-0 right-10 flex items-center pointer-events-none">
-        <kbd className="hidden sm:inline-flex items-center px-2 py-1 text-xs text-gray-400 bg-gray-700 rounded">
-          <span className="text-xs">⌘</span>K
-        </kbd>
       </div>
 
       {/* Search Results Dropdown */}
