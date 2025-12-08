@@ -1,20 +1,45 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useContext } from 'react';
 import countryService from '../services/countryService';
+import DataContext from '../context/DataContext';
 
 /**
- * Hook to fetch all countries with space programs
+ * Hook to fetch all countries with space programs (with caching)
  */
 export const useCountries = () => {
+  const dataContext = useContext(DataContext);
   const [countries, setCountries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchCountries = async () => {
+      // If DataContext is available and has cached data, use it
+      if (dataContext?.cache?.countries?.data) {
+        setCountries(dataContext.cache.countries.data);
+        setLoading(false);
+        return;
+      }
+
+      // If DataContext is available, fetch through it (caches the data)
+      if (dataContext?.fetchCountries) {
+        try {
+          setLoading(true);
+          const data = await dataContext.fetchCountries();
+          setCountries(Array.isArray(data) ? data : []);
+          setError(null);
+        } catch (err) {
+          setError(err.message || 'Failed to fetch countries');
+          setCountries([]);
+        } finally {
+          setLoading(false);
+        }
+        return;
+      }
+
+      // Fallback to direct service call (when DataContext is not available)
       try {
         setLoading(true);
         const data = await countryService.getAll();
-        // Ensure data is always an array to prevent "e is not iterable" errors
         setCountries(Array.isArray(data) ? data : []);
         setError(null);
       } catch (err) {
@@ -26,7 +51,7 @@ export const useCountries = () => {
     };
 
     fetchCountries();
-  }, []);
+  }, [dataContext]);
 
   return { countries, loading, error };
 };

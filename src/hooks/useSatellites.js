@@ -1,16 +1,43 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useContext } from 'react';
 import { satelliteService } from '../services/satelliteService';
+import DataContext from '../context/DataContext';
 
 /**
- * Hook for fetching all satellites
+ * Hook for fetching all satellites (with caching)
  */
 export function useSatellites() {
+  const dataContext = useContext(DataContext);
   const [satellites, setSatellites] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchSatellites = async () => {
+      // If DataContext is available and has cached data, use it
+      if (dataContext?.cache?.satellites?.data) {
+        setSatellites(dataContext.cache.satellites.data);
+        setLoading(false);
+        return;
+      }
+
+      // If DataContext is available, fetch through it (caches the data)
+      if (dataContext?.fetchSatellites) {
+        try {
+          setLoading(true);
+          const data = await dataContext.fetchSatellites();
+          setSatellites(Array.isArray(data) ? data : []);
+          setError(null);
+        } catch (err) {
+          console.error('Failed to fetch satellites:', err);
+          setError('Failed to load satellites');
+          setSatellites([]);
+        } finally {
+          setLoading(false);
+        }
+        return;
+      }
+
+      // Fallback to direct service call
       try {
         setLoading(true);
         const data = await satelliteService.getAll();
@@ -26,7 +53,7 @@ export function useSatellites() {
     };
 
     fetchSatellites();
-  }, []);
+  }, [dataContext]);
 
   return { satellites, loading, error };
 }

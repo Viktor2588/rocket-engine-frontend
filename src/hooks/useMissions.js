@@ -1,14 +1,38 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback, useContext } from 'react';
 import SpaceMissionService from '../services/missionService';
+import DataContext from '../context/DataContext';
 
-// Hook to get all missions
+// Hook to get all missions (with caching)
 export function useAllMissions() {
+  const dataContext = useContext(DataContext);
   const [missions, setMissions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchMissions = async () => {
+      // If DataContext is available and has cached data, use it
+      if (dataContext?.cache?.missions?.data) {
+        setMissions(dataContext.cache.missions.data);
+        setLoading(false);
+        return;
+      }
+
+      // If DataContext is available, fetch through it (caches the data)
+      if (dataContext?.fetchMissions) {
+        try {
+          setLoading(true);
+          const data = await dataContext.fetchMissions();
+          setMissions(Array.isArray(data) ? data : []);
+        } catch (err) {
+          setError(err.message);
+        } finally {
+          setLoading(false);
+        }
+        return;
+      }
+
+      // Fallback to direct service call
       try {
         setLoading(true);
         const data = await SpaceMissionService.getAllMissions();
@@ -20,7 +44,7 @@ export function useAllMissions() {
       }
     };
     fetchMissions();
-  }, []);
+  }, [dataContext]);
 
   return { missions, loading, error };
 }

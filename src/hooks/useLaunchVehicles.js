@@ -1,16 +1,41 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useContext } from 'react';
 import { launchVehicleService } from '../services/launchVehicleService';
+import DataContext from '../context/DataContext';
 
 /**
- * Hook to fetch all launch vehicles
+ * Hook to fetch all launch vehicles (with caching)
  */
 export function useLaunchVehicles() {
+  const dataContext = useContext(DataContext);
   const [vehicles, setVehicles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchVehicles = async () => {
+      // If DataContext is available and has cached data, use it
+      if (dataContext?.cache?.vehicles?.data) {
+        setVehicles(dataContext.cache.vehicles.data);
+        setLoading(false);
+        return;
+      }
+
+      // If DataContext is available, fetch through it (caches the data)
+      if (dataContext?.fetchVehicles) {
+        try {
+          setLoading(true);
+          setError(null);
+          const data = await dataContext.fetchVehicles();
+          setVehicles(Array.isArray(data) ? data : []);
+        } catch (err) {
+          setError(err.message || 'Failed to fetch launch vehicles');
+        } finally {
+          setLoading(false);
+        }
+        return;
+      }
+
+      // Fallback to direct service call
       try {
         setLoading(true);
         setError(null);
@@ -24,7 +49,7 @@ export function useLaunchVehicles() {
     };
 
     fetchVehicles();
-  }, []);
+  }, [dataContext]);
 
   return { vehicles, loading, error };
 }

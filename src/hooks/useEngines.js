@@ -1,20 +1,45 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useContext } from 'react';
 import engineService from '../services/engineService';
+import DataContext from '../context/DataContext';
 
 /**
- * Hook to fetch all engines
+ * Hook to fetch all engines (with caching)
  */
 export const useEngines = () => {
+  const dataContext = useContext(DataContext);
   const [engines, setEngines] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchEngines = async () => {
+      // If DataContext is available and has cached data, use it
+      if (dataContext?.cache?.engines?.data) {
+        setEngines(dataContext.cache.engines.data);
+        setLoading(false);
+        return;
+      }
+
+      // If DataContext is available, fetch through it (caches the data)
+      if (dataContext?.fetchEngines) {
+        try {
+          setLoading(true);
+          const data = await dataContext.fetchEngines();
+          setEngines(Array.isArray(data) ? data : []);
+          setError(null);
+        } catch (err) {
+          setError(err.message || 'Failed to fetch engines');
+          setEngines([]);
+        } finally {
+          setLoading(false);
+        }
+        return;
+      }
+
+      // Fallback to direct service call
       try {
         setLoading(true);
         const data = await engineService.getAll();
-        // Ensure data is always an array to prevent "n is not iterable" errors
         setEngines(Array.isArray(data) ? data : []);
         setError(null);
       } catch (err) {
@@ -26,7 +51,7 @@ export const useEngines = () => {
     };
 
     fetchEngines();
-  }, []);
+  }, [dataContext]);
 
   return { engines, loading, error };
 };

@@ -1,16 +1,43 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useContext } from 'react';
 import { launchSiteService } from '../services/launchSiteService';
+import DataContext from '../context/DataContext';
 
 /**
- * Hook for fetching all launch sites
+ * Hook for fetching all launch sites (with caching)
  */
 export function useLaunchSites() {
+  const dataContext = useContext(DataContext);
   const [launchSites, setLaunchSites] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchLaunchSites = async () => {
+      // If DataContext is available and has cached data, use it
+      if (dataContext?.cache?.launchSites?.data) {
+        setLaunchSites(dataContext.cache.launchSites.data);
+        setLoading(false);
+        return;
+      }
+
+      // If DataContext is available, fetch through it (caches the data)
+      if (dataContext?.fetchLaunchSites) {
+        try {
+          setLoading(true);
+          const data = await dataContext.fetchLaunchSites();
+          setLaunchSites(Array.isArray(data) ? data : []);
+          setError(null);
+        } catch (err) {
+          console.error('Failed to fetch launch sites:', err);
+          setError('Failed to load launch sites');
+          setLaunchSites([]);
+        } finally {
+          setLoading(false);
+        }
+        return;
+      }
+
+      // Fallback to direct service call
       try {
         setLoading(true);
         const data = await launchSiteService.getAll();
@@ -26,7 +53,7 @@ export function useLaunchSites() {
     };
 
     fetchLaunchSites();
-  }, []);
+  }, [dataContext]);
 
   return { launchSites, loading, error };
 }
