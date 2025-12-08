@@ -41,13 +41,13 @@ function getSystemTheme() {
  * Theme Provider Component
  */
 export function ThemeProvider({ children }) {
-  // Get initial theme from localStorage or default to system
+  // Get initial theme from localStorage or default to dark
   const [themePreference, setThemePreference] = useState(() => {
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem('theme-preference');
-      return stored || 'system';
+      return stored || 'dark';
     }
-    return 'system';
+    return 'dark';
   });
 
   // Resolved theme (actual light/dark value)
