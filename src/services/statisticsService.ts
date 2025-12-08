@@ -101,6 +101,13 @@ export interface TimelineByDecade {
   newCountries: number;
 }
 
+// New response format from backend
+export interface TimelineByDecadeResponse {
+  milestonesByDecade: Record<string, number>;
+  missionsByDecade: Record<string, number>;
+  launchesByDecade: Record<string, number>;
+}
+
 export interface GrowthData {
   year: number;
   launches: number;
@@ -286,10 +293,33 @@ class StatisticsService {
 
   /**
    * Get timeline data by decade
+   * Backend returns new format: { milestonesByDecade, missionsByDecade, launchesByDecade }
+   * Each is a Record<string, number> like { "1950s": 1, "1960s": 3, ... }
    */
-  async getTimelineByDecade(): Promise<TimelineByDecade[]> {
+  async getTimelineByDecade(): Promise<TimelineByDecade[] | TimelineByDecadeResponse> {
     try {
-      const response = await this.axiosInstance.get<TimelineByDecade[]>('/statistics/timeline/by-decade');
+      const response = await this.axiosInstance.get<TimelineByDecade[] | TimelineByDecadeResponse>('/statistics/timeline/by-decade');
+
+      // Handle new response format
+      if (response.data && 'milestonesByDecade' in response.data) {
+        // Return the raw response for components that handle the new format
+        return response.data;
+      }
+
+      // Handle legacy array format
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching timeline by decade:', error);
+      throw new Error('Failed to fetch timeline data');
+    }
+  }
+
+  /**
+   * Get timeline data by decade in the new format
+   */
+  async getTimelineByDecadeRaw(): Promise<TimelineByDecadeResponse> {
+    try {
+      const response = await this.axiosInstance.get<TimelineByDecadeResponse>('/statistics/timeline/by-decade');
       return response.data;
     } catch (error) {
       console.error('Error fetching timeline by decade:', error);

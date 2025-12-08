@@ -69,7 +69,7 @@ export default function AnalyticsPage() {
   const { records } = useWorldRecords();
   const { trends } = useTechnologyTrends();
   const { analysis } = useEmergingNations();
-  const { data: launchData } = useLaunchesPerYear();
+  const { data: launchData, loading: launchDataLoading } = useLaunchesPerYear();
   const [activeTab, setActiveTab] = useState('launches');
 
   const loading = countriesLoading || enginesLoading || statsLoading;
@@ -193,11 +193,17 @@ export default function AnalyticsPage() {
         {/* Tab Content */}
         {activeTab === 'launches' && (
           <div className="space-y-6">
-            {/* Check if launch data is available */}
-            {launchData.years.length > 0 ? (
+            {/* Loading state */}
+            {launchDataLoading ? (
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-12 text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto mb-4"></div>
+                <p className="text-gray-600 dark:text-gray-400">Loading launch activity data...</p>
+              </div>
+            ) : launchData.years.length > 0 ? (
               <>
                 <LaunchFrequencyChart
-                  title="Global Launch Frequency by Country (2019-2024)"
+                  launchData={launchData}
+                  title="Global Launch Frequency by Country"
                   stacked={true}
                 />
 

@@ -89,30 +89,15 @@ class EngineService {
 
   /**
    * Fetch all engines
-   * Handles paginated API responses - fetches all pages if paginated
+   * Uses unpaged=true for simpler response without pagination
    */
   async getAll(): Promise<Engine[]> {
-    const response = await this.axiosInstance.get<Engine[] | PaginatedResponse<Engine>>('/engines?size=100');
+    const response = await this.axiosInstance.get<Engine[] | PaginatedResponse<Engine>>('/engines?unpaged=true');
     const data = response.data;
 
-    // Handle paginated response
+    // Handle paginated response (fallback)
     if (data && typeof data === 'object' && 'content' in data) {
-      let allEngines = [...data.content];
-
-      // If there are more pages, fetch them all
-      if (data.totalPages > 1) {
-        const promises = [];
-        for (let page = 1; page < data.totalPages; page++) {
-          promises.push(this.axiosInstance.get<PaginatedResponse<Engine>>(`/engines?page=${page}&size=100`));
-        }
-        const responses = await Promise.all(promises);
-        responses.forEach(res => {
-          if (res.data?.content) {
-            allEngines = [...allEngines, ...res.data.content];
-          }
-        });
-      }
-      return allEngines.map(e => this.enhanceEngine(e));
+      return data.content.map(e => this.enhanceEngine(e));
     }
 
     // Handle flat array response

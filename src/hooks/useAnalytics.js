@@ -1,10 +1,12 @@
-import { useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import axios from 'axios';
 import { useCountries } from './useCountries';
 import { useEngines } from './useEngines';
 import { useLaunchVehicles } from './useLaunchVehicles';
 import { useAllMissions } from './useMissions';
 import { useSatellites } from './useSatellites';
 import { useLaunchSites } from './useLaunchSites';
+import { API_CONFIG } from '../constants';
 
 /**
  * Hook for global space statistics
@@ -294,24 +296,54 @@ export function useEmergingNations() {
 
 /**
  * Hook for launches per year data
- * Note: This data should come from a backend API endpoint like /api/analytics/launches-per-year
+ * Fetches from /api/analytics/launches-per-year endpoint
+ * Response format:
+ * {
+ *   years: [2020, 2021, 2022, 2023, 2024, 2025],
+ *   byCountry: {
+ *     "United States": [40, 51, 87, 116, 130, 15],
+ *     "China": [39, 55, 64, 67, 57, 5],
+ *     ...
+ *   },
+ *   total: [94, 130, 172, 202, 204, 22]
+ * }
  */
 export function useLaunchesPerYear() {
-  // TODO: Implement API call to fetch launch data per year
-  // Expected endpoint: GET /api/analytics/launches-per-year
-  // Expected response format:
-  // {
-  //   years: [2019, 2020, 2021, ...],
-  //   byCountry: { USA: [...], CHN: [...], ... },
-  //   total: [...]
-  // }
-  const data = useMemo(() => ({
+  const [data, setData] = useState({
     years: [],
     byCountry: {},
     total: [],
-  }), []);
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  return { data };
+  useEffect(() => {
+    const fetchLaunchData = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(`${API_CONFIG.BASE_URL}/analytics/launches-per-year`);
+
+        if (response.data) {
+          setData({
+            years: response.data.years || [],
+            byCountry: response.data.byCountry || {},
+            total: response.data.total || [],
+          });
+        }
+        setError(null);
+      } catch (err) {
+        console.error('Failed to fetch launches per year:', err);
+        setError('Failed to load launch data');
+        // Keep empty data structure on error
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchLaunchData();
+  }, []);
+
+  return { data, loading, error };
 }
 
 export default useGlobalStatistics;
