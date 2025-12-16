@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useLaunchVehicles, useLaunchVehicleStatistics } from '../hooks/useLaunchVehicles';
 import LaunchVehicleCard from '../components/LaunchVehicleCard';
+import Pagination from '../components/Pagination';
 import { Rocket, Recycling, PersonOutline } from '@mui/icons-material';
 
 const COUNTRIES = [
@@ -21,6 +22,8 @@ export default function LaunchVehicleListPage() {
   const [filterCountry, setFilterCountry] = useState('all');
   const [filterCapability, setFilterCapability] = useState('all');
   const [viewMode, setViewMode] = useState('grid');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(25);
 
   // Filter and sort vehicles
   const filteredAndSortedVehicles = useMemo(() => {
@@ -67,6 +70,12 @@ export default function LaunchVehicleListPage() {
 
     return result;
   }, [vehicles, sortBy, filterStatus, filterCountry, filterCapability]);
+
+  // Paginate the filtered results
+  const paginatedVehicles = useMemo(() => {
+    const startIndex = (currentPage - 1) * pageSize;
+    return filteredAndSortedVehicles.slice(startIndex, startIndex + pageSize);
+  }, [filteredAndSortedVehicles, currentPage, pageSize]);
 
   if (loading) {
     return (
@@ -231,17 +240,33 @@ export default function LaunchVehicleListPage() {
           </div>
         </div>
 
+        {/* Results count */}
+        <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+          Found {filteredAndSortedVehicles.length} vehicles
+        </div>
+
         {/* Results */}
         {viewMode === 'grid' ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredAndSortedVehicles.map((vehicle) => (
-              <LaunchVehicleCard key={vehicle.id} vehicle={vehicle} />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {paginatedVehicles.map((vehicle) => (
+                <LaunchVehicleCard key={vehicle.id} vehicle={vehicle} />
+              ))}
+            </div>
+            <Pagination
+              totalItems={filteredAndSortedVehicles.length}
+              currentPage={currentPage}
+              pageSize={pageSize}
+              onPageChange={setCurrentPage}
+              onPageSizeChange={setPageSize}
+              className="mt-6"
+            />
+          </>
         ) : (
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+          <>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead className="bg-gray-50 dark:bg-gray-700">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
@@ -271,7 +296,7 @@ export default function LaunchVehicleListPage() {
                   </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                  {filteredAndSortedVehicles.map((vehicle, index) => (
+                  {paginatedVehicles.map((vehicle, index) => (
                     <tr key={vehicle.id} className={index % 2 === 0 ? 'bg-white dark:bg-gray-800' : 'bg-gray-50 dark:bg-gray-700'}>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="font-medium text-gray-900 dark:text-white">{vehicle.name}</div>
@@ -321,6 +346,15 @@ export default function LaunchVehicleListPage() {
               </table>
             </div>
           </div>
+          <Pagination
+              totalItems={filteredAndSortedVehicles.length}
+              currentPage={currentPage}
+              pageSize={pageSize}
+              onPageChange={setCurrentPage}
+              onPageSizeChange={setPageSize}
+              className="mt-6"
+            />
+          </>
         )}
 
         {/* No results */}

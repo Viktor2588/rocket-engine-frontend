@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useEngines, useEngineStatistics } from '../hooks/useEngines';
 import EngineCard from '../components/EngineCard';
 import EngineChart from '../components/EngineChart';
+import Pagination from '../components/Pagination';
 import { Rocket, Bolt, Recycling, Tune, Refresh } from '@mui/icons-material';
 
 const COUNTRIES = [
@@ -40,6 +41,8 @@ export default function EngineListPage() {
   const [filterPropellant, setFilterPropellant] = useState('all');
   const [filterCycle, setFilterCycle] = useState('all');
   const [filterCapability, setFilterCapability] = useState('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(25);
 
   // Filter and sort engines
   const filteredAndSortedEngines = useMemo(() => {
@@ -108,6 +111,18 @@ export default function EngineListPage() {
 
     return result;
   }, [engines, sortBy, filterStatus, filterCountry, filterPropellant, filterCycle, filterCapability]);
+
+  // Paginate the filtered results
+  const paginatedEngines = useMemo(() => {
+    const startIndex = (currentPage - 1) * pageSize;
+    return filteredAndSortedEngines.slice(startIndex, startIndex + pageSize);
+  }, [filteredAndSortedEngines, currentPage, pageSize]);
+
+  // Reset to page 1 when filters change
+  const handleFilterChange = (setter) => (value) => {
+    setter(value);
+    setCurrentPage(1);
+  };
 
   if (loading) {
     return (
@@ -321,49 +336,65 @@ export default function EngineListPage() {
           </div>
         </div>
 
+        {/* Results count */}
+        <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+          Found {filteredAndSortedEngines.length} engines
+        </div>
+
         {/* Results */}
         {viewMode === 'grid' && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredAndSortedEngines.map((engine) => (
-              <EngineCard key={engine.id} engine={engine} />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {paginatedEngines.map((engine) => (
+                <EngineCard key={engine.id} engine={engine} />
+              ))}
+            </div>
+            <Pagination
+              totalItems={filteredAndSortedEngines.length}
+              currentPage={currentPage}
+              pageSize={pageSize}
+              onPageChange={setCurrentPage}
+              onPageSizeChange={setPageSize}
+              className="mt-6"
+            />
+          </>
         )}
 
         {viewMode === 'table' && (
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                <thead className="bg-gray-50 dark:bg-gray-700">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                      Engine
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                      Designer
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                      Status
-                    </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                      ISP (Vac)
-                    </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                      Thrust
-                    </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                      Reliability
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                      Capabilities
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                  {filteredAndSortedEngines.map((engine, index) => (
+          <>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                  <thead className="bg-gray-50 dark:bg-gray-700">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                        Engine
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                        Designer
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                        Status
+                      </th>
+                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                        ISP (Vac)
+                      </th>
+                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                        Thrust
+                      </th>
+                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                        Reliability
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                        Capabilities
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    {paginatedEngines.map((engine, index) => (
                     <tr key={engine.id} className={index % 2 === 0 ? 'bg-white dark:bg-gray-800' : 'bg-gray-50 dark:bg-gray-700'}>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="font-medium text-gray-900 dark:text-white">{engine.name}</div>
@@ -409,12 +440,21 @@ export default function EngineListPage() {
                           View Details
                         </Link>
                       </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
+            <Pagination
+              totalItems={filteredAndSortedEngines.length}
+              currentPage={currentPage}
+              pageSize={pageSize}
+              onPageChange={setCurrentPage}
+              onPageSizeChange={setPageSize}
+              className="mt-6"
+            />
+          </>
         )}
 
         {viewMode === 'chart' && (

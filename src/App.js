@@ -22,6 +22,7 @@ import LaunchSiteListPage from './pages/LaunchSiteListPage';
 import LaunchSiteDetailPage from './pages/LaunchSiteDetailPage';
 import RankingsPage from './pages/RankingsPage';
 import AnalyticsPage from './pages/AnalyticsPage';
+import AdminPage from './pages/AdminPage';
 import './App.css';
 
 function App() {
@@ -77,6 +78,9 @@ function App() {
 
           {/* Analytics Route */}
           <Route path="/analytics" element={<AnalyticsPage />} />
+
+          {/* Admin Route */}
+          <Route path="/admin" element={<AdminPage />} />
         </Routes>
           </main>
             <Footer />

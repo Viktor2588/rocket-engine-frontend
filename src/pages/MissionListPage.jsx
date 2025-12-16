@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useAllMissions, useFilteredMissions, useMissionStatistics } from '../hooks/useMissions';
 import MissionCard, { StatusBadge, MissionTypeBadge, DestinationBadge } from '../components/MissionCard';
+import Pagination from '../components/Pagination';
 import { MISSION_TYPE_INFO, DESTINATION_INFO } from '../types';
 import {
   Rocket,
@@ -29,6 +30,8 @@ export default function MissionListPage() {
   const { missions: allMissions, loading, error } = useAllMissions();
   const { stats } = useMissionStatistics();
   const [viewMode, setViewMode] = useState('grid'); // grid, list, timeline
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(25);
 
   const {
     missions: filteredMissions,
@@ -40,6 +43,12 @@ export default function MissionListPage() {
     sortOrder,
     setSortOrder
   } = useFilteredMissions(allMissions);
+
+  // Paginate the filtered results
+  const paginatedMissions = useMemo(() => {
+    const startIndex = (currentPage - 1) * pageSize;
+    return filteredMissions.slice(startIndex, startIndex + pageSize);
+  }, [filteredMissions, currentPage, pageSize]);
 
   if (loading) {
     return (
@@ -263,15 +272,26 @@ export default function MissionListPage() {
             </p>
           </div>
         ) : viewMode === 'grid' ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredMissions.map(mission => (
-              <MissionCard key={mission.id} mission={mission} />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {paginatedMissions.map(mission => (
+                <MissionCard key={mission.id} mission={mission} />
+              ))}
+            </div>
+            <Pagination
+              totalItems={filteredMissions.length}
+              currentPage={currentPage}
+              pageSize={pageSize}
+              onPageChange={setCurrentPage}
+              onPageSizeChange={setPageSize}
+              className="mt-6"
+            />
+          </>
         ) : (
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
-            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-              <thead className="bg-gray-50 dark:bg-gray-700">
+          <>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead className="bg-gray-50 dark:bg-gray-700">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Mission
@@ -294,7 +314,7 @@ export default function MissionListPage() {
                 </tr>
               </thead>
               <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                {filteredMissions.map(mission => (
+                {paginatedMissions.map(mission => (
                   <tr key={mission.id} className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <Link
@@ -328,8 +348,17 @@ export default function MissionListPage() {
                   </tr>
                 ))}
               </tbody>
-            </table>
-          </div>
+              </table>
+            </div>
+            <Pagination
+              totalItems={filteredMissions.length}
+              currentPage={currentPage}
+              pageSize={pageSize}
+              onPageChange={setCurrentPage}
+              onPageSizeChange={setPageSize}
+              className="mt-6"
+            />
+          </>
         )}
 
         {/* Quick Links */}
