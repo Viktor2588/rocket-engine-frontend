@@ -55,6 +55,33 @@ class CountryService {
   }
 
   // ============================================================================
+  // AGGREGATED ENDPOINTS (Performance Optimized)
+  // ============================================================================
+
+  /**
+   * Fetch all country details in a single request (country, engines, vehicles, missions, milestones)
+   * Reduces frontend API calls from 6+ to 1 for country detail pages
+   */
+  async getCountryDetails(idOrCode: string | number): Promise<{
+    country: Country;
+    engines: Engine[];
+    launchVehicles: LaunchVehicle[];
+    missions: any[];
+    milestones: any[];
+  }> {
+    try {
+      const response = await this.axiosInstance.get(`/countries/${idOrCode}/details`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching country details for ${idOrCode}:`, error);
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        throw new Error(ERROR_MESSAGES.COUNTRY_NOT_FOUND);
+      }
+      throw new Error(ERROR_MESSAGES.FETCH_COUNTRY_FAILED);
+    }
+  }
+
+  // ============================================================================
   // COUNTRY CRUD OPERATIONS
   // ============================================================================
 

@@ -91,6 +91,50 @@ export const useCountry = (id) => {
 };
 
 /**
+ * Hook to fetch all country details in a single request (optimized)
+ * Returns country, engines, vehicles, missions, and milestones
+ * Reduces API calls from 6+ to 1 for country detail pages
+ */
+export const useCountryDetails = (idOrCode) => {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (!idOrCode) {
+      setLoading(false);
+      return;
+    }
+
+    const fetchDetails = async () => {
+      try {
+        setLoading(true);
+        const result = await countryService.getCountryDetails(idOrCode);
+        setData(result);
+        setError(null);
+      } catch (err) {
+        setError(err.message || 'Failed to fetch country details');
+        setData(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDetails();
+  }, [idOrCode]);
+
+  return {
+    country: data?.country || null,
+    engines: data?.engines || [],
+    vehicles: data?.launchVehicles || [],
+    missions: data?.missions || [],
+    milestones: data?.milestones || [],
+    loading,
+    error
+  };
+};
+
+/**
  * Hook to fetch a country by ISO code (USA, CHN, RUS, etc.)
  */
 export const useCountryByCode = (isoCode) => {

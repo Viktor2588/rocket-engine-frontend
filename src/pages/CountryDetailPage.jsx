@@ -1,8 +1,7 @@
 import { useParams, Link } from 'react-router-dom';
-import { useCountryByCode, useCountryEngines, useCountryLaunchVehicles } from '../hooks/useCountries';
+import { useMemo } from 'react';
+import { useCountryDetails } from '../hooks/useCountries';
 import { useSCIBreakdown } from '../hooks/useCapabilityScores';
-import { useCountryMilestones } from '../hooks/useMilestones';
-import { useCountryMissionSummary } from '../hooks/useMissions';
 import CapabilityScoreCard, { CategoryMetricsDetail } from '../components/CapabilityScoreCard';
 import { MilestoneCard } from '../components/Timeline';
 import { MissionCardCompact } from '../components/MissionCard';
@@ -23,12 +22,39 @@ import {
 
 export default function CountryDetailPage() {
   const { code } = useParams();
-  const { country, loading, error } = useCountryByCode(code);
-  const { engines, loading: enginesLoading } = useCountryEngines(country?.id);
-  const { vehicles, loading: vehiclesLoading } = useCountryLaunchVehicles(country?.id);
+
+  // Single aggregated API call for country details (replaces 5+ separate calls)
+  const { country, engines, vehicles, missions, milestones, loading, error } = useCountryDetails(code);
+
+  // SCI breakdown still requires separate call (not included in aggregated endpoint)
   const { breakdown: sciBreakdown, loading: sciLoading } = useSCIBreakdown(code);
-  const { milestones, loading: milestonesLoading } = useCountryMilestones(code);
-  const { summary: missionSummary, missions, loading: missionsLoading } = useCountryMissionSummary(code);
+
+  // Compute mission summary from missions data
+  const missionSummary = useMemo(() => {
+    if (!missions || missions.length === 0) return null;
+
+    const byStatus = {};
+    let crewedCount = 0;
+    let totalCrew = 0;
+
+    missions.forEach(m => {
+      byStatus[m.status] = (byStatus[m.status] || 0) + 1;
+      if (m.crewed) {
+        crewedCount++;
+        totalCrew += m.crewSize || 0;
+      }
+    });
+
+    return {
+      totalMissions: missions.length,
+      crewedMissions: crewedCount,
+      totalCrewMembers: totalCrew,
+      activeMissions: missions.filter(m => m.status === 'ACTIVE' || m.status === 'IN_TRANSIT').length,
+      successRate: missions.length > 0
+        ? ((missions.filter(m => m.status === 'COMPLETED' || m.status === 'ACTIVE').length / missions.length) * 100).toFixed(1)
+        : 0
+    };
+  }, [missions]);
 
   if (loading) {
     return (
@@ -272,11 +298,7 @@ export default function CountryDetailPage() {
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
             <LocalFireDepartment style={{ fontSize: '1.75rem' }} className="text-orange-500" /> Rocket Engines ({engines?.length || 0})
           </h2>
-          {enginesLoading ? (
-            <div className="text-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500 mx-auto"></div>
-            </div>
-          ) : engines && engines.length > 0 ? (
+          {engines && engines.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {engines.slice(0, 6).map(engine => (
                 <EngineCard key={engine.id} engine={engine} />
@@ -304,11 +326,7 @@ export default function CountryDetailPage() {
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
             <Rocket style={{ fontSize: '1.75rem' }} className="text-blue-600" /> Launch Vehicles ({vehicles?.length || 0})
           </h2>
-          {vehiclesLoading ? (
-            <div className="text-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500 mx-auto"></div>
-            </div>
-          ) : vehicles && vehicles.length > 0 ? (
+          {vehicles && vehicles.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {vehicles.map(vehicle => (
                 <div key={vehicle.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
@@ -389,11 +407,7 @@ export default function CountryDetailPage() {
               </Link>
             )}
           </div>
-          {milestonesLoading ? (
-            <div className="text-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500 mx-auto"></div>
-            </div>
-          ) : milestones && milestones.length > 0 ? (
+          {milestones && milestones.length > 0 ? (
             <>
               {/* World Firsts */}
               {milestones.filter(m => m.isFirst).length > 0 && (
@@ -455,11 +469,7 @@ export default function CountryDetailPage() {
             )}
           </div>
 
-          {missionsLoading ? (
-            <div className="text-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500 mx-auto"></div>
-            </div>
-          ) : missionSummary && missions && missions.length > 0 ? (
+          {missionSummary && missions && missions.length > 0 ? (
             <>
               {/* Mission Stats Summary */}
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 mb-4">
