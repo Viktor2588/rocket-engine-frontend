@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { DataProvider } from './context/DataContext';
+import { ToastProvider } from './context/ToastContext';
 import Navigation from './components/Navigation';
 import Footer from './components/Footer';
 import SkipLinks from './components/SkipLinks';
@@ -29,9 +30,10 @@ function App() {
 
   return (
     <ThemeProvider>
-      <DataProvider>
-        <Router basename={basename}>
-          <div className="App dark:bg-gray-900 dark:text-white min-h-screen">
+      <ToastProvider>
+        <DataProvider>
+          <Router basename={basename}>
+            <div className="App dark:bg-gray-900 dark:text-white min-h-screen">
           <SkipLinks />
           <Navigation />
           <main id="main-content" tabIndex="-1" className="focus:outline-none">
@@ -78,9 +80,10 @@ function App() {
         </Routes>
           </main>
             <Footer />
-          </div>
-        </Router>
-      </DataProvider>
+            </div>
+          </Router>
+        </DataProvider>
+      </ToastProvider>
     </ThemeProvider>
   );
 }

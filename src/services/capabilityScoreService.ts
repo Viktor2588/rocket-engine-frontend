@@ -889,12 +889,31 @@ class CapabilityScoreService {
     }
 
     try {
-      // Fetch from API - try unpaged first, then handle paginated response
-      const response = await this.axiosInstance.get('/countries?unpaged=true');
-      // Handle both array response and paginated response { content: [...] }
-      const countries: Country[] = Array.isArray(response.data)
-        ? response.data
-        : (response.data.content || []);
+      // Fetch from API with pagination support
+      const response = await this.axiosInstance.get('/countries?size=500');
+      let countries: Country[] = [];
+
+      // Handle paginated response { content: [...] }
+      if (response.data && typeof response.data === 'object' && 'content' in response.data) {
+        countries = [...response.data.content];
+
+        // Fetch additional pages if needed
+        if (response.data.totalPages > 1) {
+          const promises = [];
+          for (let page = 1; page < response.data.totalPages; page++) {
+            promises.push(this.axiosInstance.get(`/countries?size=500&page=${page}`));
+          }
+          const responses = await Promise.all(promises);
+          responses.forEach(res => {
+            if (res.data?.content) {
+              countries = [...countries, ...res.data.content];
+            }
+          });
+        }
+      } else if (Array.isArray(response.data)) {
+        // Handle flat array response
+        countries = response.data;
+      }
 
       // Calculate scores for each country
       const countriesWithScores = countries.map(country => {

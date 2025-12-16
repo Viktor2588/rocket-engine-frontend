@@ -15,7 +15,46 @@ const api = axios.create({
 });
 
 /**
- * Helper to handle paginated responses
+ * Helper to handle paginated responses and fetch all pages
+ */
+async function fetchAllPages(apiInstance, endpoint) {
+  const baseUrl = endpoint.includes('?') ? endpoint : `${endpoint}?`;
+  const separator = endpoint.includes('?') ? '&' : '';
+
+  // First request with large page size
+  const firstResponse = await apiInstance.get(`${baseUrl}${separator}size=500`);
+  const data = firstResponse.data;
+
+  // If it's a flat array response, return directly
+  if (Array.isArray(data)) {
+    return data;
+  }
+
+  // If it's a paginated response
+  if (data && typeof data === 'object' && 'content' in data) {
+    let allContent = [...data.content];
+
+    // If there are more pages, fetch them
+    if (data.totalPages > 1) {
+      const promises = [];
+      for (let page = 1; page < data.totalPages; page++) {
+        promises.push(apiInstance.get(`${baseUrl}${separator}size=500&page=${page}`));
+      }
+      const responses = await Promise.all(promises);
+      responses.forEach(res => {
+        if (res.data?.content) {
+          allContent = [...allContent, ...res.data.content];
+        }
+      });
+    }
+    return allContent;
+  }
+
+  return [];
+}
+
+/**
+ * Helper to extract data from response (backward compatible)
  */
 function extractData(response) {
   const data = response.data;
@@ -45,7 +84,7 @@ export function DataProvider({ children }) {
     return entry.data && (Date.now() - entry.timestamp) < CACHE_DURATION;
   }, [cache]);
 
-  // Generic fetch function with caching
+  // Generic fetch function with caching (uses pagination)
   const fetchData = useCallback(async (key, endpoint) => {
     // Return cached data if valid
     if (isCacheValid(key)) {
@@ -65,8 +104,8 @@ export function DataProvider({ children }) {
     }));
 
     try {
-      const response = await api.get(endpoint);
-      const data = extractData(response);
+      // Use fetchAllPages to handle pagination properly
+      const data = await fetchAllPages(api, endpoint);
 
       setCache(prev => ({
         ...prev,
@@ -84,24 +123,24 @@ export function DataProvider({ children }) {
     }
   }, [cache, isCacheValid]);
 
-  // Specific fetch functions
+  // Specific fetch functions (pagination handled automatically)
   const fetchCountries = useCallback(() =>
-    fetchData('countries', '/countries?unpaged=true'), [fetchData]);
+    fetchData('countries', '/countries'), [fetchData]);
 
   const fetchEngines = useCallback(() =>
-    fetchData('engines', '/engines?unpaged=true'), [fetchData]);
+    fetchData('engines', '/engines'), [fetchData]);
 
   const fetchVehicles = useCallback(() =>
-    fetchData('vehicles', '/launch-vehicles?unpaged=true'), [fetchData]);
+    fetchData('vehicles', '/launch-vehicles'), [fetchData]);
 
   const fetchMissions = useCallback(() =>
-    fetchData('missions', '/missions?unpaged=true'), [fetchData]);
+    fetchData('missions', '/missions'), [fetchData]);
 
   const fetchSatellites = useCallback(() =>
-    fetchData('satellites', '/satellites?unpaged=true'), [fetchData]);
+    fetchData('satellites', '/satellites'), [fetchData]);
 
   const fetchLaunchSites = useCallback(() =>
-    fetchData('launchSites', '/launch-sites?unpaged=true'), [fetchData]);
+    fetchData('launchSites', '/launch-sites'), [fetchData]);
 
   // Invalidate cache (for manual refresh)
   const invalidateCache = useCallback((key) => {

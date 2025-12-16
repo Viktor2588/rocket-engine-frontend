@@ -500,8 +500,44 @@ export interface ApiErrorResponse {
   code?: string;
 }
 
+/**
+ * RFC 7807 ProblemDetail error response format
+ * https://tools.ietf.org/html/rfc7807
+ */
+export interface ProblemDetail {
+  type?: string;              // URI reference identifying the problem type
+  title: string;              // Human-readable summary
+  status: number;             // HTTP status code
+  detail?: string;            // Human-readable explanation
+  instance?: string;          // URI reference to specific occurrence
+  requestId?: string;         // X-Request-Id for tracing
+  timestamp?: string;         // When the error occurred
+  path?: string;              // Request path
+  errors?: ValidationFieldError[];  // Field-level validation errors
+}
+
+export interface ValidationFieldError {
+  field: string;
+  message: string;
+  code?: string;
+  rejectedValue?: any;
+}
+
 export interface ValidationError extends Error {
   validationErrors?: Record<string, string[]>;
+}
+
+// Toast notification types for the notification system
+export type ToastSeverity = 'success' | 'error' | 'warning' | 'info';
+
+export interface ToastMessage {
+  id: string;
+  message: string;
+  severity: ToastSeverity;
+  title?: string;
+  requestId?: string;         // For error tracing
+  autoHideDuration?: number;  // ms, null = manual dismiss
+  details?: string;           // Expandable details
 }
 
 // ============================================================================

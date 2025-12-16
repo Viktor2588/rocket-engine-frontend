@@ -38,10 +38,32 @@ class CountryService {
   private handleError(error: AxiosError<ApiErrorResponse>): Promise<never> {
     if (error.response) {
       const status = error.response.status;
-      const message = error.response.data?.message || ERROR_MESSAGES.INTERNAL_ERROR;
-      console.error(`API Error [${status}]:`, message);
+      const requestId = error.response.headers?.['x-request-id'];
+      const data = error.response.data;
+
+      // Parse ProblemDetail format or legacy format
+      const message = (data as any)?.detail || data?.message || ERROR_MESSAGES.INTERNAL_ERROR;
+      const title = (data as any)?.title || `Error ${status}`;
+
+      // Attach request ID and parsed error to the error object for toast handling
+      (error as any).problemDetail = {
+        title,
+        message,
+        status,
+        requestId,
+        errors: (data as any)?.errors || [],
+        path: (data as any)?.path,
+        timestamp: (data as any)?.timestamp,
+      };
+
+      console.error(`API Error [${status}]${requestId ? ` (${requestId})` : ''}:`, message);
     } else if (error.request) {
       console.error('Network Error:', ERROR_MESSAGES.NETWORK_ERROR);
+      (error as any).problemDetail = {
+        title: 'Network Error',
+        message: ERROR_MESSAGES.NETWORK_ERROR,
+        status: 0,
+      };
     } else {
       console.error('Error:', error.message);
     }
