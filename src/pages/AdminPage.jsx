@@ -8,10 +8,25 @@ import {
   CloudSync,
   Speed,
   Settings,
+  Download,
+  CheckBox,
+  CheckBoxOutlineBlank,
 } from '@mui/icons-material';
 import { useToast } from '../context/ToastContext';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api';
+
+// Entity types for selective export
+const EXPORT_ENTITIES = [
+  { key: 'countries', label: 'Countries' },
+  { key: 'engines', label: 'Engines' },
+  { key: 'launchVehicles', label: 'Launch Vehicles' },
+  { key: 'spaceMissions', label: 'Missions' },
+  { key: 'spaceMilestones', label: 'Milestones' },
+  { key: 'launchSites', label: 'Launch Sites' },
+  { key: 'satellites', label: 'Satellites' },
+  { key: 'capabilityScores', label: 'Capability Scores' },
+];
 
 export default function AdminPage() {
   const [healthStatus, setHealthStatus] = useState(null);
@@ -19,6 +34,11 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [lastRefresh, setLastRefresh] = useState(null);
+  const [exportMetadata, setExportMetadata] = useState(null);
+  const [exporting, setExporting] = useState(false);
+  const [selectedEntities, setSelectedEntities] = useState(
+    EXPORT_ENTITIES.reduce((acc, e) => ({ ...acc, [e.key]: true }), {})
+  );
   const { showSuccess, showError } = useToast();
 
   const fetchStatus = useCallback(async () => {
@@ -66,9 +86,23 @@ export default function AdminPage() {
     setLoading(false);
   }, []);
 
+  // Fetch export metadata
+  const fetchExportMetadata = useCallback(async () => {
+    try {
+      const response = await fetch(`${API_URL}/export/metadata`);
+      if (response.ok) {
+        const data = await response.json();
+        setExportMetadata(data);
+      }
+    } catch (error) {
+      console.error('Error fetching export metadata:', error);
+    }
+  }, []);
+
   useEffect(() => {
     fetchStatus();
-  }, [fetchStatus]);
+    fetchExportMetadata();
+  }, [fetchStatus, fetchExportMetadata]);
 
   const handleRefresh = async () => {
     setRefreshing(true);
@@ -88,6 +122,84 @@ export default function AdminPage() {
     sessionStorage.clear();
 
     showSuccess(`Cleared ${cacheKeys.length} cached items`);
+  };
+
+  // Toggle entity selection for export
+  const toggleEntitySelection = (key) => {
+    setSelectedEntities(prev => ({
+      ...prev,
+      [key]: !prev[key]
+    }));
+  };
+
+  // Select/deselect all entities
+  const toggleAllEntities = (selected) => {
+    setSelectedEntities(
+      EXPORT_ENTITIES.reduce((acc, e) => ({ ...acc, [e.key]: selected }), {})
+    );
+  };
+
+  // Download full export
+  const handleFullExport = async () => {
+    setExporting(true);
+    try {
+      const response = await fetch(`${API_URL}/export`);
+      if (!response.ok) throw new Error('Export failed');
+
+      const data = await response.json();
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `rocket-data-export-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      showSuccess('Full export downloaded successfully');
+    } catch (error) {
+      showError(`Export failed: ${error.message}`);
+    } finally {
+      setExporting(false);
+    }
+  };
+
+  // Download selective export
+  const handleSelectiveExport = async () => {
+    const selectedCount = Object.values(selectedEntities).filter(Boolean).length;
+    if (selectedCount === 0) {
+      showError('Please select at least one entity type to export');
+      return;
+    }
+
+    setExporting(true);
+    try {
+      const params = new URLSearchParams();
+      Object.entries(selectedEntities).forEach(([key, value]) => {
+        params.append(key, value.toString());
+      });
+
+      const response = await fetch(`${API_URL}/export/selective?${params}`);
+      if (!response.ok) throw new Error('Export failed');
+
+      const data = await response.json();
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `rocket-data-selective-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      showSuccess(`Exported ${selectedCount} entity types successfully`);
+    } catch (error) {
+      showError(`Export failed: ${error.message}`);
+    } finally {
+      setExporting(false);
+    }
   };
 
   const getStatusIcon = (status) => {
@@ -222,6 +334,97 @@ export default function AdminPage() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+
+        {/* Data Export */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+            <Download className="text-indigo-500" /> Data Export
+          </h2>
+
+          {/* Export metadata summary */}
+          {exportMetadata && (
+            <div className="mb-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-sm text-gray-600 dark:text-gray-400">
+                  Total records available: <strong className="text-gray-900 dark:text-white">{exportMetadata.counts?.total?.toLocaleString() || 0}</strong>
+                </span>
+                <span className="text-xs text-gray-500 dark:text-gray-400">
+                  Version {exportMetadata.version}
+                </span>
+              </div>
+            </div>
+          )}
+
+          {/* Entity selection */}
+          <div className="mb-4">
+            <div className="flex justify-between items-center mb-3">
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Select entities to export:</span>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => toggleAllEntities(true)}
+                  className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline"
+                >
+                  Select All
+                </button>
+                <span className="text-gray-400">|</span>
+                <button
+                  onClick={() => toggleAllEntities(false)}
+                  className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline"
+                >
+                  Deselect All
+                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+              {EXPORT_ENTITIES.map(entity => (
+                <button
+                  key={entity.key}
+                  onClick={() => toggleEntitySelection(entity.key)}
+                  className={`flex items-center gap-2 p-3 rounded-lg border transition ${
+                    selectedEntities[entity.key]
+                      ? 'bg-indigo-50 dark:bg-indigo-900/30 border-indigo-300 dark:border-indigo-600'
+                      : 'bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600'
+                  }`}
+                >
+                  {selectedEntities[entity.key] ? (
+                    <CheckBox className="text-indigo-600 dark:text-indigo-400" style={{ fontSize: '1.25rem' }} />
+                  ) : (
+                    <CheckBoxOutlineBlank className="text-gray-400" style={{ fontSize: '1.25rem' }} />
+                  )}
+                  <div className="text-left">
+                    <div className="text-sm font-medium text-gray-900 dark:text-white">{entity.label}</div>
+                    {exportMetadata?.counts?.[entity.key] !== undefined && (
+                      <div className="text-xs text-gray-500 dark:text-gray-400">
+                        {exportMetadata.counts[entity.key].toLocaleString()} records
+                      </div>
+                    )}
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Export buttons */}
+          <div className="flex flex-wrap gap-3 pt-4 border-t dark:border-gray-700">
+            <button
+              onClick={handleFullExport}
+              disabled={exporting}
+              className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition flex items-center gap-2 disabled:opacity-50"
+            >
+              <Download style={{ fontSize: '1.25rem' }} />
+              {exporting ? 'Exporting...' : 'Download All Data'}
+            </button>
+            <button
+              onClick={handleSelectiveExport}
+              disabled={exporting || Object.values(selectedEntities).filter(Boolean).length === 0}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition flex items-center gap-2 disabled:opacity-50"
+            >
+              <Download style={{ fontSize: '1.25rem' }} />
+              {exporting ? 'Exporting...' : `Download Selected (${Object.values(selectedEntities).filter(Boolean).length})`}
+            </button>
           </div>
         </div>
 
