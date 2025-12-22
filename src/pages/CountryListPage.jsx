@@ -150,20 +150,22 @@ export default function CountryListPage() {
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
           <div className="flex flex-col lg:flex-row gap-4 justify-between items-start lg:items-center">
             <div className="flex flex-wrap gap-4">
-              {/* Sort */}
-              <label className="flex items-center gap-2">
-                <span className="text-gray-700 dark:text-gray-300 font-semibold text-sm">Sort:</span>
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                >
-                  <option value="score">Capability Score</option>
-                  <option value="name">Name</option>
-                  <option value="launches">Total Launches</option>
-                  <option value="budget">Budget</option>
-                </select>
-              </label>
+              {/* Sort - only show when not in map view */}
+              {viewMode !== 'map' && (
+                <label className="flex items-center gap-2">
+                  <span className="text-gray-700 dark:text-gray-300 font-semibold text-sm">Sort:</span>
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  >
+                    <option value="score">Capability Score</option>
+                    <option value="name">Name</option>
+                    <option value="launches">Total Launches</option>
+                    <option value="budget">Budget</option>
+                  </select>
+                </label>
+              )}
 
               {/* Filter by Region */}
               <label className="flex items-center gap-2">
