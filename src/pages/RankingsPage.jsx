@@ -1,11 +1,10 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   useSCIRankings,
   useSCIComparison,
   useFilteredRankings,
   useRankingsStatistics,
-  useCategoryWeights,
   useCountrySelection,
 } from '../hooks/useCapabilityScores';
 import CapabilityScoreCard, {
@@ -13,7 +12,6 @@ import CapabilityScoreCard, {
   ScoreGauge,
   ComparisonRadarChart,
   TierDistributionChart,
-  MiniScoreCard,
   CategoryScoreBar,
 } from '../components/CapabilityScoreCard';
 import { CATEGORY_WEIGHTS, SCI_TIER_THRESHOLDS } from '../types';
@@ -44,7 +42,6 @@ function getCountryFlag(isoCode) {
 export default function RankingsPage() {
   const { rankings, loading, error } = useSCIRankings();
   const statistics = useRankingsStatistics(rankings);
-  const categoryWeights = useCategoryWeights();
   const {
     selectedCountries,
     toggleCountry,
@@ -74,19 +71,10 @@ export default function RankingsPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-1/4 mb-8"></div>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-            {[1, 2, 3, 4].map(i => (
-              <div key={i} className="h-24 bg-gray-200 rounded-lg"></div>
-            ))}
-          </div>
-          <div className="space-y-4">
-            {[1, 2, 3, 4, 5].map(i => (
-              <div key={i} className="h-20 bg-gray-200 rounded-lg"></div>
-            ))}
-          </div>
+      <div className="container mx-auto px-4 py-12">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400">Loading rankings...</p>
         </div>
       </div>
     );
