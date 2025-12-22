@@ -175,7 +175,7 @@ export default function GlobalSearch() {
           onFocus={() => query.length >= 2 && setIsOpen(true)}
           onKeyDown={handleKeyDown}
           placeholder="Search..."
-          className="w-full pl-10 pr-16 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm truncate"
+          className="w-full pl-10 pr-16 py-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm truncate"
           aria-label="Global search"
           aria-expanded={isOpen}
           aria-haspopup="listbox"
@@ -183,7 +183,7 @@ export default function GlobalSearch() {
         {/* Keyboard shortcut hint - shown when no query */}
         {!query && (
           <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
-            <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-xs text-gray-400 bg-gray-700 border border-gray-600 rounded font-mono">
+            <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-xs text-gray-500 dark:text-gray-400 bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded font-mono">
               <span>⌘</span><span>K</span>
             </kbd>
           </div>
@@ -192,7 +192,7 @@ export default function GlobalSearch() {
         {query && (
           <button
             onClick={clearSearch}
-            className="absolute inset-y-0 right-2 flex items-center text-gray-400 hover:text-white"
+            className="absolute inset-y-0 right-2 flex items-center text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white"
             aria-label="Clear search"
           >
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

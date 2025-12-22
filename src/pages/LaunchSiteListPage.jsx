@@ -153,13 +153,13 @@ function LaunchSiteWorldMap({ launchSites, onSiteHover, hoveredSite, onSiteClick
   };
 
   return (
-    <div className="bg-gray-900 rounded-lg p-4 relative overflow-hidden">
+    <div className="bg-white dark:bg-gray-900 rounded-lg p-4 relative overflow-hidden border border-gray-200 dark:border-gray-700">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-white text-lg font-semibold">Launch Sites Worldwide</h3>
+        <h3 className="text-gray-800 dark:text-white text-lg font-semibold">Launch Sites Worldwide</h3>
         <div className="flex items-center gap-1">
           <button
             onClick={handleZoomIn}
-            className="p-1 rounded bg-gray-700 hover:bg-gray-600 text-white transition"
+            className="p-1 rounded bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-white transition"
             title="Zoom in"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -168,7 +168,7 @@ function LaunchSiteWorldMap({ launchSites, onSiteHover, hoveredSite, onSiteClick
           </button>
           <button
             onClick={handleZoomOut}
-            className="p-1 rounded bg-gray-700 hover:bg-gray-600 text-white transition"
+            className="p-1 rounded bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-white transition"
             title="Zoom out"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -177,7 +177,7 @@ function LaunchSiteWorldMap({ launchSites, onSiteHover, hoveredSite, onSiteClick
           </button>
           <button
             onClick={handleReset}
-            className="p-1 rounded bg-gray-700 hover:bg-gray-600 text-white transition"
+            className="p-1 rounded bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-white transition"
             title="Reset view"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -262,32 +262,32 @@ function LaunchSiteWorldMap({ launchSites, onSiteHover, hoveredSite, onSiteClick
         {/* Tooltip */}
         {hoveredSite && (
           <div
-            className="absolute bg-gray-900/95 rounded-lg shadow-xl p-3 z-20 pointer-events-none border border-gray-700"
+            className="absolute bg-white dark:bg-gray-900/95 rounded-lg shadow-xl p-3 z-20 pointer-events-none border border-gray-200 dark:border-gray-700"
             style={{
               left: `${Math.min(Math.max(tooltipPos.x, 100), 300)}px`,
               top: `${Math.max(tooltipPos.y, 10)}px`,
               minWidth: '200px',
             }}
           >
-            <div className="font-semibold text-white">{hoveredSite.name}</div>
-            <div className="text-sm text-gray-400">{hoveredSite.countryId} | {hoveredSite.region}</div>
-            <div className="text-sm text-gray-300 mt-2 space-y-1">
+            <div className="font-semibold text-gray-800 dark:text-white">{hoveredSite.name}</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400">{hoveredSite.countryId} | {hoveredSite.region}</div>
+            <div className="text-sm text-gray-600 dark:text-gray-300 mt-2 space-y-1">
               <div className="flex justify-between">
                 <span>Total Launches:</span>
-                <span className="font-medium text-white">{hoveredSite.totalLaunches || 0}</span>
+                <span className="font-medium text-gray-800 dark:text-white">{hoveredSite.totalLaunches || 0}</span>
               </div>
               <div className="flex justify-between">
                 <span>Success Rate:</span>
-                <span className="font-medium text-green-400">{hoveredSite.successRate?.toFixed(1) || 0}%</span>
+                <span className="font-medium text-green-600 dark:text-green-400">{hoveredSite.successRate?.toFixed(1) || 0}%</span>
               </div>
               <div className="flex justify-between">
                 <span>Status:</span>
-                <span className={`font-medium ${hoveredSite.status === 'Active' ? 'text-green-400' : 'text-gray-400'}`}>
+                <span className={`font-medium ${hoveredSite.status === 'Active' ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'}`}>
                   {hoveredSite.status}
                 </span>
               </div>
             </div>
-            <div className="flex gap-1 mt-2 pt-2 border-t border-gray-700">
+            <div className="flex gap-1 mt-2 pt-2 border-t border-gray-200 dark:border-gray-700">
               {hoveredSite.humanRated && <PersonOutline titleAccess="Human Rated" style={{ fontSize: '1rem' }} />}
               {hoveredSite.geoCapable && <Public titleAccess="GEO Capable" style={{ fontSize: '1rem' }} />}
               {hoveredSite.polarCapable && <AcUnit titleAccess="Polar Capable" style={{ fontSize: '1rem' }} />}
@@ -302,7 +302,7 @@ function LaunchSiteWorldMap({ launchSites, onSiteHover, hoveredSite, onSiteClick
         {Object.entries(REGION_COLORS).map(([region, color]) => (
           <div key={region} className="flex items-center gap-1">
             <span className="w-2 h-2 rounded-full" style={{ backgroundColor: color }}></span>
-            <span className="text-xs text-gray-300">{region}</span>
+            <span className="text-xs text-gray-600 dark:text-gray-300">{region}</span>
           </div>
         ))}
       </div>

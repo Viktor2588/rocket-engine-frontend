@@ -143,12 +143,12 @@ function WorldMapView({
   };
 
   return (
-    <div className="bg-gray-800 rounded-lg shadow-lg p-4">
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 border border-gray-200 dark:border-gray-700">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-semibold text-white">Global Space Programs</h3>
+        <h3 className="text-lg font-semibold text-gray-800 dark:text-white">Global Space Programs</h3>
         <div className="flex items-center gap-4">
           {/* Legend */}
-          <div className="hidden sm:flex items-center gap-3 text-xs text-gray-300">
+          <div className="hidden sm:flex items-center gap-3 text-xs text-gray-600 dark:text-gray-300">
             <div className="flex items-center gap-1">
               <span className="w-3 h-3 rounded-full bg-emerald-600"></span>
               <span>80+</span>
@@ -171,7 +171,7 @@ function WorldMapView({
           <div className="flex items-center gap-1">
             <button
               onClick={handleZoomIn}
-              className="p-1 rounded bg-gray-700 hover:bg-gray-600 text-white transition"
+              className="p-1 rounded bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-white transition"
               title="Zoom in"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -180,7 +180,7 @@ function WorldMapView({
             </button>
             <button
               onClick={handleZoomOut}
-              className="p-1 rounded bg-gray-700 hover:bg-gray-600 text-white transition"
+              className="p-1 rounded bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-white transition"
               title="Zoom out"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -189,7 +189,7 @@ function WorldMapView({
             </button>
             <button
               onClick={handleReset}
-              className="p-1 rounded bg-gray-700 hover:bg-gray-600 text-white transition"
+              className="p-1 rounded bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-white transition"
               title="Reset view"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -308,7 +308,7 @@ function WorldMapView({
         {/* Tooltip */}
         {hoveredCountry && (
           <div
-            className="absolute bg-gray-900 rounded-lg shadow-xl p-3 z-20 pointer-events-none border border-gray-700"
+            className="absolute bg-white dark:bg-gray-900 rounded-lg shadow-xl p-3 z-20 pointer-events-none border border-gray-200 dark:border-gray-700"
             style={{
               left: `${Math.min(Math.max(tooltipPos.x, 100), window.innerWidth - 250)}px`,
               top: `${Math.max(tooltipPos.y, 10)}px`,
@@ -323,13 +323,13 @@ function WorldMapView({
                   className="w-6 h-4 object-cover rounded"
                 />
               )}
-              <span className="font-semibold text-white">{hoveredCountry.name}</span>
+              <span className="font-semibold text-gray-800 dark:text-white">{hoveredCountry.name}</span>
             </div>
-            <div className="text-sm text-gray-300 space-y-1">
+            <div className="text-sm text-gray-600 dark:text-gray-300 space-y-1">
               {hoveredCountry.spaceAgencyAcronym && (
                 <div className="flex justify-between">
                   <span>Agency:</span>
-                  <span className="font-medium text-white">{hoveredCountry.spaceAgencyAcronym}</span>
+                  <span className="font-medium text-gray-800 dark:text-white">{hoveredCountry.spaceAgencyAcronym}</span>
                 </div>
               )}
               <div className="flex justify-between">
@@ -344,10 +344,10 @@ function WorldMapView({
               {hoveredCountry.totalLaunches > 0 && (
                 <div className="flex justify-between">
                   <span>Total Launches:</span>
-                  <span className="font-medium text-white">{hoveredCountry.totalLaunches.toLocaleString()}</span>
+                  <span className="font-medium text-gray-800 dark:text-white">{hoveredCountry.totalLaunches.toLocaleString()}</span>
                 </div>
               )}
-              <div className="flex gap-1 mt-2 pt-2 border-t border-gray-700">
+              <div className="flex gap-1 mt-2 pt-2 border-t border-gray-200 dark:border-gray-700">
                 {hoveredCountry.humanSpaceflightCapable && <span title="Human Spaceflight">👨‍🚀</span>}
                 {hoveredCountry.independentLaunchCapable && <span title="Independent Launch">🚀</span>}
                 {hoveredCountry.reusableRocketCapable && <span title="Reusable Rockets">♻️</span>}
@@ -368,18 +368,18 @@ function WorldMapView({
             <Link
               key={country.isoCode}
               to={`/countries/${country.isoCode}`}
-              className={`flex items-center gap-2 p-2 rounded-lg transition-all bg-gray-700/50 hover:bg-gray-700 ${
-                selectedCountry === country.isoCode ? 'ring-2 ring-indigo-500 bg-gray-700' : ''
+              className={`flex items-center gap-2 p-2 rounded-lg transition-all bg-gray-100 dark:bg-gray-700/50 hover:bg-gray-200 dark:hover:bg-gray-700 ${
+                selectedCountry === country.isoCode ? 'ring-2 ring-indigo-500 bg-gray-200 dark:bg-gray-700' : ''
               }`}
             >
               <span
                 className="w-3 h-3 rounded-full flex-shrink-0"
                 style={{ backgroundColor: country.color }}
               ></span>
-              <span className="text-xs font-medium text-gray-200 truncate">
+              <span className="text-xs font-medium text-gray-700 dark:text-gray-200 truncate">
                 {country.spaceAgencyAcronym || country.isoCode}
               </span>
-              <span className="text-xs text-gray-400 ml-auto">
+              <span className="text-xs text-gray-500 dark:text-gray-400 ml-auto">
                 {(country.overallCapabilityScore || 0).toFixed(0)}
               </span>
             </Link>
