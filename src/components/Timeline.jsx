@@ -1,5 +1,4 @@
 import { useState, useMemo } from 'react';
-import { Link } from 'react-router-dom';
 import { MILESTONE_TYPE_INFO } from '../types';
 import SpaceIcon from './icons/SpaceIcons';
 import { EmojiEvents, CalendarToday } from '@mui/icons-material';
@@ -258,9 +257,8 @@ export function VerticalTimeline({ milestones, showCountry = true }) {
 
       {/* Timeline items */}
       <div className="space-y-6">
-        {sorted.map((m, index) => {
+        {sorted.map((m) => {
           const typeInfo = MILESTONE_TYPE_INFO[m.milestoneType];
-          const isLeft = index % 2 === 0;
 
           return (
             <div key={m.id} className="relative flex items-start">
@@ -519,7 +517,7 @@ export function MilestoneStatsCard({ stats }) {
   );
 }
 
-export default {
+const TimelineComponents = {
   MilestoneCard,
   HorizontalTimeline,
   VerticalTimeline,
@@ -527,3 +525,5 @@ export default {
   CategoryFilter,
   MilestoneStatsCard
 };
+
+export default TimelineComponents;

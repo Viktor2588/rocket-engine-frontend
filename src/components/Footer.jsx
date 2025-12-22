@@ -1,15 +1,9 @@
 import { Link } from 'react-router-dom';
-import DidYouKnow from './DidYouKnow';
 
 export default function Footer() {
   return (
     <footer className="bg-gray-900 text-gray-300 py-8 mt-16">
       <div className="container mx-auto px-4">
-        {/* Did You Know Facts */}
-        <div className="mb-8">
-          <DidYouKnow />
-        </div>
-
         {/* Quick Links */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
           <div>

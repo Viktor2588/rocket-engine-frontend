@@ -962,30 +962,30 @@ class CapabilityScoreService {
   }
 
   /**
-   * Get a single country by ID from the API
+   * Get a single country by ISO code from the API
    */
-  async getCountryById(countryId: string): Promise<Country | null> {
+  async getCountryByCode(isoCode: string): Promise<Country | null> {
     try {
-      const response = await this.axiosInstance.get<Country>(`/countries/by-code/${countryId}`);
+      const response = await this.axiosInstance.get<Country>(`/countries/by-code/${isoCode}`);
       return response.data;
     } catch (error) {
       // Try getting from the full list
       const countries = await this.getAllCountries();
-      return countries.find(c => c.isoCode === countryId || c.id === countryId) || null;
+      return countries.find(c => c.isoCode === isoCode) || null;
     }
   }
 
   /**
    * Get SCI breakdown for a specific country
    */
-  async getSCIBreakdown(countryId: string): Promise<SCIBreakdown | null> {
+  async getSCIBreakdown(isoCode: string): Promise<SCIBreakdown | null> {
     // First try to get the specific country from API
-    let country = await this.getCountryById(countryId);
+    let country = await this.getCountryByCode(isoCode);
 
     // If not found directly, try from the full list
     if (!country) {
       const countries = await this.getAllCountries();
-      country = countries.find(c => c.isoCode === countryId || c.id === countryId) || null;
+      country = countries.find(c => c.isoCode === isoCode) || null;
     }
 
     if (!country) return null;
@@ -1039,7 +1039,7 @@ class CapabilityScoreService {
     ];
 
     return {
-      countryId: country.id || country.isoCode || countryId,
+      countryId: country.isoCode || isoCode,
       countryName: country.name,
       overallScore,
       tier: determineTier(overallScore),
@@ -1064,7 +1064,7 @@ class CapabilityScoreService {
     const rankings: SCIBreakdown[] = [];
     for (let i = 0; i < sortedCountries.length; i++) {
       const country = sortedCountries[i];
-      const breakdown = await this.getSCIBreakdown(String(country.id || country.isoCode));
+      const breakdown = await this.getSCIBreakdown(country.isoCode);
       if (breakdown) {
         breakdown.globalRank = i + 1;
         rankings.push(breakdown);

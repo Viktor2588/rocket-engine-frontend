@@ -9,20 +9,24 @@ export function useAllMissions() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchMissions = async () => {
-      // If DataContext is available and has cached data, use it
-      if (dataContext?.cache?.missions?.data) {
-        setMissions(dataContext.cache.missions.data);
-        setLoading(false);
-        return;
-      }
+  // Extract stable references from context
+  const cachedData = dataContext?.cache?.missions?.data;
+  const fetchMissions = dataContext?.fetchMissions;
 
+  useEffect(() => {
+    // If we have cached data, use it immediately
+    if (cachedData) {
+      setMissions(cachedData);
+      setLoading(false);
+      return;
+    }
+
+    const doFetch = async () => {
       // If DataContext is available, fetch through it (caches the data)
-      if (dataContext?.fetchMissions) {
+      if (fetchMissions) {
         try {
           setLoading(true);
-          const data = await dataContext.fetchMissions();
+          const data = await fetchMissions();
           setMissions(Array.isArray(data) ? data : []);
         } catch (err) {
           setError(err.message);
@@ -43,8 +47,8 @@ export function useAllMissions() {
         setLoading(false);
       }
     };
-    fetchMissions();
-  }, [dataContext]);
+    doFetch();
+  }, [cachedData, fetchMissions]);
 
   return { missions, loading, error };
 }

@@ -11,20 +11,24 @@ export const useEngines = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchEngines = async () => {
-      // If DataContext is available and has cached data, use it
-      if (dataContext?.cache?.engines?.data) {
-        setEngines(dataContext.cache.engines.data);
-        setLoading(false);
-        return;
-      }
+  // Extract stable references from context
+  const cachedData = dataContext?.cache?.engines?.data;
+  const fetchEngines = dataContext?.fetchEngines;
 
+  useEffect(() => {
+    // If we have cached data, use it immediately
+    if (cachedData) {
+      setEngines(cachedData);
+      setLoading(false);
+      return;
+    }
+
+    const doFetch = async () => {
       // If DataContext is available, fetch through it (caches the data)
-      if (dataContext?.fetchEngines) {
+      if (fetchEngines) {
         try {
           setLoading(true);
-          const data = await dataContext.fetchEngines();
+          const data = await fetchEngines();
           setEngines(Array.isArray(data) ? data : []);
           setError(null);
         } catch (err) {
@@ -50,8 +54,8 @@ export const useEngines = () => {
       }
     };
 
-    fetchEngines();
-  }, [dataContext]);
+    doFetch();
+  }, [cachedData, fetchEngines]);
 
   return { engines, loading, error };
 };

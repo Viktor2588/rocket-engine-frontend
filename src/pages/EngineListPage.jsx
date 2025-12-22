@@ -118,12 +118,6 @@ export default function EngineListPage() {
     return filteredAndSortedEngines.slice(startIndex, startIndex + pageSize);
   }, [filteredAndSortedEngines, currentPage, pageSize]);
 
-  // Reset to page 1 when filters change
-  const handleFilterChange = (setter) => (value) => {
-    setter(value);
-    setCurrentPage(1);
-  };
-
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-12">

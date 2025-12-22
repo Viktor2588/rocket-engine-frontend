@@ -11,20 +11,24 @@ export function useSatellites() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchSatellites = async () => {
-      // If DataContext is available and has cached data, use it
-      if (dataContext?.cache?.satellites?.data) {
-        setSatellites(dataContext.cache.satellites.data);
-        setLoading(false);
-        return;
-      }
+  // Extract stable references from context
+  const cachedData = dataContext?.cache?.satellites?.data;
+  const fetchSatellites = dataContext?.fetchSatellites;
 
+  useEffect(() => {
+    // If we have cached data, use it immediately
+    if (cachedData) {
+      setSatellites(cachedData);
+      setLoading(false);
+      return;
+    }
+
+    const doFetch = async () => {
       // If DataContext is available, fetch through it (caches the data)
-      if (dataContext?.fetchSatellites) {
+      if (fetchSatellites) {
         try {
           setLoading(true);
-          const data = await dataContext.fetchSatellites();
+          const data = await fetchSatellites();
           setSatellites(Array.isArray(data) ? data : []);
           setError(null);
         } catch (err) {
@@ -52,8 +56,8 @@ export function useSatellites() {
       }
     };
 
-    fetchSatellites();
-  }, [dataContext]);
+    doFetch();
+  }, [cachedData, fetchSatellites]);
 
   return { satellites, loading, error };
 }

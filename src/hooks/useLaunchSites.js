@@ -11,20 +11,24 @@ export function useLaunchSites() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchLaunchSites = async () => {
-      // If DataContext is available and has cached data, use it
-      if (dataContext?.cache?.launchSites?.data) {
-        setLaunchSites(dataContext.cache.launchSites.data);
-        setLoading(false);
-        return;
-      }
+  // Extract stable references from context
+  const cachedData = dataContext?.cache?.launchSites?.data;
+  const fetchLaunchSites = dataContext?.fetchLaunchSites;
 
+  useEffect(() => {
+    // If we have cached data, use it immediately
+    if (cachedData) {
+      setLaunchSites(cachedData);
+      setLoading(false);
+      return;
+    }
+
+    const doFetch = async () => {
       // If DataContext is available, fetch through it (caches the data)
-      if (dataContext?.fetchLaunchSites) {
+      if (fetchLaunchSites) {
         try {
           setLoading(true);
-          const data = await dataContext.fetchLaunchSites();
+          const data = await fetchLaunchSites();
           setLaunchSites(Array.isArray(data) ? data : []);
           setError(null);
         } catch (err) {
@@ -52,8 +56,8 @@ export function useLaunchSites() {
       }
     };
 
-    fetchLaunchSites();
-  }, [dataContext]);
+    doFetch();
+  }, [cachedData, fetchLaunchSites]);
 
   return { launchSites, loading, error };
 }

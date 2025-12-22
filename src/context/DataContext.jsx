@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, useMemo } from 'react';
+import { createContext, useContext, useState, useCallback, useMemo, useRef } from 'react';
 import axios from 'axios';
 import { API_CONFIG } from '../constants';
 
@@ -54,17 +54,6 @@ async function fetchAllPages(apiInstance, endpoint) {
 }
 
 /**
- * Helper to extract data from response (backward compatible)
- */
-function extractData(response) {
-  const data = response.data;
-  if (data && typeof data === 'object' && 'content' in data) {
-    return data.content;
-  }
-  return Array.isArray(data) ? data : [];
-}
-
-/**
  * Data Provider - Centralized data fetching with caching
  */
 export function DataProvider({ children }) {
@@ -78,23 +67,27 @@ export function DataProvider({ children }) {
     launchSites: { data: null, timestamp: 0, loading: false, error: null },
   });
 
-  // Check if cache is valid
+  // Use ref to access cache without causing callback recreation
+  const cacheRef = useRef(cache);
+  cacheRef.current = cache;
+
+  // Check if cache is valid - uses ref to avoid dependency on cache
   const isCacheValid = useCallback((key) => {
-    const entry = cache[key];
+    const entry = cacheRef.current[key];
     return entry.data && (Date.now() - entry.timestamp) < CACHE_DURATION;
-  }, [cache]);
+  }, []);
 
   // Generic fetch function with caching (uses pagination)
   const fetchData = useCallback(async (key, endpoint) => {
     // Return cached data if valid
     if (isCacheValid(key)) {
-      return cache[key].data;
+      return cacheRef.current[key].data;
     }
 
     // If already loading, wait for it
-    if (cache[key].loading) {
+    if (cacheRef.current[key].loading) {
       // Return existing data while loading, or empty array
-      return cache[key].data || [];
+      return cacheRef.current[key].data || [];
     }
 
     // Set loading state
@@ -121,7 +114,7 @@ export function DataProvider({ children }) {
       }));
       throw error;
     }
-  }, [cache, isCacheValid]);
+  }, [isCacheValid]);
 
   // Specific fetch functions (pagination handled automatically)
   const fetchCountries = useCallback(() =>

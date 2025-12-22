@@ -11,21 +11,25 @@ export function useLaunchVehicles() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchVehicles = async () => {
-      // If DataContext is available and has cached data, use it
-      if (dataContext?.cache?.vehicles?.data) {
-        setVehicles(dataContext.cache.vehicles.data);
-        setLoading(false);
-        return;
-      }
+  // Extract stable references from context
+  const cachedData = dataContext?.cache?.vehicles?.data;
+  const fetchVehicles = dataContext?.fetchVehicles;
 
+  useEffect(() => {
+    // If we have cached data, use it immediately
+    if (cachedData) {
+      setVehicles(cachedData);
+      setLoading(false);
+      return;
+    }
+
+    const doFetch = async () => {
       // If DataContext is available, fetch through it (caches the data)
-      if (dataContext?.fetchVehicles) {
+      if (fetchVehicles) {
         try {
           setLoading(true);
           setError(null);
-          const data = await dataContext.fetchVehicles();
+          const data = await fetchVehicles();
           setVehicles(Array.isArray(data) ? data : []);
         } catch (err) {
           setError(err.message || 'Failed to fetch launch vehicles');
@@ -48,8 +52,8 @@ export function useLaunchVehicles() {
       }
     };
 
-    fetchVehicles();
-  }, [dataContext]);
+    doFetch();
+  }, [cachedData, fetchVehicles]);
 
   return { vehicles, loading, error };
 }

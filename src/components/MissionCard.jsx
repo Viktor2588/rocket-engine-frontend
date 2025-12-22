@@ -81,7 +81,6 @@ export function MissionTypeBadge({ missionType }) {
 
 // Compact Mission Card
 export function MissionCardCompact({ mission, showCountry = true }) {
-  const typeInfo = MISSION_TYPE_INFO[mission.missionType];
   const destInfo = DESTINATION_INFO[mission.destination];
 
   return (
@@ -120,9 +119,6 @@ export function MissionCardCompact({ mission, showCountry = true }) {
 
 // Full Mission Card
 export default function MissionCard({ mission, showCountry = true, className = '' }) {
-  const typeInfo = MISSION_TYPE_INFO[mission.missionType];
-  const destInfo = DESTINATION_INFO[mission.destination];
-
   return (
     <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow ${className}`}>
       {/* Header with status bar */}

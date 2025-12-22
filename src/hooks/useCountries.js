@@ -11,20 +11,24 @@ export const useCountries = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchCountries = async () => {
-      // If DataContext is available and has cached data, use it
-      if (dataContext?.cache?.countries?.data) {
-        setCountries(dataContext.cache.countries.data);
-        setLoading(false);
-        return;
-      }
+  // Extract stable references from context
+  const cachedData = dataContext?.cache?.countries?.data;
+  const fetchCountries = dataContext?.fetchCountries;
 
+  useEffect(() => {
+    // If we have cached data, use it immediately
+    if (cachedData) {
+      setCountries(cachedData);
+      setLoading(false);
+      return;
+    }
+
+    const doFetch = async () => {
       // If DataContext is available, fetch through it (caches the data)
-      if (dataContext?.fetchCountries) {
+      if (fetchCountries) {
         try {
           setLoading(true);
-          const data = await dataContext.fetchCountries();
+          const data = await fetchCountries();
           setCountries(Array.isArray(data) ? data : []);
           setError(null);
         } catch (err) {
@@ -50,8 +54,8 @@ export const useCountries = () => {
       }
     };
 
-    fetchCountries();
-  }, [dataContext]);
+    doFetch();
+  }, [cachedData, fetchCountries]);
 
   return { countries, loading, error };
 };
