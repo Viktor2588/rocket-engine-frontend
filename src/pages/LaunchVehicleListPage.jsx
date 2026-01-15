@@ -173,8 +173,8 @@ export default function LaunchVehicleListPage() {
                   <option value="all">All Status</option>
                   <option value="Active">Active</option>
                   <option value="Retired">Retired</option>
-                  <option value="Development">Development</option>
-                  <option value="Planned">Planned</option>
+                  <option value="In Development">In Development</option>
+                  <option value="Cancelled">Cancelled</option>
                 </select>
               </label>
 
@@ -311,8 +311,8 @@ export default function LaunchVehicleListPage() {
                         <span className={`px-2 py-1 rounded text-xs font-medium ${
                           vehicle.status === 'Active' ? 'bg-green-100 text-green-800' :
                           vehicle.status === 'Retired' ? 'bg-gray-100 text-gray-800' :
-                          vehicle.status === 'Development' ? 'bg-blue-100 text-blue-800' :
-                          'bg-purple-100 text-purple-800'
+                          vehicle.status === 'In Development' ? 'bg-blue-100 text-blue-800' :
+                          'bg-red-100 text-red-800'
                         }`}>
                           {vehicle.status}
                         </span>

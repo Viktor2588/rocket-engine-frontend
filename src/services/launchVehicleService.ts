@@ -194,7 +194,7 @@ class LaunchVehicleService {
         total: vehicles.length,
         active: vehicles.filter(v => v.status === 'Active').length,
         retired: vehicles.filter(v => v.status === 'Retired').length,
-        development: vehicles.filter(v => v.status === 'Development').length,
+        development: vehicles.filter(v => v.status === 'In Development').length,
         reusable: vehicles.filter(v => v.reusable).length,
         humanRated: vehicles.filter(v => v.humanRated).length,
         byCountry,

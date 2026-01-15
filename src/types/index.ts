@@ -255,7 +255,7 @@ export const SCI_TIER_THRESHOLDS: { tier: SCITier; minScore: number; color: stri
 // LAUNCH VEHICLE TYPES
 // ============================================================================
 
-export type LaunchVehicleStatus = 'Active' | 'Retired' | 'Development' | 'Planned';
+export type LaunchVehicleStatus = 'Active' | 'In Development' | 'Retired' | 'Cancelled';
 
 export interface LaunchVehicle {
   id: string | number;

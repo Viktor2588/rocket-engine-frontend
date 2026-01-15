@@ -142,8 +142,8 @@ export default function LaunchVehicleDetailPage() {
                 <span className={`px-3 py-1 rounded text-sm font-medium ${
                   vehicle.status === 'Active' ? 'bg-green-500' :
                   vehicle.status === 'Retired' ? 'bg-gray-500' :
-                  vehicle.status === 'Development' ? 'bg-blue-500' :
-                  'bg-purple-500'
+                  vehicle.status === 'In Development' ? 'bg-blue-500' :
+                  'bg-red-500'
                 }`}>
                   {vehicle.status}
                 </span>
