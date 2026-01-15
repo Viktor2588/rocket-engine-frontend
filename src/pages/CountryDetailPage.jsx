@@ -94,15 +94,42 @@ export default function CountryDetailPage() {
     );
   }
 
-  // Capability badges configuration
-  const capabilities = [
+  // Capability badges configuration (boolean capabilities)
+  const booleanCapabilities = [
     { key: 'humanSpaceflightCapable', label: 'Human Spaceflight', IconComponent: PersonOutline, color: 'bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300' },
     { key: 'independentLaunchCapable', label: 'Independent Launch', IconComponent: Rocket, color: 'bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300' },
-    { key: 'reusableRocketCapable', label: 'Reusable Rockets', IconComponent: Recycling, color: 'bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-300' },
     { key: 'deepSpaceCapable', label: 'Deep Space Exploration', IconComponent: NightlightRound, color: 'bg-indigo-100 dark:bg-indigo-900/50 text-indigo-800 dark:text-indigo-300' },
     { key: 'spaceStationCapable', label: 'Space Station', IconComponent: SatelliteAlt, color: 'bg-orange-100 dark:bg-orange-900/50 text-orange-800 dark:text-orange-300' },
     { key: 'lunarLandingCapable', label: 'Lunar Landing', IconComponent: NightlightRound, color: 'bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-300' },
     { key: 'marsLandingCapable', label: 'Mars Landing', IconComponent: Circle, color: 'bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300' },
+  ];
+
+  // Handle reusable rocket status separately (Yes/In Development/No)
+  const reusableStatus = country.reusableRocketStatus;
+  const reusableCapability = reusableStatus === 'Yes' || reusableStatus === 'In Development'
+    ? {
+        key: 'reusableRocketStatus',
+        label: reusableStatus === 'Yes' ? 'Reusable Rockets' : 'Reusable (In Dev)',
+        IconComponent: Recycling,
+        color: reusableStatus === 'Yes'
+          ? 'bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-300'
+          : 'bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-300',
+        isActive: true
+      }
+    : {
+        key: 'reusableRocketStatus',
+        label: 'Reusable Rockets',
+        IconComponent: Recycling,
+        color: 'bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500',
+        isActive: false
+      };
+
+  // Combine all capabilities
+  const capabilities = [
+    booleanCapabilities[0], // Human Spaceflight
+    booleanCapabilities[1], // Independent Launch
+    reusableCapability,     // Reusable Rockets (special handling)
+    ...booleanCapabilities.slice(2) // Rest of boolean capabilities
   ];
 
   return (
@@ -146,17 +173,21 @@ export default function CountryDetailPage() {
 
           {/* Capability Badges */}
           <div className="flex flex-wrap gap-2 mb-6">
-            {capabilities.map(cap => (
-              <span
-                key={cap.key}
-                className={`inline-flex items-center gap-2 px-3 py-2 rounded-full text-sm font-medium ${
-                  country[cap.key] ? cap.color : 'bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500 line-through'
-                }`}
-              >
-                <cap.IconComponent style={{ fontSize: '1rem' }} />
-                {cap.label}
-              </span>
-            ))}
+            {capabilities.map(cap => {
+              // For reusable capability, use isActive; for others, check country[cap.key]
+              const isActive = cap.isActive !== undefined ? cap.isActive : country[cap.key];
+              return (
+                <span
+                  key={cap.key}
+                  className={`inline-flex items-center gap-2 px-3 py-2 rounded-full text-sm font-medium ${
+                    isActive ? cap.color : 'bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500 line-through'
+                  }`}
+                >
+                  <cap.IconComponent style={{ fontSize: '1rem' }} />
+                  {cap.label}
+                </span>
+              );
+            })}
           </div>
 
           {/* Description */}

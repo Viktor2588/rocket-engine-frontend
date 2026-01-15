@@ -171,7 +171,7 @@ export default function EngineDetailPage() {
         </div>
 
         {/* Quick Stats Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
           <StatBox
             label="ISP (Vacuum)"
             value={isp ?? '—'}
@@ -184,28 +184,36 @@ export default function EngineDetailPage() {
             unit="kN"
             color="blue"
           />
-          <StatBox
-            label="T/W Ratio"
-            value={engine.calculateThrustToWeightRatio?.toFixed(1) || engine.twr || '—'}
-            color="purple"
-          />
-          <StatBox
-            label="Reliability"
-            value={engine.reliabilityRate ? `${engine.reliabilityRate.toFixed(1)}%` : '—'}
-            color={engine.reliabilityRate >= 99 ? 'green' : engine.reliabilityRate >= 95 ? 'blue' : 'orange'}
-          />
-          <StatBox
-            label="Chamber Pressure"
-            value={engine.chamberPressureBar ?? '—'}
-            unit="bar"
-            color="indigo"
-          />
-          <StatBox
-            label="Mass"
-            value={engine.massKg ? formatNumber(engine.massKg) : '—'}
-            unit="kg"
-            color="orange"
-          />
+          {(engine.calculateThrustToWeightRatio || engine.twr) && (
+            <StatBox
+              label="T/W Ratio"
+              value={(engine.calculateThrustToWeightRatio || engine.twr).toFixed(1)}
+              color="purple"
+            />
+          )}
+          {engine.reliabilityRate && (
+            <StatBox
+              label="Reliability"
+              value={`${engine.reliabilityRate.toFixed(1)}%`}
+              color={engine.reliabilityRate >= 99 ? 'green' : engine.reliabilityRate >= 95 ? 'blue' : 'orange'}
+            />
+          )}
+          {engine.chamberPressureBar && (
+            <StatBox
+              label="Chamber Pressure"
+              value={engine.chamberPressureBar}
+              unit="bar"
+              color="indigo"
+            />
+          )}
+          {engine.massKg && (
+            <StatBox
+              label="Mass"
+              value={formatNumber(engine.massKg)}
+              unit="kg"
+              color="orange"
+            />
+          )}
         </div>
 
         {/* Main Content Grid */}

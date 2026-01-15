@@ -23,16 +23,29 @@ export default function CountryCard({ country, rank }) {
     return 'bg-blue-100 text-blue-800';
   };
 
-  // Count active capabilities
-  const capabilities = [
+  // Count active capabilities (boolean flags)
+  const booleanCapabilities = [
     { key: 'humanSpaceflightCapable', label: 'Human Spaceflight', icon: 'astronaut' },
     { key: 'independentLaunchCapable', label: 'Independent Launch', icon: 'rocket' },
-    { key: 'reusableRocketCapable', label: 'Reusable Rockets', icon: 'recycling' },
     { key: 'deepSpaceCapable', label: 'Deep Space', icon: 'moon' },
     { key: 'spaceStationCapable', label: 'Space Station', icon: 'satellite' },
   ];
 
-  const activeCapabilities = capabilities.filter(cap => country[cap.key]);
+  const activeBooleanCapabilities = booleanCapabilities.filter(cap => country[cap.key]);
+
+  // Handle reusable rocket status separately (Yes/In Development/No)
+  const reusableStatus = country.reusableRocketStatus;
+  const hasReusableCapability = reusableStatus === 'Yes' || reusableStatus === 'In Development';
+
+  const activeCapabilities = [
+    ...activeBooleanCapabilities,
+    ...(hasReusableCapability ? [{
+      key: 'reusableRocketStatus',
+      label: reusableStatus === 'Yes' ? 'Reusable Rockets' : 'Reusable (Dev)',
+      icon: 'recycling',
+      inDevelopment: reusableStatus === 'In Development'
+    }] : [])
+  ];
 
   return (
     <Link to={`/countries/${country.isoCode}`}>
@@ -107,7 +120,11 @@ export default function CountryCard({ country, rank }) {
           {activeCapabilities.map(cap => (
             <span
               key={cap.key}
-              className="inline-flex items-center gap-1 px-2 py-1 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 text-xs rounded-full"
+              className={`inline-flex items-center gap-1 px-2 py-1 text-xs rounded-full ${
+                cap.inDevelopment
+                  ? 'bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300'
+                  : 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300'
+              }`}
               title={cap.label}
             >
               <SpaceIcon name={cap.icon} size="sm" />

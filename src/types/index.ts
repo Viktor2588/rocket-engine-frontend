@@ -35,7 +35,7 @@ export interface Country {
   // Capability Flags
   humanSpaceflightCapable: boolean;
   independentLaunchCapable: boolean;
-  reusableRocketCapable: boolean;
+  reusableRocketStatus: 'Yes' | 'In Development' | 'No';
   deepSpaceCapable: boolean;
   spaceStationCapable: boolean;
   lunarLandingCapable: boolean;

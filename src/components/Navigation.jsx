@@ -51,12 +51,12 @@ export default function Navigation() {
           </Link>
 
           {/* Search Bar - Desktop (pushed right with ml-auto) */}
-          <div className="hidden lg:block w-64 xl:w-80 ml-auto mr-4">
+          <div className="hidden lg:block w-48 xl:w-64 2xl:w-80 ml-auto mr-3 xl:mr-4">
             <GlobalSearch />
           </div>
 
           {/* Desktop Navigation Links */}
-          <div className="hidden md:flex items-center gap-4 text-sm">
+          <div className="hidden md:flex items-center gap-1.5 lg:gap-2 xl:gap-3 text-sm">
             <Link to="/countries" className={linkClass('/')}>
               Countries
             </Link>
@@ -67,7 +67,8 @@ export default function Navigation() {
               Vehicles
             </Link>
             <Link to="/satellites" className={linkClass('/satellites')}>
-              Satellites
+              <span className="hidden xl:inline">Satellites</span>
+              <span className="xl:hidden">Sats</span>
             </Link>
             <Link to="/launch-sites" className={linkClass('/launch-sites')}>
               Sites
@@ -76,10 +77,12 @@ export default function Navigation() {
               Missions
             </Link>
             <Link to="/rankings" className={linkClass('/rankings')}>
-              Rankings
+              <span className="hidden xl:inline">Rankings</span>
+              <span className="xl:hidden">Ranks</span>
             </Link>
             <Link to="/analytics" className={linkClass('/analytics')}>
-              Analytics
+              <span className="hidden xl:inline">Analytics</span>
+              <span className="xl:hidden">Stats</span>
             </Link>
 
             {/* Compare dropdown */}

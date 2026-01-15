@@ -103,28 +103,30 @@ export default function EngineCard({ engine }) {
             </p>
           </div>
 
-          {/* T/W Ratio */}
-          <div>
-            <p className="text-xs text-gray-500 dark:text-gray-400 uppercase">T/W Ratio</p>
-            <p className="text-lg font-bold text-purple-600">
-              {engine.calculateThrustToWeightRatio || engine.twr
-                ? (engine.calculateThrustToWeightRatio || engine.twr).toFixed(1)
-                : '—'}
-            </p>
-          </div>
+          {/* T/W Ratio - only show if data exists */}
+          {(engine.calculateThrustToWeightRatio || engine.twr) && (
+            <div>
+              <p className="text-xs text-gray-500 dark:text-gray-400 uppercase">T/W Ratio</p>
+              <p className="text-lg font-bold text-purple-600">
+                {(engine.calculateThrustToWeightRatio || engine.twr).toFixed(1)}
+              </p>
+            </div>
+          )}
 
-          {/* Reliability */}
-          <div>
-            <p className="text-xs text-gray-500 dark:text-gray-400 uppercase">Reliability</p>
-            <p className={`text-lg font-bold ${
-              engine.reliabilityRate >= 99 ? 'text-green-600' :
-              engine.reliabilityRate >= 95 ? 'text-blue-600' :
-              engine.reliabilityRate >= 90 ? 'text-yellow-600' :
-              'text-red-600'
-            }`}>
-              {engine.reliabilityRate ? `${engine.reliabilityRate.toFixed(1)}%` : '—'}
-            </p>
-          </div>
+          {/* Reliability - only show if data exists */}
+          {engine.reliabilityRate && (
+            <div>
+              <p className="text-xs text-gray-500 dark:text-gray-400 uppercase">Reliability</p>
+              <p className={`text-lg font-bold ${
+                engine.reliabilityRate >= 99 ? 'text-green-600' :
+                engine.reliabilityRate >= 95 ? 'text-blue-600' :
+                engine.reliabilityRate >= 90 ? 'text-yellow-600' :
+                'text-red-600'
+              }`}>
+                {`${engine.reliabilityRate.toFixed(1)}%`}
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Properties */}
