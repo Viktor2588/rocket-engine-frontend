@@ -199,44 +199,44 @@ export default function CountryDetailPage() {
 
           {/* Key Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
-            <div className="glass-tinted-blue p-4 text-center">
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Total Launches</p>
+            <div className="glass-tinted-blue p-4 text-center flex flex-col">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-2 min-h-[40px] flex items-center justify-center">Total Launches</p>
               <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{country.totalLaunches ?? '-'}</p>
             </div>
-            <div className="glass-tinted-teal p-4 text-center">
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Successful</p>
+            <div className="glass-tinted-teal p-4 text-center flex flex-col">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-2 min-h-[40px] flex items-center justify-center">Successful</p>
               <p className="text-2xl font-bold text-teal-600 dark:text-teal-400">{country.successfulLaunches ?? '-'}</p>
             </div>
-            <div className="glass-tinted-green p-4 text-center">
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Success Rate</p>
+            <div className="glass-tinted-green p-4 text-center flex flex-col">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-2 min-h-[40px] flex items-center justify-center">Success Rate</p>
               <p className="text-2xl font-bold text-green-600 dark:text-green-400">
                 {country.launchSuccessRate
                   ? `${country.launchSuccessRate.toFixed(1)}%`
                   : '-'}
               </p>
             </div>
-            <div className="glass-tinted-purple p-4 text-center">
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Annual Budget</p>
+            <div className="glass-tinted-purple p-4 text-center flex flex-col">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-2 min-h-[40px] flex items-center justify-center">Annual Budget</p>
               <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">
                 {country.annualBudgetUsd
                   ? `$${(country.annualBudgetUsd / 1e9).toFixed(1)}B`
                   : '-'}
               </p>
             </div>
-            <div className="glass-tinted-orange p-4 text-center">
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">% of GDP</p>
+            <div className="glass-tinted-orange p-4 text-center flex flex-col">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-2 min-h-[40px] flex items-center justify-center">% of GDP</p>
               <p className="text-2xl font-bold text-orange-600 dark:text-orange-400">
                 {country.budgetAsPercentOfGdp
                   ? `${country.budgetAsPercentOfGdp.toFixed(3)}%`
                   : '-'}
               </p>
             </div>
-            <div className="glass-tinted-indigo p-4 text-center">
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Active Astronauts</p>
+            <div className="glass-tinted-indigo p-4 text-center flex flex-col">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-2 min-h-[40px] flex items-center justify-center">Active Astronauts</p>
               <p className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">{country.activeAstronauts ?? '-'}</p>
             </div>
-            <div className="glass-panel p-4 text-center">
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Employees</p>
+            <div className="glass-panel p-4 text-center flex flex-col">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-2 min-h-[40px] flex items-center justify-center">Employees</p>
               <p className="text-2xl font-bold text-gray-600 dark:text-gray-300">
                 {country.totalSpaceAgencyEmployees
                   ? country.totalSpaceAgencyEmployees.toLocaleString()

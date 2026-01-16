@@ -37,7 +37,7 @@ function App() {
             <div className="App min-h-screen flex flex-col">
           <SkipLinks />
           <Navigation />
-          <main id="main-content" tabIndex="-1" className="focus:outline-none flex-1">
+          <main id="main-content" tabIndex="-1" className="focus:outline-none flex-1 relative z-0">
         <Routes>
           {/* Main Dashboard - Countries Overview */}
           <Route path="/" element={<CountryListPage />} />
