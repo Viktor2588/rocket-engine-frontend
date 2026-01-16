@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useLaunchVehicles, useLaunchVehicleStatistics } from '../hooks/useLaunchVehicles';
 import LaunchVehicleCard from '../components/LaunchVehicleCard';
 import Pagination from '../components/Pagination';
+import LoadingSpinner from '../components/LoadingSpinner';
 import SortableHeader, { SortableGridHeader } from '../components/SortableHeader';
 import { Rocket, Recycling, PersonOutline, Close, FilterList } from '@mui/icons-material';
 
@@ -263,10 +264,7 @@ export default function LaunchVehicleListPage() {
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-12">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Loading launch vehicles...</p>
-        </div>
+        <LoadingSpinner message="Loading launch vehicles..." />
       </div>
     );
   }

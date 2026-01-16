@@ -5,6 +5,7 @@ import CountryCard from '../components/CountryCard';
 import { CapabilityScoreBadge } from '../components/CapabilityScoreCard';
 import WorldMapView from '../components/maps/WorldMapView';
 import SortableHeader, { SortableGridHeader } from '../components/SortableHeader';
+import LoadingSpinner from '../components/LoadingSpinner';
 import { REGIONS } from '../constants';
 import {
   Public,
@@ -108,10 +109,7 @@ export default function CountryListPage() {
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-12">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400">Loading space programs...</p>
-        </div>
+        <LoadingSpinner message="Loading space programs..." />
       </div>
     );
   }

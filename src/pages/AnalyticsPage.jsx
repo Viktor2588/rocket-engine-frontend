@@ -8,6 +8,7 @@ import LaunchFrequencyChart from '../components/charts/LaunchFrequencyChart';
 import EngineBubbleChart from '../components/charts/EngineBubbleChart';
 import CapabilityRadarChart from '../components/charts/CapabilityRadarChart';
 import SpaceIcon from '../components/icons/SpaceIcons';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 // Record Card Component
 function RecordCard({ title, value, subtitle, icon, link, color = 'indigo' }) {
@@ -83,10 +84,7 @@ export default function AnalyticsPage() {
     return (
       <div className="min-h-screen py-8">
         <div className="container mx-auto px-4">
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto mb-4"></div>
-            <p className="text-gray-600 dark:text-gray-400">Loading analytics data...</p>
-          </div>
+          <LoadingSpinner message="Loading analytics data..." />
         </div>
       </div>
     );

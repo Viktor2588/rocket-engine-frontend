@@ -2,6 +2,7 @@ import { useState, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useLaunchSites, useFilteredLaunchSites, useLaunchSiteStatistics } from '../hooks/useLaunchSites';
 import SortableHeader, { SortableGridHeader } from '../components/SortableHeader';
+import LoadingSpinner from '../components/LoadingSpinner';
 import {
   ComposableMap,
   Geographies,
@@ -386,8 +387,8 @@ export default function LaunchSiteListPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+      <div className="container mx-auto px-4 py-12">
+        <LoadingSpinner message="Loading launch sites..." />
       </div>
     );
   }

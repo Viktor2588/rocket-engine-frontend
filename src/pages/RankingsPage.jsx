@@ -7,6 +7,7 @@ import {
   useRankingsStatistics,
   useCountrySelection,
 } from '../hooks/useCapabilityScores';
+import LoadingSpinner from '../components/LoadingSpinner';
 import CapabilityScoreCard, {
   TierBadge,
   ScoreGauge,
@@ -86,10 +87,7 @@ export default function RankingsPage() {
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-12">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400">Loading rankings...</p>
-        </div>
+        <LoadingSpinner message="Loading rankings..." />
       </div>
     );
   }

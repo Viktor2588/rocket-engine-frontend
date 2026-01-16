@@ -2,6 +2,7 @@ import { useState, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useSatellites, useFilteredSatellites, useSatelliteStatistics } from '../hooks/useSatellites';
 import SortableHeader, { SortableGridHeader } from '../components/SortableHeader';
+import LoadingSpinner from '../components/LoadingSpinner';
 import {
   SettingsInputAntenna,
   Explore,
@@ -255,10 +256,8 @@ export default function SatelliteListPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
-        </div>
+      <div className="container mx-auto px-4 py-12">
+        <LoadingSpinner message="Loading satellites..." />
       </div>
     );
   }

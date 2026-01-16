@@ -4,6 +4,7 @@ import { useAllMissions, useFilteredMissions, useMissionStatistics } from '../ho
 import MissionCard, { StatusBadge, MissionTypeBadge, DestinationBadge } from '../components/MissionCard';
 import Pagination from '../components/Pagination';
 import SortableHeader, { SortableGridHeader } from '../components/SortableHeader';
+import LoadingSpinner from '../components/LoadingSpinner';
 import { MISSION_TYPE_INFO, DESTINATION_INFO } from '../types';
 import {
   Rocket,
@@ -68,10 +69,7 @@ export default function MissionListPage() {
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-12">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Loading missions...</p>
-        </div>
+        <LoadingSpinner message="Loading missions..." />
       </div>
     );
   }

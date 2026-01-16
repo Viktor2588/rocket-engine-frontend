@@ -5,6 +5,7 @@ import EngineCard from '../components/EngineCard';
 import EngineChart from '../components/EngineChart';
 import Pagination from '../components/Pagination';
 import SortableHeader, { SortableGridHeader } from '../components/SortableHeader';
+import LoadingSpinner from '../components/LoadingSpinner';
 import { Rocket, Bolt, Recycling, Tune, Refresh } from '@mui/icons-material';
 
 const COUNTRIES = [
@@ -147,10 +148,7 @@ export default function EngineListPage() {
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-12">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400">Loading engines...</p>
-        </div>
+        <LoadingSpinner message="Loading engines..." />
       </div>
     );
   }
