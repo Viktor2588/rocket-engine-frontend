@@ -22,6 +22,7 @@ import {
   AcUnit,
   FlightLand,
   Search,
+  LocationOn,
 } from '@mui/icons-material';
 
 // World TopoJSON URL
@@ -573,9 +574,11 @@ export default function LaunchSiteListPage() {
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 dark:text-white">Launch Sites</h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-2">
-            Explore spaceports and launch facilities around the world
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-3">
+            <LocationOn style={{ fontSize: '2.5rem' }} className="text-gray-900 dark:text-white" /> Launch Sites
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400">
+            Explore {launchSites.length} spaceports and launch facilities around the world
           </p>
         </div>
 
@@ -605,18 +608,6 @@ export default function LaunchSiteListPage() {
               value={`${statistics.averageSuccessRate?.toFixed(1) || 0}%`}
               IconComponent={GpsFixed}
               color="purple"
-            />
-          </div>
-        )}
-
-        {/* World Map - shown in map view or always visible */}
-        {viewMode === 'map' && (
-          <div className="mb-6">
-            <LaunchSiteWorldMap
-              launchSites={filteredAndSorted}
-              onSiteHover={setHoveredSite}
-              hoveredSite={hoveredSite}
-              onSiteClick={(site) => window.location.href = `/launch-sites/${site.id}`}
             />
           </div>
         )}
@@ -729,7 +720,19 @@ export default function LaunchSiteListPage() {
           </div>
         </div>
 
-        {/* Launch Sites Grid/Table/Map */}
+        {/* World Map - shown in map view */}
+        {viewMode === 'map' && (
+          <div className="mb-6">
+            <LaunchSiteWorldMap
+              launchSites={filteredAndSorted}
+              onSiteHover={setHoveredSite}
+              hoveredSite={hoveredSite}
+              onSiteClick={(site) => window.location.href = `/launch-sites/${site.id}`}
+            />
+          </div>
+        )}
+
+        {/* Launch Sites Grid/Table */}
         {viewMode === 'grid' && (
           <div className="space-y-4">
             <SortableGridHeader

@@ -39,7 +39,7 @@ export default function Navigation() {
     `glass-nav-link ${isActive(path) ? 'glass-nav-link-active' : ''}`;
 
   return (
-    <nav id="main-navigation" className="glass-nav sticky top-0 z-40" role="navigation" aria-label="Main navigation">
+    <nav id="main-navigation" className="glass-nav fixed top-0 left-0 right-0 z-40" role="navigation" aria-label="Main navigation">
       <div className="container mx-auto px-4">
         {/* Main Navigation Row */}
         <div className="flex justify-between items-center py-3">
