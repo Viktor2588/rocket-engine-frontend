@@ -205,7 +205,7 @@ export default function GlobalSearch() {
       {/* Search Results Dropdown */}
       {isOpen && query.length >= 2 && (
         <div
-          className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden z-50 max-h-[70vh] overflow-y-auto"
+          className="absolute top-full left-0 mt-2 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden z-50 max-h-[70vh] overflow-y-auto min-w-[384px]"
           role="listbox"
         >
           {/* Type Filters */}
