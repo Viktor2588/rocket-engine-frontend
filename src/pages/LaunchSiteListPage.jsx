@@ -371,7 +371,7 @@ export default function LaunchSiteListPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
       </div>
     );
@@ -379,17 +379,17 @@ export default function LaunchSiteListPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <div className="text-center">
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="glass-panel p-8 text-center">
           <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">Error Loading Launch Sites</h2>
-          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400">{error}</p>
+          <p className="text-gray-600 dark:text-gray-400">{error}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+    <div className="min-h-screen py-8">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
@@ -440,7 +440,7 @@ export default function LaunchSiteListPage() {
         </div>
 
         {/* Filters */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 mb-6">
+        <div className="glass-panel p-4 mb-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Search */}
             <div>
@@ -450,7 +450,7 @@ export default function LaunchSiteListPage() {
                 placeholder="Search launch sites..."
                 value={filters.search}
                 onChange={(e) => handleFilterChange('search', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="glass-input w-full"
               />
             </div>
 
@@ -460,7 +460,7 @@ export default function LaunchSiteListPage() {
               <select
                 value={filters.status}
                 onChange={(e) => handleFilterChange('status', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="glass-select w-full"
               >
                 <option value="">All Status</option>
                 <option value="Active">Active</option>
@@ -475,7 +475,7 @@ export default function LaunchSiteListPage() {
               <select
                 value={filters.countryId}
                 onChange={(e) => handleFilterChange('countryId', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="glass-select w-full"
               >
                 <option value="">All Countries</option>
                 {uniqueCountries.map(country => (
@@ -490,7 +490,7 @@ export default function LaunchSiteListPage() {
               <select
                 value={filters.region}
                 onChange={(e) => handleFilterChange('region', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="glass-select w-full"
               >
                 <option value="">All Regions</option>
                 {uniqueRegions.map(region => (
@@ -507,44 +507,44 @@ export default function LaunchSiteListPage() {
                 type="checkbox"
                 checked={filters.humanRated === true}
                 onChange={(e) => handleFilterChange('humanRated', e.target.checked ? true : undefined)}
-                className="rounded text-indigo-600 focus:ring-indigo-500"
+                className="rounded text-indigo-600 focus:ring-indigo-500 bg-white/50 dark:bg-white/10 border-gray-300/50 dark:border-white/20"
               />
-              <span className="text-sm text-gray-700">Human Rated</span>
+              <span className="text-sm text-gray-700 dark:text-gray-300">Human Rated</span>
             </label>
             <label className="flex items-center gap-2 cursor-pointer">
               <input
                 type="checkbox"
                 checked={filters.geoCapable === true}
                 onChange={(e) => handleFilterChange('geoCapable', e.target.checked ? true : undefined)}
-                className="rounded text-indigo-600 focus:ring-indigo-500"
+                className="rounded text-indigo-600 focus:ring-indigo-500 bg-white/50 dark:bg-white/10 border-gray-300/50 dark:border-white/20"
               />
-              <span className="text-sm text-gray-700">GEO Capable</span>
+              <span className="text-sm text-gray-700 dark:text-gray-300">GEO Capable</span>
             </label>
             <label className="flex items-center gap-2 cursor-pointer">
               <input
                 type="checkbox"
                 checked={filters.polarCapable === true}
                 onChange={(e) => handleFilterChange('polarCapable', e.target.checked ? true : undefined)}
-                className="rounded text-indigo-600 focus:ring-indigo-500"
+                className="rounded text-indigo-600 focus:ring-indigo-500 bg-white/50 dark:bg-white/10 border-gray-300/50 dark:border-white/20"
               />
-              <span className="text-sm text-gray-700">Polar Capable</span>
+              <span className="text-sm text-gray-700 dark:text-gray-300">Polar Capable</span>
             </label>
           </div>
         </div>
 
         {/* Sort and View Controls */}
         <div className="flex items-center justify-between mb-4">
-          <div className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">
+          <div className="text-sm text-gray-600 dark:text-gray-400">
             Showing {sortedSites.length} of {launchSites.length} launch sites
           </div>
           <div className="flex items-center gap-4">
             {/* Sort */}
             <div className="flex items-center gap-2">
-              <label className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">Sort by:</label>
+              <label className="text-sm text-gray-600 dark:text-gray-400">Sort by:</label>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="px-2 py-1 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded text-sm focus:ring-2 focus:ring-indigo-500"
+                className="glass-select text-sm"
               >
                 <option value="name">Name</option>
                 <option value="totalLaunches">Total Launches</option>
@@ -553,23 +553,23 @@ export default function LaunchSiteListPage() {
               </select>
               <button
                 onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
-                className="px-2 py-1 border border-gray-300 dark:border-gray-600 rounded text-sm hover:bg-gray-100"
+                className="glass-button text-sm"
               >
                 {sortOrder === 'asc' ? '↑' : '↓'}
               </button>
             </div>
 
             {/* View Mode */}
-            <div className="flex border border-gray-300 dark:border-gray-600 rounded overflow-hidden">
+            <div className="flex gap-2">
               <button
                 onClick={() => setViewMode('grid')}
-                className={`px-3 py-1 text-sm ${viewMode === 'grid' ? 'bg-indigo-600 text-white' : 'bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'}`}
+                className={viewMode === 'grid' ? 'glass-button-primary' : 'glass-button'}
               >
                 Grid
               </button>
               <button
                 onClick={() => setViewMode('list')}
-                className={`px-3 py-1 text-sm ${viewMode === 'list' ? 'bg-indigo-600 text-white' : 'bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'}`}
+                className={viewMode === 'list' ? 'glass-button-primary' : 'glass-button'}
               >
                 List
               </button>
@@ -585,43 +585,43 @@ export default function LaunchSiteListPage() {
             ))}
           </div>
         ) : (
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+          <div className="glass-panel overflow-hidden">
             <table className="w-full">
-              <thead className="bg-gray-50 dark:bg-gray-700">
+              <thead className="glass-header-gradient">
                 <tr>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600 dark:text-gray-400 dark:text-gray-400">Name</th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600 dark:text-gray-400 dark:text-gray-400">Country</th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600 dark:text-gray-400 dark:text-gray-400">Status</th>
-                  <th className="px-4 py-3 text-right text-sm font-semibold text-gray-600 dark:text-gray-400 dark:text-gray-400">Launches</th>
-                  <th className="px-4 py-3 text-right text-sm font-semibold text-gray-600 dark:text-gray-400 dark:text-gray-400">Success Rate</th>
-                  <th className="px-4 py-3 text-center text-sm font-semibold text-gray-600 dark:text-gray-400 dark:text-gray-400">Capabilities</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600 dark:text-gray-300">Name</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600 dark:text-gray-300">Country</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600 dark:text-gray-300">Status</th>
+                  <th className="px-4 py-3 text-right text-sm font-semibold text-gray-600 dark:text-gray-300">Launches</th>
+                  <th className="px-4 py-3 text-right text-sm font-semibold text-gray-600 dark:text-gray-300">Success Rate</th>
+                  <th className="px-4 py-3 text-center text-sm font-semibold text-gray-600 dark:text-gray-300">Capabilities</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                {sortedSites.map(site => {
+              <tbody className="divide-y divide-gray-200/50 dark:divide-white/[0.08]">
+                {sortedSites.map((site, index) => {
                   const statusClass = STATUS_COLORS[site.status?.replace(' ', '_')] || STATUS_COLORS.Active;
                   return (
-                    <tr key={site.id} className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700">
+                    <tr key={site.id} className={`${index % 2 === 0 ? 'bg-transparent' : 'bg-gray-500/[0.03] dark:bg-white/[0.02]'} hover:bg-gray-500/[0.05] dark:hover:bg-white/[0.03] transition-colors`}>
                       <td className="px-4 py-3">
                         <Link to={`/launch-sites/${site.id}`} className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium">
                           {site.name}
                         </Link>
-                        <div className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-400">{site.operator}</div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">{site.operator}</div>
                       </td>
-                      <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">{site.countryId}</td>
+                      <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{site.countryId}</td>
                       <td className="px-4 py-3">
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusClass}`}>
+                        <span className={statusClass}>
                           {site.status}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-right text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">{site.totalLaunches || 0}</td>
-                      <td className="px-4 py-3 text-right text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">{site.successRate?.toFixed(1) || 0}%</td>
+                      <td className="px-4 py-3 text-right text-sm text-gray-600 dark:text-gray-400">{site.totalLaunches || 0}</td>
+                      <td className="px-4 py-3 text-right text-sm text-gray-600 dark:text-gray-400">{site.successRate?.toFixed(1) || 0}%</td>
                       <td className="px-4 py-3">
                         <div className="flex justify-center gap-1">
-                          {site.humanRated && <PersonOutline titleAccess="Human Rated" style={{ fontSize: '1.25rem' }} className="text-purple-600" />}
-                          {site.geoCapable && <Public titleAccess="GEO Capable" style={{ fontSize: '1.25rem' }} className="text-blue-600" />}
-                          {site.polarCapable && <AcUnit titleAccess="Polar Capable" style={{ fontSize: '1.25rem' }} className="text-cyan-600" />}
-                          {site.hasLanding && <FlightLand titleAccess="Landing Capable" style={{ fontSize: '1.25rem' }} className="text-green-600" />}
+                          {site.humanRated && <PersonOutline titleAccess="Human Rated" style={{ fontSize: '1.25rem' }} className="text-purple-600 dark:text-purple-400" />}
+                          {site.geoCapable && <Public titleAccess="GEO Capable" style={{ fontSize: '1.25rem' }} className="text-blue-600 dark:text-blue-400" />}
+                          {site.polarCapable && <AcUnit titleAccess="Polar Capable" style={{ fontSize: '1.25rem' }} className="text-cyan-600 dark:text-cyan-400" />}
+                          {site.hasLanding && <FlightLand titleAccess="Landing Capable" style={{ fontSize: '1.25rem' }} className="text-green-600 dark:text-green-400" />}
                         </div>
                       </td>
                     </tr>

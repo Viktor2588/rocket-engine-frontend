@@ -63,12 +63,12 @@ export default function MissionDetailPage() {
   if (error || !mission) {
     return (
       <div className="container mx-auto px-4 py-12">
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 text-center">
+        <div className="glass-tinted-red p-6 text-center">
           <h2 className="text-lg font-semibold text-red-800 dark:text-red-400 mb-2">Mission Not Found</h2>
-          <p className="text-red-600 mb-4">{error || 'The requested mission could not be found.'}</p>
+          <p className="text-red-600 dark:text-red-400 mb-4">{error || 'The requested mission could not be found.'}</p>
           <Link
             to="/missions"
-            className="text-indigo-500 hover:text-indigo-700 font-semibold"
+            className="text-indigo-500 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-semibold"
           >
             ← Back to Missions
           </Link>
@@ -83,7 +83,7 @@ export default function MissionDetailPage() {
   const otherMissions = relatedMissions?.filter(m => m.id !== mission.id).slice(0, 4) || [];
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+    <div className="min-h-screen py-8">
       <div className="container mx-auto px-4">
         {/* Breadcrumb */}
         <div className="mb-6">
@@ -96,9 +96,9 @@ export default function MissionDetailPage() {
         </div>
 
         {/* Header */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden mb-8">
+        <div className="glass-panel overflow-hidden mb-8">
           {/* Status bar */}
-          <div className={`h-3 ${
+          <div className={`h-1 ${
             mission.status === 'ACTIVE' ? 'bg-green-500' :
             mission.status === 'COMPLETED' ? 'bg-teal-500' :
             mission.status === 'FAILED' ? 'bg-red-500' :
@@ -155,22 +155,22 @@ export default function MissionDetailPage() {
 
               {/* Key stats */}
               <div className="flex gap-4">
-                <div className="text-center px-4 py-2 bg-gray-50 rounded-lg">
+                <div className="text-center px-4 py-2 bg-gray-500/10 dark:bg-white/[0.06] rounded-[12px] border border-gray-200/30 dark:border-white/[0.08]">
                   <div className="text-lg font-bold text-gray-800 dark:text-white">{formatDate(mission.launchDate)}</div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-400">Launch Date</div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400">Launch Date</div>
                 </div>
                 {mission.status === 'ACTIVE' && (
-                  <div className="text-center px-4 py-2 bg-green-50 rounded-lg">
-                    <div className="text-lg font-bold text-green-700">
+                  <div className="glass-tinted-green text-center px-4 py-2">
+                    <div className="text-lg font-bold text-green-700 dark:text-green-400">
                       {getMissionDuration(mission.launchDate)}
                     </div>
-                    <div className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-400">Duration</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">Duration</div>
                   </div>
                 )}
                 {mission.crewed && mission.crewSize && (
-                  <div className="text-center px-4 py-2 bg-purple-50 rounded-lg">
-                    <div className="text-lg font-bold text-purple-700">{mission.crewSize}</div>
-                    <div className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-400">Crew Members</div>
+                  <div className="glass-tinted-purple text-center px-4 py-2">
+                    <div className="text-lg font-bold text-purple-700 dark:text-purple-400">{mission.crewSize}</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">Crew Members</div>
                   </div>
                 )}
               </div>
@@ -182,19 +182,19 @@ export default function MissionDetailPage() {
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Description */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <div className="glass-panel p-6">
               <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Mission Overview</h2>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed">{mission.description}</p>
             </div>
 
             {/* Crew */}
             {mission.crewed && mission.crewNames && mission.crewNames.length > 0 && (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+              <div className="glass-panel p-6">
                 <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">👨‍🚀 Crew Members</h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   {mission.crewNames.map((name, idx) => (
-                    <div key={idx} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                      <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-bold">
+                    <div key={idx} className="flex items-center gap-3 p-3 bg-gray-500/10 dark:bg-white/[0.06] rounded-[12px] border border-gray-200/30 dark:border-white/[0.08]">
+                      <div className="w-10 h-10 bg-indigo-500/20 dark:bg-indigo-500/30 rounded-full flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold">
                         {name.charAt(0)}
                       </div>
                       <span className="font-medium text-gray-800 dark:text-white">{name}</span>
@@ -206,15 +206,15 @@ export default function MissionDetailPage() {
 
             {/* Objectives */}
             {mission.objectives && mission.objectives.length > 0 && (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+              <div className="glass-panel p-6">
                 <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">🎯 Mission Objectives</h2>
                 <ul className="space-y-3">
                   {mission.objectives.map((objective, idx) => (
                     <li key={idx} className="flex items-start gap-3">
-                      <span className="flex-shrink-0 w-6 h-6 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-sm font-semibold">
+                      <span className="flex-shrink-0 w-6 h-6 bg-indigo-500/20 dark:bg-indigo-500/30 text-indigo-600 dark:text-indigo-400 rounded-full flex items-center justify-center text-sm font-semibold">
                         {idx + 1}
                       </span>
-                      <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">{objective}</span>
+                      <span className="text-gray-600 dark:text-gray-400">{objective}</span>
                     </li>
                   ))}
                 </ul>
@@ -223,13 +223,13 @@ export default function MissionDetailPage() {
 
             {/* Achievements */}
             {mission.achievements && mission.achievements.length > 0 && (
-              <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg shadow-md p-6">
+              <div className="glass-tinted-yellow p-6">
                 <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">🏆 Key Achievements</h2>
                 <ul className="space-y-2">
                   {mission.achievements.map((achievement, idx) => (
                     <li key={idx} className="flex items-start gap-2">
                       <span className="text-yellow-500">★</span>
-                      <span className="text-gray-700">{achievement}</span>
+                      <span className="text-gray-700 dark:text-gray-300">{achievement}</span>
                     </li>
                   ))}
                 </ul>
@@ -238,7 +238,7 @@ export default function MissionDetailPage() {
 
             {/* Mission Outcomes */}
             {mission.outcomes && (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+              <div className="glass-panel p-6">
                 <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">📋 Mission Outcomes</h2>
                 <p className="text-gray-600 dark:text-gray-400 leading-relaxed">{mission.outcomes}</p>
               </div>
@@ -248,45 +248,45 @@ export default function MissionDetailPage() {
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Mission Details */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <div className="glass-panel p-6">
               <h2 className="text-lg font-bold text-gray-800 dark:text-white mb-4">Mission Details</h2>
               <dl className="space-y-4">
                 <div>
-                  <dt className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Launch Date</dt>
+                  <dt className="text-sm text-gray-500 dark:text-gray-400">Launch Date</dt>
                   <dd className="font-medium text-gray-800 dark:text-white">{formatDate(mission.launchDate)}</dd>
                 </div>
                 {mission.endDate && (
                   <div>
-                    <dt className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">End Date</dt>
+                    <dt className="text-sm text-gray-500 dark:text-gray-400">End Date</dt>
                     <dd className="font-medium text-gray-800 dark:text-white">{formatDate(mission.endDate)}</dd>
                   </div>
                 )}
                 {mission.launchVehicle && (
                   <div>
-                    <dt className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Launch Vehicle</dt>
+                    <dt className="text-sm text-gray-500 dark:text-gray-400">Launch Vehicle</dt>
                     <dd className="font-medium text-gray-800 dark:text-white">🚀 {mission.launchVehicle}</dd>
                   </div>
                 )}
                 {mission.launchSite && (
                   <div>
-                    <dt className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Launch Site</dt>
+                    <dt className="text-sm text-gray-500 dark:text-gray-400">Launch Site</dt>
                     <dd className="font-medium text-gray-800 dark:text-white">{mission.launchSite}</dd>
                   </div>
                 )}
                 {mission.missionMassKg && (
                   <div>
-                    <dt className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Mission Mass</dt>
+                    <dt className="text-sm text-gray-500 dark:text-gray-400">Mission Mass</dt>
                     <dd className="font-medium text-gray-800 dark:text-white">{mission.missionMassKg.toLocaleString()} kg</dd>
                   </div>
                 )}
                 <div>
-                  <dt className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Mission Type</dt>
+                  <dt className="text-sm text-gray-500 dark:text-gray-400">Mission Type</dt>
                   <dd className="font-medium text-gray-800 dark:text-white">
                     {typeInfo?.icon} {typeInfo?.label || mission.missionType}
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Destination</dt>
+                  <dt className="text-sm text-gray-500 dark:text-gray-400">Destination</dt>
                   <dd className="font-medium text-gray-800 dark:text-white">
                     {destInfo?.icon} {destInfo?.label || mission.destination}
                   </dd>
@@ -296,33 +296,33 @@ export default function MissionDetailPage() {
 
             {/* Destination Info */}
             {destInfo && (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+              <div className="glass-panel p-6">
                 <div className="flex items-center gap-3 mb-4">
                   <span className="text-4xl">{destInfo.icon}</span>
                   <h2 className="text-lg font-bold text-gray-800 dark:text-white">{destInfo.label}</h2>
                 </div>
-                <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-400">{destInfo.description}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">{destInfo.description}</p>
               </div>
             )}
 
             {/* Country Link */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <div className="glass-panel p-6">
               <h2 className="text-lg font-bold text-gray-800 dark:text-white mb-4">Space Program</h2>
               <Link
                 to={`/countries/${mission.countryId}`}
-                className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition"
+                className="flex items-center gap-3 p-3 bg-gray-500/10 dark:bg-white/[0.06] rounded-[12px] hover:bg-gray-500/15 dark:hover:bg-white/[0.08] transition border border-gray-200/30 dark:border-white/[0.08]"
               >
                 <span className="text-3xl">{countryInfo.flag}</span>
                 <div>
                   <div className="font-medium text-gray-800 dark:text-white">{countryInfo.name}</div>
-                  <div className="text-sm text-indigo-600">View Space Program →</div>
+                  <div className="text-sm text-indigo-600 dark:text-indigo-400">View Space Program →</div>
                 </div>
               </Link>
             </div>
 
             {/* Related Missions */}
             {otherMissions.length > 0 && (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+              <div className="glass-panel p-6">
                 <h2 className="text-lg font-bold text-gray-800 dark:text-white mb-4">Related Missions</h2>
                 <div className="space-y-3">
                   {otherMissions.map(m => (
@@ -344,13 +344,13 @@ export default function MissionDetailPage() {
         <div className="mt-8 flex justify-between items-center">
           <Link
             to="/missions"
-            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
+            className="glass-button px-4 py-2"
           >
             ← All Missions
           </Link>
           <Link
             to={`/countries/${mission.countryId}`}
-            className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+            className="glass-button-primary px-4 py-2"
           >
             {countryInfo.name} Space Program →
           </Link>

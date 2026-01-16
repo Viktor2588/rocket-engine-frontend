@@ -12,16 +12,16 @@ import SpaceIcon from '../components/icons/SpaceIcons';
 // Record Card Component
 function RecordCard({ title, value, subtitle, icon, link, color = 'indigo' }) {
   const colorClasses = {
-    indigo: 'bg-indigo-50 dark:bg-indigo-900/30 border-indigo-200 dark:border-indigo-700 text-indigo-700 dark:text-indigo-300',
-    green: 'bg-green-50 dark:bg-green-900/30 border-green-200 dark:border-green-700 text-green-700 dark:text-green-300',
-    blue: 'bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-300',
-    purple: 'bg-purple-50 dark:bg-purple-900/30 border-purple-200 dark:border-purple-700 text-purple-700 dark:text-purple-300',
-    orange: 'bg-orange-50 dark:bg-orange-900/30 border-orange-200 dark:border-orange-700 text-orange-700 dark:text-orange-300',
-    yellow: 'bg-yellow-50 dark:bg-yellow-900/30 border-yellow-200 dark:border-yellow-700 text-yellow-700 dark:text-yellow-300',
+    indigo: 'bg-indigo-500/15 dark:bg-indigo-500/20 border-indigo-500/20 dark:border-indigo-400/20 text-indigo-700 dark:text-indigo-300',
+    green: 'bg-green-500/15 dark:bg-green-500/20 border-green-500/20 dark:border-green-400/20 text-green-700 dark:text-green-300',
+    blue: 'bg-blue-500/15 dark:bg-blue-500/20 border-blue-500/20 dark:border-blue-400/20 text-blue-700 dark:text-blue-300',
+    purple: 'bg-purple-500/15 dark:bg-purple-500/20 border-purple-500/20 dark:border-purple-400/20 text-purple-700 dark:text-purple-300',
+    orange: 'bg-orange-500/15 dark:bg-orange-500/20 border-orange-500/20 dark:border-orange-400/20 text-orange-700 dark:text-orange-300',
+    yellow: 'bg-yellow-500/15 dark:bg-yellow-500/20 border-yellow-500/20 dark:border-yellow-400/20 text-yellow-700 dark:text-yellow-300',
   };
 
   const content = (
-    <div className={`${colorClasses[color]} rounded-lg border-2 p-4 transition hover:shadow-md`}>
+    <div className={`${colorClasses[color]} rounded-[12px] border p-4 transition hover:shadow-md`}>
       <div className="flex items-center gap-2 mb-2">
         <SpaceIcon name={icon} size="xl" />
         <span className="text-sm font-medium text-gray-600 dark:text-gray-400">{title}</span>
@@ -51,7 +51,7 @@ function TrendBar({ label, value, maxValue, color = 'indigo' }) {
   return (
     <div className="flex items-center gap-3">
       <span className="w-32 text-sm text-gray-600 dark:text-gray-400 truncate">{label}</span>
-      <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-4">
+      <div className="flex-1 bg-gray-500/20 dark:bg-white/10 rounded-full h-4">
         <div
           className={`${colorClasses[color]} h-4 rounded-full transition-all duration-500`}
           style={{ width: `${percentage}%` }}
@@ -81,7 +81,7 @@ export default function AnalyticsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+      <div className="min-h-screen py-8">
         <div className="container mx-auto px-4">
           <div className="text-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto mb-4"></div>
@@ -93,7 +93,7 @@ export default function AnalyticsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+    <div className="min-h-screen py-8">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
@@ -107,26 +107,26 @@ export default function AnalyticsPage() {
 
         {/* Quick Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
-            <div className="text-3xl font-bold text-indigo-600">
+          <div className="glass-tinted-indigo p-4 text-center">
+            <div className="text-3xl font-bold text-indigo-600 dark:text-indigo-400">
               {statsOverview?.totalCountries || countries.length}
             </div>
             <div className="text-sm text-gray-500 dark:text-gray-400">Space Programs</div>
           </div>
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
-            <div className="text-3xl font-bold text-green-600">
+          <div className="glass-tinted-green p-4 text-center">
+            <div className="text-3xl font-bold text-green-600 dark:text-green-400">
               {statsOverview?.totalEngines || engines.length}
             </div>
             <div className="text-sm text-gray-500 dark:text-gray-400">Rocket Engines</div>
           </div>
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
-            <div className="text-3xl font-bold text-purple-600">
+          <div className="glass-tinted-purple p-4 text-center">
+            <div className="text-3xl font-bold text-purple-600 dark:text-purple-400">
               {statsOverview?.humanSpaceflightCapable || countries.filter(c => c.humanSpaceflightCapable).length}
             </div>
             <div className="text-sm text-gray-500 dark:text-gray-400">Human Spaceflight</div>
           </div>
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
-            <div className="text-3xl font-bold text-orange-600">
+          <div className="glass-tinted-orange p-4 text-center">
+            <div className="text-3xl font-bold text-orange-600 dark:text-orange-400">
               {statsOverview?.reusableRocketCapable || countries.filter(c => c.reusableRocketCapable).length}
             </div>
             <div className="text-sm text-gray-500 dark:text-gray-400">Reusable Rockets</div>
@@ -136,26 +136,26 @@ export default function AnalyticsPage() {
         {/* Additional Stats Row */}
         {statsOverview && (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
-              <div className="text-3xl font-bold text-blue-600">
+            <div className="glass-tinted-blue p-4 text-center">
+              <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
                 {statsOverview.totalLaunchVehicles || 0}
               </div>
               <div className="text-sm text-gray-500 dark:text-gray-400">Launch Vehicles</div>
             </div>
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
-              <div className="text-3xl font-bold text-cyan-600">
+            <div className="glass-tinted-teal p-4 text-center">
+              <div className="text-3xl font-bold text-cyan-600 dark:text-cyan-400">
                 {statsOverview.totalSatellites || 0}
               </div>
               <div className="text-sm text-gray-500 dark:text-gray-400">Satellites</div>
             </div>
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
-              <div className="text-3xl font-bold text-pink-600">
+            <div className="glass-tinted-purple p-4 text-center">
+              <div className="text-3xl font-bold text-pink-600 dark:text-pink-400">
                 {statsOverview.totalMissions || 0}
               </div>
               <div className="text-sm text-gray-500 dark:text-gray-400">Missions</div>
             </div>
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
-              <div className="text-3xl font-bold text-yellow-600">
+            <div className="glass-tinted-yellow p-4 text-center">
+              <div className="text-3xl font-bold text-yellow-600 dark:text-yellow-400">
                 {statsOverview.totalLaunchSites || 0}
               </div>
               <div className="text-sm text-gray-500 dark:text-gray-400">Launch Sites</div>
@@ -164,8 +164,8 @@ export default function AnalyticsPage() {
         )}
 
         {/* Tab Navigation */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md mb-6">
-          <div className="flex overflow-x-auto border-b dark:border-gray-700">
+        <div className="glass-panel mb-6">
+          <div className="flex overflow-x-auto border-b border-gray-200/30 dark:border-white/[0.08]">
             {[
               { id: 'launches', label: 'Launch Activity', icon: 'rocket' },
               { id: 'records', label: 'World Records', icon: 'trophy' },
@@ -195,7 +195,7 @@ export default function AnalyticsPage() {
           <div className="space-y-6">
             {/* Loading state */}
             {launchDataLoading ? (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-12 text-center">
+              <div className="glass-panel p-12 text-center">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto mb-4"></div>
                 <p className="text-gray-600 dark:text-gray-400">Loading launch activity data...</p>
               </div>
@@ -209,7 +209,7 @@ export default function AnalyticsPage() {
 
                 {/* Launch Summary Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                  <div className="glass-panel p-6">
                     <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">2024 Launch Leaders</h3>
                     <div className="space-y-3">
                       {Object.entries(launchData.byCountry)
@@ -230,7 +230,7 @@ export default function AnalyticsPage() {
                     </div>
                   </div>
 
-                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                  <div className="glass-panel p-6">
                     <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Year-over-Year Growth</h3>
                     <div className="space-y-3">
                       {Object.entries(launchData.byCountry)
@@ -253,7 +253,7 @@ export default function AnalyticsPage() {
                     </div>
                   </div>
 
-                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                  <div className="glass-panel p-6">
                     <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Key Insights</h3>
                     <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
                       <li className="flex items-start gap-2">
@@ -277,7 +277,7 @@ export default function AnalyticsPage() {
                 </div>
               </>
             ) : (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-12 text-center">
+              <div className="glass-panel p-12 text-center">
                 <SpaceIcon name="rocket" size="4xl" />
                 <h3 className="text-xl font-semibold text-gray-800 dark:text-white mt-4 mb-2">
                   Launch Frequency Data Not Available
@@ -295,7 +295,7 @@ export default function AnalyticsPage() {
             <h2 className="text-2xl font-bold text-gray-800 dark:text-white">World Records & Achievements</h2>
 
             {/* Engine Records */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <div className="glass-panel p-6">
               <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Engine Records</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <RecordCard
@@ -334,7 +334,7 @@ export default function AnalyticsPage() {
             </div>
 
             {/* Country Records */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <div className="glass-panel p-6">
               <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Country Records</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <RecordCard
@@ -365,7 +365,7 @@ export default function AnalyticsPage() {
             </div>
 
             {/* Vehicle & Infrastructure Records */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <div className="glass-panel p-6">
               <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Vehicle & Infrastructure Records</h3>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <RecordCard
@@ -411,7 +411,7 @@ export default function AnalyticsPage() {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Propellant Trends */}
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+              <div className="glass-panel p-6">
                 <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Propellant Distribution</h3>
                 <div className="space-y-4">
                   <TrendBar
@@ -445,7 +445,7 @@ export default function AnalyticsPage() {
               </div>
 
               {/* Engine Cycle Trends */}
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+              <div className="glass-panel p-6">
                 <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Engine Cycle Distribution</h3>
                 <div className="space-y-4">
                   <TrendBar
@@ -479,27 +479,27 @@ export default function AnalyticsPage() {
               </div>
 
               {/* Reusability Trends */}
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 lg:col-span-2">
+              <div className="glass-panel p-6 lg:col-span-2">
                 <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Reusability Revolution</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="text-center p-4 bg-green-50 dark:bg-green-900/30 rounded-lg">
+                  <div className="text-center p-4 glass-tinted-green">
                     <div className="text-3xl font-bold text-green-600 dark:text-green-400">{trends.reusabilityTrend.reusableVehicles}</div>
                     <div className="text-sm text-gray-600 dark:text-gray-400">Reusable Vehicles</div>
                   </div>
-                  <div className="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                  <div className="text-center p-4 bg-gray-500/10 dark:bg-white/[0.06] rounded-[12px] border border-gray-200/30 dark:border-white/[0.08]">
                     <div className="text-3xl font-bold text-gray-600 dark:text-gray-300">{trends.reusabilityTrend.expendableVehicles}</div>
                     <div className="text-sm text-gray-600 dark:text-gray-400">Expendable Vehicles</div>
                   </div>
-                  <div className="text-center p-4 bg-green-50 dark:bg-green-900/30 rounded-lg">
+                  <div className="text-center p-4 glass-tinted-green">
                     <div className="text-3xl font-bold text-green-600 dark:text-green-400">{trends.reusabilityTrend.reusableEngines}</div>
                     <div className="text-sm text-gray-600 dark:text-gray-400">Reusable Engines</div>
                   </div>
-                  <div className="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                  <div className="text-center p-4 bg-gray-500/10 dark:bg-white/[0.06] rounded-[12px] border border-gray-200/30 dark:border-white/[0.08]">
                     <div className="text-3xl font-bold text-gray-600 dark:text-gray-300">{trends.reusabilityTrend.expendableEngines}</div>
                     <div className="text-sm text-gray-600 dark:text-gray-400">Expendable Engines</div>
                   </div>
                 </div>
-                <div className="mt-4 p-4 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg">
+                <div className="mt-4 p-4 glass-tinted-indigo">
                   <p className="text-sm text-indigo-800 dark:text-indigo-300">
                     <strong>The Reusability Shift:</strong> SpaceX pioneered routine reusability, dropping launch costs by ~90%.
                     Now China, Europe, and others are racing to develop their own reusable systems.
@@ -516,7 +516,7 @@ export default function AnalyticsPage() {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Established Powers */}
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+              <div className="glass-panel p-6">
                 <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
                   <SpaceIcon name="trophy" size="xl" /> Established Powers
                 </h3>
@@ -525,7 +525,7 @@ export default function AnalyticsPage() {
                     <Link
                       key={country.id}
                       to={`/countries/${country.isoCode}`}
-                      className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition"
+                      className="flex items-center justify-between p-2 rounded-[10px] hover:bg-gray-500/10 dark:hover:bg-white/[0.06] transition"
                     >
                       <div className="flex items-center gap-2">
                         {country.flagUrl && (
@@ -542,7 +542,7 @@ export default function AnalyticsPage() {
               </div>
 
               {/* Emerging Powers */}
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+              <div className="glass-panel p-6">
                 <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
                   <SpaceIcon name="rocket" size="xl" /> Emerging Powers
                 </h3>
@@ -551,7 +551,7 @@ export default function AnalyticsPage() {
                     <Link
                       key={country.id}
                       to={`/countries/${country.isoCode}`}
-                      className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition"
+                      className="flex items-center justify-between p-2 rounded-[10px] hover:bg-gray-500/10 dark:hover:bg-white/[0.06] transition"
                     >
                       <div className="flex items-center gap-2">
                         {country.flagUrl && (
@@ -573,7 +573,7 @@ export default function AnalyticsPage() {
               </div>
 
               {/* Rising Contenders */}
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+              <div className="glass-panel p-6">
                 <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
                   <SpaceIcon name="star" size="xl" /> Rising Contenders
                 </h3>
@@ -582,7 +582,7 @@ export default function AnalyticsPage() {
                     <Link
                       key={country.id}
                       to={`/countries/${country.isoCode}`}
-                      className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition"
+                      className="flex items-center justify-between p-2 rounded-[10px] hover:bg-gray-500/10 dark:hover:bg-white/[0.06] transition"
                     >
                       <div className="flex items-center gap-2">
                         {country.flagUrl && (
@@ -605,7 +605,7 @@ export default function AnalyticsPage() {
             </div>
 
             {/* Achievement Distribution */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <div className="glass-panel p-6">
               <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Capability Achievement Distribution</h3>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                 {[
@@ -616,7 +616,7 @@ export default function AnalyticsPage() {
                   { key: 'lunarLanding', label: 'Lunar Landing', icon: 'moon', color: 'yellow' },
                   { key: 'marsLanding', label: 'Mars Landing', icon: 'globe', color: 'orange' },
                 ].map(item => (
-                  <div key={item.key} className="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                  <div key={item.key} className="text-center p-4 bg-gray-500/10 dark:bg-white/[0.06] rounded-[12px] border border-gray-200/30 dark:border-white/[0.08]">
                     <div className="mb-2"><SpaceIcon name={item.icon} size="2xl" /></div>
                     <div className={`text-2xl font-bold text-${item.color}-600 dark:text-${item.color}-400`}>
                       {analysis.achievements[item.key]?.length || 0}
@@ -639,7 +639,7 @@ export default function AnalyticsPage() {
               title="Engine Performance: Thrust vs Specific Impulse"
             />
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+              <div className="glass-panel p-6">
                 <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-3">High Thrust Engines</h3>
                 <div className="space-y-2">
                   {[...engines]
@@ -657,7 +657,7 @@ export default function AnalyticsPage() {
                     ))}
                 </div>
               </div>
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+              <div className="glass-panel p-6">
                 <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-3">High Efficiency Engines</h3>
                 <div className="space-y-2">
                   {[...engines]
@@ -675,7 +675,7 @@ export default function AnalyticsPage() {
                     ))}
                 </div>
               </div>
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+              <div className="glass-panel p-6">
                 <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-3">Engine by Cycle Type</h3>
                 <div className="space-y-2">
                   {Object.entries(
@@ -710,14 +710,14 @@ export default function AnalyticsPage() {
                   showLegend={true}
                 />
               </div>
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+              <div className="glass-panel p-6">
                 <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Capability Rankings</h3>
                 <div className="space-y-4">
                   {topCountries.map((country, idx) => (
                     <Link
                       key={country.id}
                       to={`/countries/${country.isoCode}`}
-                      className="flex items-center gap-4 hover:bg-gray-50 dark:hover:bg-gray-700 p-2 rounded-lg transition"
+                      className="flex items-center gap-4 hover:bg-gray-500/10 dark:hover:bg-white/[0.06] p-2 rounded-[10px] transition"
                     >
                       <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-white ${
                         idx === 0 ? 'bg-yellow-500' :
@@ -754,7 +754,7 @@ export default function AnalyticsPage() {
             </div>
 
             {/* Capability Distribution */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <div className="glass-panel p-6">
               <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Global Capability Distribution</h3>
               <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                 {[
@@ -767,7 +767,7 @@ export default function AnalyticsPage() {
                   const count = countries.filter(c => c[cap.key]).length;
                   const percentage = ((count / countries.length) * 100).toFixed(0);
                   return (
-                    <div key={cap.key} className="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                    <div key={cap.key} className="text-center p-4 bg-gray-500/10 dark:bg-white/[0.06] rounded-[12px] border border-gray-200/30 dark:border-white/[0.08]">
                       <div className="mb-2"><SpaceIcon name={cap.icon} size="2xl" /></div>
                       <div className={`text-2xl font-bold text-${cap.color}-600 dark:text-${cap.color}-400`}>{count}</div>
                       <div className="text-xs text-gray-500 dark:text-gray-400">{cap.label}</div>

@@ -35,7 +35,7 @@ function CountrySelector({ countries, selectedIds, onToggle, maxSelections }) {
   const isSelected = (id) => selectedIds.includes(id);
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
+    <div className="glass-panel p-4">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-lg font-semibold text-gray-800 dark:text-white">Select Countries</h3>
         <span className="text-sm text-gray-500 dark:text-gray-400">
@@ -49,7 +49,7 @@ function CountrySelector({ countries, selectedIds, onToggle, maxSelections }) {
         placeholder="Search countries or agencies..."
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
-        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg mb-4 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+        className="glass-input w-full px-4 py-2 mb-4"
       />
 
       {/* Country grid */}
@@ -63,12 +63,12 @@ function CountrySelector({ countries, selectedIds, onToggle, maxSelections }) {
               key={country.id}
               onClick={() => !disabled && onToggle(country.id)}
               disabled={disabled}
-              className={`flex items-center gap-2 p-2 rounded-lg transition-all text-left ${
+              className={`flex items-center gap-2 p-2 rounded-[12px] transition-all text-left border ${
                 selected
-                  ? 'bg-indigo-100 dark:bg-indigo-900/50 ring-2 ring-indigo-500'
+                  ? 'bg-indigo-500/15 dark:bg-indigo-500/20 border-indigo-500 ring-1 ring-indigo-500/50'
                   : disabled
-                  ? 'bg-gray-100 dark:bg-gray-700 opacity-50 cursor-not-allowed'
-                  : 'bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600'
+                  ? 'bg-gray-500/10 dark:bg-white/[0.06] border-gray-200/30 dark:border-white/[0.08] opacity-50 cursor-not-allowed'
+                  : 'bg-gray-500/10 dark:bg-white/[0.06] border-gray-200/30 dark:border-white/[0.08] hover:bg-gray-500/15 dark:hover:bg-white/[0.08]'
               }`}
             >
               {country.flagUrl ? (
@@ -110,9 +110,9 @@ function CountrySelector({ countries, selectedIds, onToggle, maxSelections }) {
  */
 function ComparisonCard({ country, rank }) {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+    <div className="glass-panel overflow-hidden">
       {/* Header with flag and name */}
-      <div className="bg-gradient-to-r from-indigo-500 to-purple-500 p-4 text-white">
+      <div className="bg-gradient-to-r from-indigo-500/90 to-purple-500/90 p-4 text-white">
         <div className="flex items-center gap-3">
           {country.flagUrl ? (
             <img
@@ -131,18 +131,18 @@ function ComparisonCard({ country, rank }) {
       </div>
 
       {/* Score */}
-      <div className="p-4 text-center border-b dark:border-gray-700">
-        <div className="text-4xl font-bold text-indigo-600">
+      <div className="p-4 text-center border-b border-gray-200/50 dark:border-white/[0.08]">
+        <div className="text-4xl font-bold text-indigo-600 dark:text-indigo-400">
           {(country.overallCapabilityScore || 0).toFixed(0)}
         </div>
         <div className="text-sm text-gray-500 dark:text-gray-400">Space Capability Index</div>
         {rank && (
           <div className="mt-2">
             <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-bold ${
-              rank === 1 ? 'bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-300' :
-              rank === 2 ? 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300' :
-              rank === 3 ? 'bg-orange-100 dark:bg-orange-900/50 text-orange-800 dark:text-orange-300' :
-              'bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300'
+              rank === 1 ? 'bg-yellow-500/15 dark:bg-yellow-500/20 text-yellow-800 dark:text-yellow-300 border border-yellow-500/20' :
+              rank === 2 ? 'bg-gray-500/15 dark:bg-white/[0.08] text-gray-800 dark:text-gray-300 border border-gray-200/30 dark:border-white/[0.08]' :
+              rank === 3 ? 'bg-orange-500/15 dark:bg-orange-500/20 text-orange-800 dark:text-orange-300 border border-orange-500/20' :
+              'bg-blue-500/15 dark:bg-blue-500/20 text-blue-800 dark:text-blue-300 border border-blue-500/20'
             }`}>
               #{rank} in selection
             </span>
@@ -177,32 +177,32 @@ function ComparisonCard({ country, rank }) {
         <div className="text-sm text-gray-500 dark:text-gray-400 mb-2">Capabilities</div>
         <div className="flex flex-wrap gap-2">
           {country.humanSpaceflightCapable && (
-            <span className="inline-flex items-center px-2 py-1 rounded bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300 text-xs">
+            <span className="inline-flex items-center px-2 py-1 rounded-full bg-green-500/15 dark:bg-green-500/20 text-green-800 dark:text-green-300 text-xs border border-green-500/20">
               Human Spaceflight
             </span>
           )}
           {country.independentLaunchCapable && (
-            <span className="inline-flex items-center px-2 py-1 rounded bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 text-xs">
+            <span className="inline-flex items-center px-2 py-1 rounded-full bg-blue-500/15 dark:bg-blue-500/20 text-blue-800 dark:text-blue-300 text-xs border border-blue-500/20">
               Independent Launch
             </span>
           )}
           {country.reusableRocketCapable && (
-            <span className="inline-flex items-center px-2 py-1 rounded bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-300 text-xs">
+            <span className="inline-flex items-center px-2 py-1 rounded-full bg-purple-500/15 dark:bg-purple-500/20 text-purple-800 dark:text-purple-300 text-xs border border-purple-500/20">
               Reusable Rockets
             </span>
           )}
           {country.deepSpaceCapable && (
-            <span className="inline-flex items-center px-2 py-1 rounded bg-indigo-100 dark:bg-indigo-900/50 text-indigo-800 dark:text-indigo-300 text-xs">
+            <span className="inline-flex items-center px-2 py-1 rounded-full bg-indigo-500/15 dark:bg-indigo-500/20 text-indigo-800 dark:text-indigo-300 text-xs border border-indigo-500/20">
               Deep Space
             </span>
           )}
           {country.spaceStationCapable && (
-            <span className="inline-flex items-center px-2 py-1 rounded bg-orange-100 dark:bg-orange-900/50 text-orange-800 dark:text-orange-300 text-xs">
+            <span className="inline-flex items-center px-2 py-1 rounded-full bg-orange-500/15 dark:bg-orange-500/20 text-orange-800 dark:text-orange-300 text-xs border border-orange-500/20">
               Space Station
             </span>
           )}
           {!country.humanSpaceflightCapable && !country.independentLaunchCapable && (
-            <span className="inline-flex items-center px-2 py-1 rounded bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 text-xs">
+            <span className="inline-flex items-center px-2 py-1 rounded-full bg-gray-500/15 dark:bg-white/[0.08] text-gray-600 dark:text-gray-400 text-xs border border-gray-200/30 dark:border-white/[0.08]">
               Developing Program
             </span>
           )}
@@ -210,7 +210,7 @@ function ComparisonCard({ country, rank }) {
       </div>
 
       {/* View Details Link */}
-      <div className="border-t dark:border-gray-700 p-4">
+      <div className="border-t border-gray-200/50 dark:border-white/[0.08] p-4">
         <Link
           to={`/countries/${country.isoCode}`}
           className="block text-center text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium text-sm"
@@ -227,7 +227,7 @@ function ComparisonCard({ country, rank }) {
  */
 function TabNavigation({ activeTab, onTabChange, selectedCount }) {
   return (
-    <div className="flex border-b border-gray-200 dark:border-gray-700 mb-6">
+    <div className="flex border-b border-gray-200/50 dark:border-white/[0.08] mb-6">
       {TABS.map(tab => {
         // Disable certain tabs based on selection count
         const isDisabled =
@@ -267,7 +267,7 @@ function TabNavigation({ activeTab, onTabChange, selectedCount }) {
 function OverviewTab({ selectedCountries }) {
   if (selectedCountries.length === 0) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-12 text-center">
+      <div className="glass-panel p-12 text-center">
         <div className="text-6xl mb-4"><SpaceIcon name="satellite" size="4xl" /></div>
         <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-2">
           Select Countries to Compare
@@ -315,30 +315,30 @@ function OverviewTab({ selectedCountries }) {
       </div>
 
       {/* Summary Stats */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+      <div className="glass-panel p-6">
         <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
           Comparison Summary
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="text-center p-4 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg">
+          <div className="glass-tinted-indigo text-center p-4">
             <div className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
               {selectedCountries[0]?.name || '—'}
             </div>
             <div className="text-sm text-gray-500 dark:text-gray-400">Highest Score</div>
           </div>
-          <div className="text-center p-4 bg-green-50 dark:bg-green-900/30 rounded-lg">
+          <div className="glass-tinted-green text-center p-4">
             <div className="text-2xl font-bold text-green-600 dark:text-green-400">
               {selectedCountries.filter(c => c.humanSpaceflightCapable).length}
             </div>
             <div className="text-sm text-gray-500 dark:text-gray-400">Human Spaceflight</div>
           </div>
-          <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
+          <div className="glass-tinted-blue text-center p-4">
             <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
               {selectedCountries.filter(c => c.independentLaunchCapable).length}
             </div>
             <div className="text-sm text-gray-500 dark:text-gray-400">Independent Launch</div>
           </div>
-          <div className="text-center p-4 bg-purple-50 dark:bg-purple-900/30 rounded-lg">
+          <div className="glass-tinted-purple text-center p-4">
             <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
               {selectedCountries.filter(c => c.reusableRocketCapable).length}
             </div>
@@ -430,11 +430,11 @@ export default function CountryComparisonPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+      <div className="min-h-screen py-8">
         <div className="container mx-auto px-4">
           <div className="text-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto mb-4"></div>
-            <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Loading countries...</p>
+            <p className="text-gray-600 dark:text-gray-400">Loading countries...</p>
           </div>
         </div>
       </div>
@@ -443,9 +443,9 @@ export default function CountryComparisonPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+      <div className="min-h-screen py-8">
         <div className="container mx-auto px-4">
-          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 text-center">
+          <div className="glass-tinted-red p-6 text-center">
             <h2 className="text-lg font-semibold text-red-800 dark:text-red-400 mb-2">Error Loading Data</h2>
             <p className="text-red-600 dark:text-red-400">{error}</p>
           </div>
@@ -455,14 +455,14 @@ export default function CountryComparisonPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+    <div className="min-h-screen py-8">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
             Country Comparison Tool
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400">
+          <p className="text-gray-600 dark:text-gray-400">
             Compare space capabilities across nations with detailed gap analysis and SWOT assessments
           </p>
         </div>
@@ -550,7 +550,7 @@ export default function CountryComparisonPage() {
             )}
 
             {activeTab === 'gap-analysis' && selectedCountries.length !== 2 && (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-12 text-center">
+              <div className="glass-panel p-12 text-center">
                 <div className="text-6xl mb-4"><SpaceIcon name="chart" size="4xl" /></div>
                 <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-2">
                   Select Exactly Two Countries
@@ -570,7 +570,7 @@ export default function CountryComparisonPage() {
             )}
 
             {activeTab === 'swot' && selectedCountries.length !== 1 && (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-12 text-center">
+              <div className="glass-panel p-12 text-center">
                 <div className="text-6xl mb-4"><SpaceIcon name="target" size="4xl" /></div>
                 <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-2">
                   Select One Country
@@ -586,7 +586,7 @@ export default function CountryComparisonPage() {
 
         {/* Empty State */}
         {selectedCountries.length === 0 && (
-          <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-md p-12 text-center">
+          <div className="mt-8 glass-panel p-12 text-center">
             <div className="text-6xl mb-4"><SpaceIcon name="satellite" size="4xl" /></div>
             <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-2">
               Select Countries to Compare
@@ -595,7 +595,7 @@ export default function CountryComparisonPage() {
               Choose up to {MAX_COMPARE_COUNTRIES} countries from the selector above to see a
               detailed comparison of their space capabilities.
             </p>
-            <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">
+            <div className="text-sm text-gray-500 dark:text-gray-400">
               <p className="mb-2"><strong>Tip:</strong> Use the quick select buttons above for common comparisons</p>
               <ul className="space-y-1">
                 <li>Select 1 country for SWOT Analysis</li>

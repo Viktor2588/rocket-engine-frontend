@@ -51,7 +51,7 @@ function EngineVariantsSection({ variants, formatNumber }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
+    <div className="glass-panel p-6 mb-8">
       <button
         onClick={() => setIsExpanded(!isExpanded)}
         className="w-full flex items-center justify-between text-left"
@@ -78,7 +78,7 @@ function EngineVariantsSection({ variants, formatNumber }) {
             <Link
               key={variant.id}
               to={`/engines/${variant.id}`}
-              className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition"
+              className="flex items-center justify-between p-4 bg-gray-500/10 dark:bg-white/[0.06] rounded-[12px] hover:bg-gray-500/15 dark:hover:bg-white/[0.08] transition border border-gray-200/30 dark:border-white/[0.08]"
             >
               <div className="flex items-center gap-4">
                 <div className="text-2xl">🔥</div>
@@ -126,21 +126,21 @@ function EngineVariantsSection({ variants, formatNumber }) {
  */
 function StatBox({ label, value, unit, color = 'indigo' }) {
   const colorClasses = {
-    indigo: 'text-indigo-600',
-    green: 'text-green-600',
-    blue: 'text-blue-600',
-    orange: 'text-orange-600',
-    purple: 'text-purple-600',
-    red: 'text-red-600',
+    indigo: 'glass-tinted-indigo text-indigo-600 dark:text-indigo-400',
+    green: 'glass-tinted-green text-green-600 dark:text-green-400',
+    blue: 'glass-tinted-blue text-blue-600 dark:text-blue-400',
+    orange: 'glass-tinted-orange text-orange-600 dark:text-orange-400',
+    purple: 'glass-tinted-purple text-purple-600 dark:text-purple-400',
+    red: 'glass-tinted-red text-red-600 dark:text-red-400',
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
-      <div className={`text-2xl font-bold ${colorClasses[color]}`}>
+    <div className={`${colorClasses[color]} p-4 text-center`}>
+      <div className="text-2xl font-bold">
         {value}
-        {unit && <span className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400 ml-1">{unit}</span>}
+        {unit && <span className="text-sm opacity-70 ml-1">{unit}</span>}
       </div>
-      <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">{label}</div>
+      <div className="text-sm opacity-70">{label}</div>
     </div>
   );
 }
@@ -155,7 +155,7 @@ export default function EngineDetailPage() {
       <div className="container mx-auto px-4 py-12">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Loading engine details...</p>
+          <p className="text-gray-600 dark:text-gray-400">Loading engine details...</p>
         </div>
       </div>
     );
@@ -164,12 +164,12 @@ export default function EngineDetailPage() {
   if (error || !engine) {
     return (
       <div className="container mx-auto px-4 py-12">
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 text-center">
+        <div className="glass-tinted-red p-6 text-center">
           <h2 className="text-lg font-semibold text-red-800 dark:text-red-400 mb-2">Engine Not Found</h2>
           <p className="text-red-600 dark:text-red-400">{error || 'The requested engine could not be found.'}</p>
           <Link
             to="/engines"
-            className="inline-block mt-4 px-4 py-2 bg-indigo-500 text-white rounded hover:bg-indigo-600"
+            className="inline-block mt-4 glass-button-primary"
           >
             Back to Engines
           </Link>
@@ -182,7 +182,7 @@ export default function EngineDetailPage() {
   const ispSL = engine.ispSeaLevel || engine.isp;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+    <div className="min-h-screen py-8">
       <div className="container mx-auto px-4">
         {/* Back Link */}
         <Link
@@ -196,7 +196,7 @@ export default function EngineDetailPage() {
         </Link>
 
         {/* Header */}
-        <div className="bg-gradient-to-r from-indigo-700 to-indigo-900 rounded-lg shadow-lg p-6 mb-8 text-white">
+        <div className="glass-panel-heavy bg-gradient-to-r from-indigo-600/90 to-indigo-800/90 dark:from-indigo-700/80 dark:to-indigo-900/80 p-6 mb-8 text-white">
           <div className="flex flex-col md:flex-row justify-between items-start gap-4">
             {/* Engine Image */}
             {engine.imageUrl && (
@@ -339,43 +339,43 @@ export default function EngineDetailPage() {
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Performance Specifications */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+          <div className="glass-panel p-6">
             <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
               🚀 Performance Specifications
             </h2>
             <div className="space-y-4">
-              <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700 dark:border-gray-700">
-                <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">ISP (Sea Level)</span>
+              <div className="flex justify-between items-center py-2 border-b border-gray-200/50 dark:border-white/[0.08]">
+                <span className="text-gray-600 dark:text-gray-400">ISP (Sea Level)</span>
                 <span className="font-bold text-gray-800 dark:text-white">
                   {ispSL ? `${ispSL} s` : '—'}
                 </span>
               </div>
-              <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700 dark:border-gray-700">
-                <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">ISP (Vacuum)</span>
+              <div className="flex justify-between items-center py-2 border-b border-gray-200/50 dark:border-white/[0.08]">
+                <span className="text-gray-600 dark:text-gray-400">ISP (Vacuum)</span>
                 <span className="font-bold text-gray-800 dark:text-white">
                   {isp ? `${isp} s` : '—'}
                 </span>
               </div>
-              <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700 dark:border-gray-700">
-                <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Thrust (Sea Level)</span>
+              <div className="flex justify-between items-center py-2 border-b border-gray-200/50 dark:border-white/[0.08]">
+                <span className="text-gray-600 dark:text-gray-400">Thrust (Sea Level)</span>
                 <span className="font-bold text-gray-800 dark:text-white">
                   {engine.thrustKn ? `${formatNumber(engine.thrustKn)} kN` : '—'}
                 </span>
               </div>
-              <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700 dark:border-gray-700">
-                <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Thrust (Vacuum)</span>
+              <div className="flex justify-between items-center py-2 border-b border-gray-200/50 dark:border-white/[0.08]">
+                <span className="text-gray-600 dark:text-gray-400">Thrust (Vacuum)</span>
                 <span className="font-bold text-gray-800 dark:text-white">
                   {engine.thrustVacuumKn ? `${formatNumber(engine.thrustVacuumKn)} kN` : '—'}
                 </span>
               </div>
-              <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700 dark:border-gray-700">
-                <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Chamber Pressure</span>
+              <div className="flex justify-between items-center py-2 border-b border-gray-200/50 dark:border-white/[0.08]">
+                <span className="text-gray-600 dark:text-gray-400">Chamber Pressure</span>
                 <span className="font-bold text-gray-800 dark:text-white">
                   {engine.chamberPressureBar ? `${engine.chamberPressureBar} bar` : '—'}
                 </span>
               </div>
               <div className="flex justify-between items-center py-2">
-                <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Nozzle Expansion Ratio</span>
+                <span className="text-gray-600 dark:text-gray-400">Nozzle Expansion Ratio</span>
                 <span className="font-bold text-gray-800 dark:text-white">
                   {engine.nozzleExpansionRatio ? `${engine.nozzleExpansionRatio}:1` : '—'}
                 </span>
@@ -384,43 +384,43 @@ export default function EngineDetailPage() {
           </div>
 
           {/* Technical Details */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+          <div className="glass-panel p-6">
             <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
               ⚙️ Technical Details
             </h2>
             <div className="space-y-4">
-              <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700 dark:border-gray-700">
-                <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Power Cycle</span>
+              <div className="flex justify-between items-center py-2 border-b border-gray-200/50 dark:border-white/[0.08]">
+                <span className="text-gray-600 dark:text-gray-400">Power Cycle</span>
                 <span className="font-bold text-gray-800 dark:text-white">
                   {engine.powerCycle || '—'}
                 </span>
               </div>
-              <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700 dark:border-gray-700">
-                <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Propellant</span>
+              <div className="flex justify-between items-center py-2 border-b border-gray-200/50 dark:border-white/[0.08]">
+                <span className="text-gray-600 dark:text-gray-400">Propellant</span>
                 <span className="font-bold text-gray-800 dark:text-white">
                   {engine.propellant || '—'}
                 </span>
               </div>
-              <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700 dark:border-gray-700">
-                <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">O/F Ratio</span>
+              <div className="flex justify-between items-center py-2 border-b border-gray-200/50 dark:border-white/[0.08]">
+                <span className="text-gray-600 dark:text-gray-400">O/F Ratio</span>
                 <span className="font-bold text-gray-800 dark:text-white">
                   {engine.ofRatio ?? '—'}
                 </span>
               </div>
-              <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700 dark:border-gray-700">
-                <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Dry Mass</span>
+              <div className="flex justify-between items-center py-2 border-b border-gray-200/50 dark:border-white/[0.08]">
+                <span className="text-gray-600 dark:text-gray-400">Dry Mass</span>
                 <span className="font-bold text-gray-800 dark:text-white">
                   {engine.massKg ? `${formatNumber(engine.massKg)} kg` : '—'}
                 </span>
               </div>
-              <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700 dark:border-gray-700">
-                <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Vehicle</span>
+              <div className="flex justify-between items-center py-2 border-b border-gray-200/50 dark:border-white/[0.08]">
+                <span className="text-gray-600 dark:text-gray-400">Vehicle</span>
                 <span className="font-bold text-gray-800 dark:text-white">
                   {engine.vehicle || '—'}
                 </span>
               </div>
               <div className="flex justify-between items-center py-2">
-                <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Stage Position</span>
+                <span className="text-gray-600 dark:text-gray-400">Stage Position</span>
                 <span className="font-bold text-gray-800 dark:text-white">
                   {engine.use || '—'}
                 </span>
@@ -429,20 +429,20 @@ export default function EngineDetailPage() {
           </div>
 
           {/* Throttle & Control */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+          <div className="glass-panel p-6">
             <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
               🎚️ Throttle & Control
             </h2>
             <div className="space-y-4">
-              <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700 dark:border-gray-700">
-                <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Throttle Capable</span>
-                <span className={`font-bold ${engine.throttleCapable ? 'text-green-600' : 'text-gray-400'}`}>
+              <div className="flex justify-between items-center py-2 border-b border-gray-200/50 dark:border-white/[0.08]">
+                <span className="text-gray-600 dark:text-gray-400">Throttle Capable</span>
+                <span className={`font-bold ${engine.throttleCapable ? 'text-green-600 dark:text-green-400' : 'text-gray-400'}`}>
                   {engine.throttleCapable ? 'Yes' : 'No'}
                 </span>
               </div>
               {engine.throttleCapable && (
-                <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700 dark:border-gray-700">
-                  <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Throttle Range</span>
+                <div className="flex justify-between items-center py-2 border-b border-gray-200/50 dark:border-white/[0.08]">
+                  <span className="text-gray-600 dark:text-gray-400">Throttle Range</span>
                   <span className="font-bold text-gray-800 dark:text-white">
                     {engine.throttleMinPercent && engine.throttleMaxPercent
                       ? `${engine.throttleMinPercent}% - ${engine.throttleMaxPercent}%`
@@ -450,29 +450,29 @@ export default function EngineDetailPage() {
                   </span>
                 </div>
               )}
-              <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700 dark:border-gray-700">
-                <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Gimbal Capable</span>
-                <span className={`font-bold ${engine.gimbalCapable ? 'text-green-600' : 'text-gray-400'}`}>
+              <div className="flex justify-between items-center py-2 border-b border-gray-200/50 dark:border-white/[0.08]">
+                <span className="text-gray-600 dark:text-gray-400">Gimbal Capable</span>
+                <span className={`font-bold ${engine.gimbalCapable ? 'text-green-600 dark:text-green-400' : 'text-gray-400'}`}>
                   {engine.gimbalCapable ? 'Yes' : 'No'}
                 </span>
               </div>
               {engine.gimbalCapable && (
-                <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700 dark:border-gray-700">
-                  <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Gimbal Range</span>
+                <div className="flex justify-between items-center py-2 border-b border-gray-200/50 dark:border-white/[0.08]">
+                  <span className="text-gray-600 dark:text-gray-400">Gimbal Range</span>
                   <span className="font-bold text-gray-800 dark:text-white">
                     {engine.gimbalRangeDegrees ? `±${engine.gimbalRangeDegrees}°` : '—'}
                   </span>
                 </div>
               )}
-              <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700 dark:border-gray-700">
-                <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Restart Capable</span>
-                <span className={`font-bold ${engine.restartCapable ? 'text-green-600' : 'text-gray-400'}`}>
+              <div className="flex justify-between items-center py-2 border-b border-gray-200/50 dark:border-white/[0.08]">
+                <span className="text-gray-600 dark:text-gray-400">Restart Capable</span>
+                <span className={`font-bold ${engine.restartCapable ? 'text-green-600 dark:text-green-400' : 'text-gray-400'}`}>
                   {engine.restartCapable ? 'Yes' : 'No'}
                 </span>
               </div>
               {engine.restartCapable && engine.maxRestarts && (
                 <div className="flex justify-between items-center py-2">
-                  <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Max Restarts</span>
+                  <span className="text-gray-600 dark:text-gray-400">Max Restarts</span>
                   <span className="font-bold text-gray-800 dark:text-white">{engine.maxRestarts}</span>
                 </div>
               )}
@@ -480,31 +480,31 @@ export default function EngineDetailPage() {
           </div>
 
           {/* Reliability & Flight History */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+          <div className="glass-panel p-6">
             <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
               📊 Reliability & History
             </h2>
             <div className="space-y-4">
-              <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700 dark:border-gray-700">
-                <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">First Flight</span>
+              <div className="flex justify-between items-center py-2 border-b border-gray-200/50 dark:border-white/[0.08]">
+                <span className="text-gray-600 dark:text-gray-400">First Flight</span>
                 <span className="font-bold text-gray-800 dark:text-white">
                   {engine.firstFlight || engine.firstFlightYear || '—'}
                 </span>
               </div>
-              <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700 dark:border-gray-700">
-                <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Total Flights</span>
+              <div className="flex justify-between items-center py-2 border-b border-gray-200/50 dark:border-white/[0.08]">
+                <span className="text-gray-600 dark:text-gray-400">Total Flights</span>
                 <span className="font-bold text-gray-800 dark:text-white">
                   {engine.totalFlights ?? '—'}
                 </span>
               </div>
-              <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700 dark:border-gray-700">
-                <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Successful Flights</span>
-                <span className="font-bold text-green-600">
+              <div className="flex justify-between items-center py-2 border-b border-gray-200/50 dark:border-white/[0.08]">
+                <span className="text-gray-600 dark:text-gray-400">Successful Flights</span>
+                <span className="font-bold text-green-600 dark:text-green-400">
                   {engine.successfulFlights ?? '—'}
                 </span>
               </div>
-              <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700 dark:border-gray-700">
-                <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Failed Flights</span>
+              <div className="flex justify-between items-center py-2 border-b border-gray-200/50 dark:border-white/[0.08]">
+                <span className="text-gray-600 dark:text-gray-400">Failed Flights</span>
                 <span className="font-bold text-red-600 dark:text-red-400">
                   {engine.failedFlights ?? (engine.totalFlights && engine.successfulFlights
                     ? engine.totalFlights - engine.successfulFlights
@@ -512,12 +512,12 @@ export default function EngineDetailPage() {
                 </span>
               </div>
               <div className="flex justify-between items-center py-2">
-                <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Reliability Rate</span>
+                <span className="text-gray-600 dark:text-gray-400">Reliability Rate</span>
                 <span className={`font-bold ${
-                  engine.reliabilityRate >= 99 ? 'text-green-600' :
-                  engine.reliabilityRate >= 95 ? 'text-blue-600' :
-                  engine.reliabilityRate >= 90 ? 'text-yellow-600' :
-                  'text-red-600'
+                  engine.reliabilityRate >= 99 ? 'text-green-600 dark:text-green-400' :
+                  engine.reliabilityRate >= 95 ? 'text-blue-600 dark:text-blue-400' :
+                  engine.reliabilityRate >= 90 ? 'text-yellow-600 dark:text-yellow-400' :
+                  'text-red-600 dark:text-red-400'
                 }`}>
                   {engine.reliabilityRate ? `${engine.reliabilityRate.toFixed(1)}%` : '—'}
                 </span>
@@ -527,12 +527,12 @@ export default function EngineDetailPage() {
             {/* Reliability Bar */}
             {engine.reliabilityRate && (
               <div className="mt-4">
-                <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 dark:text-gray-400 mb-1">
+                <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
                   <span>0%</span>
                   <span>Reliability</span>
                   <span>100%</span>
                 </div>
-                <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                <div className="h-3 bg-gray-500/20 dark:bg-white/10 rounded-full overflow-hidden">
                   <div
                     className={`h-full rounded-full ${
                       engine.reliabilityRate >= 99 ? 'bg-green-500' :
@@ -549,25 +549,25 @@ export default function EngineDetailPage() {
 
           {/* Reusability */}
           {engine.reusable && (
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <div className="glass-panel p-6">
               <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
                 ♻️ Reusability
               </h2>
               <div className="space-y-4">
-                <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700 dark:border-gray-700">
-                  <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Reusable</span>
-                  <span className="font-bold text-green-600">Yes</span>
+                <div className="flex justify-between items-center py-2 border-b border-gray-200/50 dark:border-white/[0.08]">
+                  <span className="text-gray-600 dark:text-gray-400">Reusable</span>
+                  <span className="font-bold text-green-600 dark:text-green-400">Yes</span>
                 </div>
-                <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700 dark:border-gray-700">
-                  <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Certified Reuse Flights</span>
+                <div className="flex justify-between items-center py-2 border-b border-gray-200/50 dark:border-white/[0.08]">
+                  <span className="text-gray-600 dark:text-gray-400">Certified Reuse Flights</span>
                   <span className="font-bold text-gray-800 dark:text-white">
                     {engine.reusabilityFlights ?? '—'}
                   </span>
                 </div>
                 {engine.actualReusedFlights && (
                   <div className="flex justify-between items-center py-2">
-                    <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Record Reuses (Single Unit)</span>
-                    <span className="font-bold text-purple-600">
+                    <span className="text-gray-600 dark:text-gray-400">Record Reuses (Single Unit)</span>
+                    <span className="font-bold text-purple-600 dark:text-purple-400">
                       {engine.actualReusedFlights}
                     </span>
                   </div>
@@ -578,19 +578,19 @@ export default function EngineDetailPage() {
 
           {/* Development Info */}
           {(engine.developmentStartYear || engine.developmentCost) && (
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <div className="glass-panel p-6">
               <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
                 🔬 Development
               </h2>
               <div className="space-y-4">
                 {engine.developmentStartYear && (
-                  <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700">
+                  <div className="flex justify-between items-center py-2 border-b border-gray-200/50 dark:border-white/[0.08]">
                     <span className="text-gray-600 dark:text-gray-400">Development Started</span>
                     <span className="font-bold text-gray-800 dark:text-white">{engine.developmentStartYear}</span>
                   </div>
                 )}
                 {engine.developmentCost && (
-                  <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700">
+                  <div className="flex justify-between items-center py-2 border-b border-gray-200/50 dark:border-white/[0.08]">
                     <span className="text-gray-600 dark:text-gray-400">Development Cost</span>
                     <span className="font-bold text-gray-800 dark:text-white">
                       ${(engine.developmentCost / 1e6).toFixed(0)}M
@@ -611,13 +611,13 @@ export default function EngineDetailPage() {
 
           {/* Engine Evolution - Predecessor/Successor */}
           {(engine.predecessorEngineId || engine.successorEngineId) && (
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <div className="glass-panel p-6">
               <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
                 🔗 Engine Evolution
               </h2>
               <div className="space-y-4">
                 {engine.predecessorEngineId && (
-                  <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                  <div className="flex items-center justify-between p-3 bg-gray-500/10 dark:bg-white/[0.06] rounded-[12px] border border-gray-200/30 dark:border-white/[0.08]">
                     <div>
                       <span className="text-sm text-gray-500 dark:text-gray-400">Predecessor</span>
                       <div className="font-semibold text-gray-800 dark:text-white">
@@ -626,20 +626,20 @@ export default function EngineDetailPage() {
                     </div>
                     <Link
                       to={`/engines/${engine.predecessorEngineId}`}
-                      className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 text-sm"
+                      className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 text-sm"
                     >
                       View →
                     </Link>
                   </div>
                 )}
                 <div className="flex items-center justify-center">
-                  <div className="p-3 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg border-2 border-indigo-300 dark:border-indigo-600">
+                  <div className="p-3 bg-indigo-500/15 dark:bg-indigo-500/25 rounded-[12px] border-2 border-indigo-400/30 dark:border-indigo-400/40">
                     <span className="font-bold text-indigo-700 dark:text-indigo-300">{engine.name}</span>
-                    <span className="text-sm text-indigo-500 ml-2">(Current)</span>
+                    <span className="text-sm text-indigo-500 dark:text-indigo-400 ml-2">(Current)</span>
                   </div>
                 </div>
                 {engine.successorEngineId && (
-                  <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                  <div className="flex items-center justify-between p-3 bg-gray-500/10 dark:bg-white/[0.06] rounded-[12px] border border-gray-200/30 dark:border-white/[0.08]">
                     <div>
                       <span className="text-sm text-gray-500 dark:text-gray-400">Successor</span>
                       <div className="font-semibold text-gray-800 dark:text-white">
@@ -648,7 +648,7 @@ export default function EngineDetailPage() {
                     </div>
                     <Link
                       to={`/engines/${engine.successorEngineId}`}
-                      className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 text-sm"
+                      className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 text-sm"
                     >
                       View →
                     </Link>
@@ -660,7 +660,7 @@ export default function EngineDetailPage() {
 
           {/* Launch Vehicles Using This Engine */}
           {engine.launchVehicleIds && engine.launchVehicleIds.length > 0 && (
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <div className="glass-panel p-6">
               <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
                 🚀 Used On Vehicles
               </h2>
@@ -669,7 +669,7 @@ export default function EngineDetailPage() {
                   <Link
                     key={vehicleId}
                     to={`/vehicles/${vehicleId}`}
-                    className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition"
+                    className="flex items-center gap-3 p-3 bg-gray-500/10 dark:bg-white/[0.06] rounded-[12px] hover:bg-gray-500/15 dark:hover:bg-white/[0.08] transition border border-gray-200/30 dark:border-white/[0.08]"
                   >
                     <span className="text-2xl">🚀</span>
                     <span className="font-medium text-gray-800 dark:text-white">
@@ -683,7 +683,7 @@ export default function EngineDetailPage() {
 
           {/* Engine Family */}
           {familyEngines && familyEngines.length > 1 && (
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <div className="glass-panel p-6">
               <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
                 🧬 Engine Family: {engine.engineFamily}
               </h2>
@@ -692,10 +692,10 @@ export default function EngineDetailPage() {
                   <Link
                     key={familyEngine.id}
                     to={`/engines/${familyEngine.id}`}
-                    className={`block p-3 rounded-lg border transition ${
+                    className={`block p-3 rounded-[12px] border transition ${
                       familyEngine.id === engine.id
-                        ? 'bg-indigo-50 dark:bg-indigo-900/30 border-indigo-300 dark:border-indigo-600'
-                        : 'hover:bg-gray-50 dark:hover:bg-gray-700 border-gray-200 dark:border-gray-700 dark:border-gray-700'
+                        ? 'bg-indigo-500/15 dark:bg-indigo-500/25 border-indigo-400/30 dark:border-indigo-400/40'
+                        : 'bg-gray-500/10 dark:bg-white/[0.06] hover:bg-gray-500/15 dark:hover:bg-white/[0.08] border-gray-200/30 dark:border-white/[0.08]'
                     }`}
                   >
                     <div className="flex justify-between items-center">
@@ -704,7 +704,7 @@ export default function EngineDetailPage() {
                           {familyEngine.name}
                         </span>
                         {familyEngine.variant && (
-                          <span className="text-gray-500 dark:text-gray-400 dark:text-gray-400 text-sm ml-1">
+                          <span className="text-gray-500 dark:text-gray-400 text-sm ml-1">
                             ({familyEngine.variant})
                           </span>
                         )}
@@ -712,7 +712,7 @@ export default function EngineDetailPage() {
                           <span className="ml-2 text-xs text-indigo-600 dark:text-indigo-400">(Current)</span>
                         )}
                       </div>
-                      <span className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">
+                      <span className="text-sm text-gray-500 dark:text-gray-400">
                         {familyEngine.firstFlightYear}
                       </span>
                     </div>
@@ -730,7 +730,7 @@ export default function EngineDetailPage() {
               href={engine.wikiUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition"
+              className="glass-button inline-flex items-center gap-2"
             >
               📖 Wikipedia
             </a>
@@ -738,14 +738,14 @@ export default function EngineDetailPage() {
           {engine.countryId && (
             <Link
               to={`/countries/${engine.countryId}`}
-              className="inline-flex items-center px-4 py-2 bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 rounded hover:bg-indigo-200 dark:hover:bg-indigo-800 transition"
+              className="glass-tinted-indigo px-4 py-2 inline-flex items-center gap-2 hover:bg-indigo-500/25 transition"
             >
               {getCountryFlag(engine.countryId)} View Country Profile
             </Link>
           )}
           <Link
             to={`/compare/engines?engine1=${engine.id}`}
-            className="inline-flex items-center px-4 py-2 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded hover:bg-green-200 dark:hover:bg-green-800 transition"
+            className="glass-tinted-green px-4 py-2 inline-flex items-center gap-2 hover:bg-green-500/25 transition"
           >
             ⚖️ Compare This Engine
           </Link>

@@ -13,10 +13,10 @@ const GEO_URL = 'https://unpkg.com/world-atlas@2.0.2/countries-110m.json';
 
 // Status colors
 const STATUS_COLORS = {
-  Active: 'bg-green-100 text-green-800',
-  Inactive: 'bg-gray-100 text-gray-800',
-  'Under Construction': 'bg-yellow-100 text-yellow-800',
-  Decommissioned: 'bg-red-100 text-red-800',
+  Active: 'glass-badge-success',
+  Inactive: 'glass-badge',
+  'Under Construction': 'glass-badge-warning',
+  Decommissioned: 'glass-badge-error',
 };
 
 export default function LaunchSiteDetailPage() {
@@ -25,7 +25,7 @@ export default function LaunchSiteDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
       </div>
     );
@@ -33,8 +33,8 @@ export default function LaunchSiteDetailPage() {
 
   if (error || !launchSite) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="glass-panel p-8 text-center">
           <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">Launch Site Not Found</h2>
           <p className="text-gray-600 dark:text-gray-400 mb-4">{error || 'The requested launch site could not be found.'}</p>
           <Link to="/launch-sites" className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300">
@@ -52,7 +52,7 @@ export default function LaunchSiteDetailPage() {
       : 0);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+    <div className="min-h-screen py-8">
       <div className="container mx-auto px-4">
         {/* Breadcrumb */}
         <nav className="mb-6">
@@ -62,7 +62,7 @@ export default function LaunchSiteDetailPage() {
         </nav>
 
         {/* Header */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+        <div className="glass-panel p-6 mb-6">
           <div className="flex items-start justify-between">
             <div>
               <h1 className="text-3xl font-bold text-gray-800 dark:text-white">{launchSite.name}</h1>
@@ -70,16 +70,16 @@ export default function LaunchSiteDetailPage() {
                 <span className={`px-3 py-1 rounded-full text-sm font-medium ${statusClass}`}>
                   {launchSite.status}
                 </span>
-                <span className="text-gray-500 dark:text-gray-400 dark:text-gray-400">|</span>
-                <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">{launchSite.countryId}</span>
-                <span className="text-gray-500 dark:text-gray-400 dark:text-gray-400">|</span>
-                <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">{launchSite.region}</span>
+                <span className="text-gray-500 dark:text-gray-400">|</span>
+                <span className="text-gray-600 dark:text-gray-400">{launchSite.countryId}</span>
+                <span className="text-gray-500 dark:text-gray-400">|</span>
+                <span className="text-gray-600 dark:text-gray-400">{launchSite.region}</span>
               </div>
             </div>
             {launchSite.countryId && (
               <Link
                 to={`/countries/${launchSite.countryId}`}
-                className="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition"
+                className="glass-tinted-indigo px-4 py-2 hover:bg-indigo-500/25 transition"
               >
                 View Country
               </Link>
@@ -97,29 +97,29 @@ export default function LaunchSiteDetailPage() {
           {/* Left Column - Details */}
           <div className="lg:col-span-2 space-y-6">
             {/* Launch Statistics */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <div className="glass-panel p-6">
               <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Launch Statistics</h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="bg-indigo-50 rounded-lg p-4 text-center">
-                  <span className="text-3xl font-bold text-indigo-600">
+                <div className="glass-tinted-indigo p-4 text-center">
+                  <span className="text-3xl font-bold text-indigo-600 dark:text-indigo-400">
                     {launchSite.totalLaunches || 0}
                   </span>
                   <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Total Launches</p>
                 </div>
-                <div className="bg-green-50 rounded-lg p-4 text-center">
-                  <span className="text-3xl font-bold text-green-600">
+                <div className="glass-tinted-green p-4 text-center">
+                  <span className="text-3xl font-bold text-green-600 dark:text-green-400">
                     {launchSite.successfulLaunches || 0}
                   </span>
                   <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Successful</p>
                 </div>
-                <div className="bg-red-50 rounded-lg p-4 text-center">
+                <div className="glass-tinted-red p-4 text-center">
                   <span className="text-3xl font-bold text-red-600 dark:text-red-400">
                     {(launchSite.totalLaunches || 0) - (launchSite.successfulLaunches || 0)}
                   </span>
                   <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Failed</p>
                 </div>
-                <div className="bg-purple-50 rounded-lg p-4 text-center">
-                  <span className="text-3xl font-bold text-purple-600">
+                <div className="glass-tinted-purple p-4 text-center">
+                  <span className="text-3xl font-bold text-purple-600 dark:text-purple-400">
                     {successRate.toFixed(1)}%
                   </span>
                   <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Success Rate</p>
@@ -132,7 +132,7 @@ export default function LaunchSiteDetailPage() {
                   <span>Success Rate</span>
                   <span>{successRate.toFixed(1)}%</span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-3">
+                <div className="w-full bg-gray-500/20 dark:bg-white/10 rounded-full h-3">
                   <div
                     className="bg-green-500 rounded-full h-3 transition-all duration-500"
                     style={{ width: `${successRate}%` }}
@@ -142,23 +142,23 @@ export default function LaunchSiteDetailPage() {
             </div>
 
             {/* Orbital Capabilities */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <div className="glass-panel p-6">
               <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Orbital Capabilities</h2>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                <div className="bg-gray-50 rounded-lg p-4 text-center">
-                  <span className="text-2xl font-bold text-indigo-600">
+                <div className="bg-gray-500/10 dark:bg-white/[0.06] rounded-[12px] p-4 text-center border border-gray-200/30 dark:border-white/[0.08]">
+                  <span className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
                     {launchSite.minInclination ? `${launchSite.minInclination}°` : 'N/A'}
                   </span>
                   <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Min Inclination</p>
                 </div>
-                <div className="bg-gray-50 rounded-lg p-4 text-center">
-                  <span className="text-2xl font-bold text-indigo-600">
+                <div className="bg-gray-500/10 dark:bg-white/[0.06] rounded-[12px] p-4 text-center border border-gray-200/30 dark:border-white/[0.08]">
+                  <span className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
                     {launchSite.maxInclination ? `${launchSite.maxInclination}°` : 'N/A'}
                   </span>
                   <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Max Inclination</p>
                 </div>
-                <div className="bg-gray-50 rounded-lg p-4 text-center">
-                  <span className="text-2xl font-bold text-indigo-600">
+                <div className="bg-gray-500/10 dark:bg-white/[0.06] rounded-[12px] p-4 text-center border border-gray-200/30 dark:border-white/[0.08]">
+                  <span className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
                     {launchSite.latitude ? `${launchSite.latitude.toFixed(2)}°` : 'N/A'}
                   </span>
                   <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Latitude</p>
@@ -167,23 +167,23 @@ export default function LaunchSiteDetailPage() {
 
               {/* Capability Badges */}
               <div className="flex flex-wrap gap-3 mt-4">
-                <div className={`px-4 py-2 rounded-lg ${launchSite.humanRated ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-400'}`}>
+                <div className={`px-4 py-2 rounded-[12px] ${launchSite.humanRated ? 'bg-purple-500/15 dark:bg-purple-500/20 text-purple-800 dark:text-purple-300 border border-purple-500/20 dark:border-purple-400/20' : 'bg-gray-500/10 dark:bg-white/[0.06] text-gray-400 dark:text-gray-500 border border-gray-200/30 dark:border-white/[0.08]'}`}>
                   <span className="mr-2">👨‍🚀</span>
                   Human Rated
                 </div>
-                <div className={`px-4 py-2 rounded-lg ${launchSite.geoCapable ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-400'}`}>
+                <div className={`px-4 py-2 rounded-[12px] ${launchSite.geoCapable ? 'bg-blue-500/15 dark:bg-blue-500/20 text-blue-800 dark:text-blue-300 border border-blue-500/20 dark:border-blue-400/20' : 'bg-gray-500/10 dark:bg-white/[0.06] text-gray-400 dark:text-gray-500 border border-gray-200/30 dark:border-white/[0.08]'}`}>
                   <span className="mr-2">🌍</span>
                   GEO Capable
                 </div>
-                <div className={`px-4 py-2 rounded-lg ${launchSite.polarCapable ? 'bg-cyan-100 text-cyan-800' : 'bg-gray-100 text-gray-400'}`}>
+                <div className={`px-4 py-2 rounded-[12px] ${launchSite.polarCapable ? 'bg-cyan-500/15 dark:bg-cyan-500/20 text-cyan-800 dark:text-cyan-300 border border-cyan-500/20 dark:border-cyan-400/20' : 'bg-gray-500/10 dark:bg-white/[0.06] text-gray-400 dark:text-gray-500 border border-gray-200/30 dark:border-white/[0.08]'}`}>
                   <span className="mr-2">❄️</span>
                   Polar Capable
                 </div>
-                <div className={`px-4 py-2 rounded-lg ${launchSite.interplanetaryCapable ? 'bg-orange-100 text-orange-800' : 'bg-gray-100 text-gray-400'}`}>
+                <div className={`px-4 py-2 rounded-[12px] ${launchSite.interplanetaryCapable ? 'bg-orange-500/15 dark:bg-orange-500/20 text-orange-800 dark:text-orange-300 border border-orange-500/20 dark:border-orange-400/20' : 'bg-gray-500/10 dark:bg-white/[0.06] text-gray-400 dark:text-gray-500 border border-gray-200/30 dark:border-white/[0.08]'}`}>
                   <span className="mr-2">🪐</span>
                   Interplanetary
                 </div>
-                <div className={`px-4 py-2 rounded-lg ${launchSite.hasLanding ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-400'}`}>
+                <div className={`px-4 py-2 rounded-[12px] ${launchSite.hasLanding ? 'bg-green-500/15 dark:bg-green-500/20 text-green-800 dark:text-green-300 border border-green-500/20 dark:border-green-400/20' : 'bg-gray-500/10 dark:bg-white/[0.06] text-gray-400 dark:text-gray-500 border border-gray-200/30 dark:border-white/[0.08]'}`}>
                   <span className="mr-2">🛬</span>
                   Landing Pad
                 </div>
@@ -191,9 +191,9 @@ export default function LaunchSiteDetailPage() {
             </div>
 
             {/* Location Map */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <div className="glass-panel p-6">
               <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Location</h2>
-              <div className="bg-gray-900 rounded-lg overflow-hidden relative" style={{ height: '300px' }}>
+              <div className="bg-gray-900/80 rounded-[12px] overflow-hidden relative border border-gray-700/50" style={{ height: '300px' }}>
                 <ComposableMap
                   projection="geoMercator"
                   projectionConfig={{
@@ -281,44 +281,44 @@ export default function LaunchSiteDetailPage() {
           {/* Right Column - Info Cards */}
           <div className="space-y-6">
             {/* Basic Info */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <div className="glass-panel p-6">
               <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Basic Information</h2>
               <div className="space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Operator</span>
+                  <span className="text-gray-600 dark:text-gray-400">Operator</span>
                   <span className="font-semibold text-gray-800 dark:text-white">{launchSite.operator || 'N/A'}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Established</span>
+                  <span className="text-gray-600 dark:text-gray-400">Established</span>
                   <span className="font-semibold text-gray-800 dark:text-white">{launchSite.established || 'N/A'}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Country</span>
+                  <span className="text-gray-600 dark:text-gray-400">Country</span>
                   <span className="font-semibold text-gray-800 dark:text-white">{launchSite.countryId}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Region</span>
+                  <span className="text-gray-600 dark:text-gray-400">Region</span>
                   <span className="font-semibold text-gray-800 dark:text-white">{launchSite.region}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Status</span>
-                  <span className={`px-2 py-1 rounded text-sm ${statusClass}`}>{launchSite.status}</span>
+                  <span className="text-gray-600 dark:text-gray-400">Status</span>
+                  <span className={`px-2 py-1 rounded-full text-sm ${statusClass}`}>{launchSite.status}</span>
                 </div>
               </div>
             </div>
 
             {/* Coordinates */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <div className="glass-panel p-6">
               <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Coordinates</h2>
               <div className="space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Latitude</span>
+                  <span className="text-gray-600 dark:text-gray-400">Latitude</span>
                   <span className="font-semibold text-gray-800 dark:text-white">
                     {launchSite.latitude?.toFixed(4) || 'N/A'}°
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Longitude</span>
+                  <span className="text-gray-600 dark:text-gray-400">Longitude</span>
                   <span className="font-semibold text-gray-800 dark:text-white">
                     {launchSite.longitude?.toFixed(4) || 'N/A'}°
                   </span>
@@ -327,17 +327,17 @@ export default function LaunchSiteDetailPage() {
             </div>
 
             {/* Quick Stats */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <div className="glass-panel p-6">
               <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Quick Stats</h2>
               <div className="space-y-4">
                 <div>
                   <div className="flex justify-between text-sm mb-1">
-                    <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Operational Years</span>
-                    <span className="font-semibold">
+                    <span className="text-gray-600 dark:text-gray-400">Operational Years</span>
+                    <span className="font-semibold text-gray-800 dark:text-white">
                       {launchSite.established ? new Date().getFullYear() - launchSite.established : 'N/A'}
                     </span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="w-full bg-gray-500/20 dark:bg-white/10 rounded-full h-2">
                     <div
                       className="bg-indigo-500 rounded-full h-2"
                       style={{
@@ -348,8 +348,8 @@ export default function LaunchSiteDetailPage() {
                 </div>
                 <div>
                   <div className="flex justify-between text-sm mb-1">
-                    <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Launches per Year (avg)</span>
-                    <span className="font-semibold">
+                    <span className="text-gray-600 dark:text-gray-400">Launches per Year (avg)</span>
+                    <span className="font-semibold text-gray-800 dark:text-white">
                       {launchSite.established && launchSite.totalLaunches
                         ? (launchSite.totalLaunches / (new Date().getFullYear() - launchSite.established)).toFixed(1)
                         : 'N/A'}
@@ -361,9 +361,9 @@ export default function LaunchSiteDetailPage() {
 
             {/* Inclination Range */}
             {launchSite.minInclination && launchSite.maxInclination && (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+              <div className="glass-panel p-6">
                 <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Inclination Range</h2>
-                <div className="relative h-8 bg-gray-200 rounded-full overflow-hidden">
+                <div className="relative h-8 bg-gray-500/20 dark:bg-white/10 rounded-full overflow-hidden">
                   <div
                     className="absolute h-full bg-gradient-to-r from-blue-400 to-indigo-600 rounded-full"
                     style={{

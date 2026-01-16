@@ -70,7 +70,7 @@ export default function CountryDetailPage() {
   if (error) {
     return (
       <div className="container mx-auto px-4 py-12">
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 text-center">
+        <div className="glass-tinted-red p-6 text-center">
           <h2 className="text-lg font-semibold text-red-800 dark:text-red-400 mb-2">Error Loading Country</h2>
           <p className="text-red-600 dark:text-red-400">{error}</p>
           <Link to="/countries" className="mt-4 inline-block text-indigo-500 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-semibold">
@@ -84,7 +84,7 @@ export default function CountryDetailPage() {
   if (!country) {
     return (
       <div className="container mx-auto px-4 py-12">
-        <div className="text-center">
+        <div className="glass-panel p-8 text-center">
           <p className="text-gray-500 dark:text-gray-400 text-lg">Country not found</p>
           <Link to="/countries" className="mt-4 inline-block text-indigo-500 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-semibold">
             ← Back to Countries
@@ -133,7 +133,7 @@ export default function CountryDetailPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+    <div className="min-h-screen py-8">
       <div className="container mx-auto px-4">
         {/* Back Button */}
         <Link to="/countries" className="text-indigo-500 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-semibold mb-6 inline-block">
@@ -141,7 +141,7 @@ export default function CountryDetailPage() {
         </Link>
 
         {/* Country Header */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 mb-8">
+        <div className="glass-panel p-8 mb-8">
           <div className="flex flex-col md:flex-row items-start justify-between gap-6 mb-6">
             <div className="flex items-start gap-4">
               <div className="text-6xl">
@@ -192,22 +192,22 @@ export default function CountryDetailPage() {
 
           {/* Description */}
           {country.description && (
-            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mb-6">
+            <div className="bg-gray-500/10 dark:bg-white/[0.06] rounded-[12px] p-4 mb-6 border border-gray-200/30 dark:border-white/[0.08]">
               <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{country.description}</p>
             </div>
           )}
 
           {/* Key Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
-            <div className="bg-blue-50 dark:bg-blue-900/30 p-4 rounded-lg text-center">
+            <div className="glass-tinted-blue p-4 text-center">
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Total Launches</p>
               <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{country.totalLaunches ?? '-'}</p>
             </div>
-            <div className="bg-teal-50 dark:bg-teal-900/30 p-4 rounded-lg text-center">
+            <div className="glass-tinted-teal p-4 text-center">
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Successful</p>
               <p className="text-2xl font-bold text-teal-600 dark:text-teal-400">{country.successfulLaunches ?? '-'}</p>
             </div>
-            <div className="bg-green-50 dark:bg-green-900/30 p-4 rounded-lg text-center">
+            <div className="glass-tinted-green p-4 text-center">
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Success Rate</p>
               <p className="text-2xl font-bold text-green-600 dark:text-green-400">
                 {country.launchSuccessRate
@@ -215,7 +215,7 @@ export default function CountryDetailPage() {
                   : '-'}
               </p>
             </div>
-            <div className="bg-purple-50 dark:bg-purple-900/30 p-4 rounded-lg text-center">
+            <div className="glass-tinted-purple p-4 text-center">
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Annual Budget</p>
               <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">
                 {country.annualBudgetUsd
@@ -223,7 +223,7 @@ export default function CountryDetailPage() {
                   : '-'}
               </p>
             </div>
-            <div className="bg-orange-50 dark:bg-orange-900/30 p-4 rounded-lg text-center">
+            <div className="glass-tinted-orange p-4 text-center">
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">% of GDP</p>
               <p className="text-2xl font-bold text-orange-600 dark:text-orange-400">
                 {country.budgetAsPercentOfGdp
@@ -231,11 +231,11 @@ export default function CountryDetailPage() {
                   : '-'}
               </p>
             </div>
-            <div className="bg-indigo-50 dark:bg-indigo-900/30 p-4 rounded-lg text-center">
+            <div className="glass-tinted-indigo p-4 text-center">
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Active Astronauts</p>
               <p className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">{country.activeAstronauts ?? '-'}</p>
             </div>
-            <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg text-center">
+            <div className="glass-panel p-4 text-center">
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Employees</p>
               <p className="text-2xl font-bold text-gray-600 dark:text-gray-300">
                 {country.totalSpaceAgencyEmployees
@@ -250,7 +250,7 @@ export default function CountryDetailPage() {
           {/* Left Column - Capability Score */}
           <div className="lg:col-span-2">
             {sciLoading ? (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 text-center">
+              <div className="glass-panel p-8 text-center">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500 mx-auto mb-4"></div>
                 <p className="text-gray-500 dark:text-gray-400">Loading capability analysis...</p>
               </div>
@@ -264,24 +264,24 @@ export default function CountryDetailPage() {
           {/* Right Column - Quick Actions */}
           <div className="space-y-6">
             {/* Actions Card */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <div className="glass-panel p-6">
               <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4">Actions</h3>
               <div className="space-y-3">
                 <Link
                   to={`/compare/countries?c1=${country.isoCode}`}
-                  className="block w-full text-center bg-indigo-500 text-white px-4 py-3 rounded-lg font-semibold hover:bg-indigo-600 transition"
+                  className="block w-full text-center glass-button-primary px-4 py-3 font-semibold"
                 >
                   Compare with Another Country
                 </Link>
                 <Link
                   to={`/countries/${country.isoCode}/timeline`}
-                  className="block w-full text-center bg-purple-500 text-white px-4 py-3 rounded-lg font-semibold hover:bg-purple-600 transition"
+                  className="block w-full text-center glass-tinted-purple px-4 py-3 font-semibold hover:bg-purple-500/25 transition"
                 >
                   View Timeline
                 </Link>
                 <Link
                   to="/countries"
-                  className="block w-full text-center bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-4 py-3 rounded-lg font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition"
+                  className="block w-full text-center glass-button px-4 py-3 font-semibold"
                 >
                   Back to All Countries
                 </Link>
@@ -289,7 +289,7 @@ export default function CountryDetailPage() {
             </div>
 
             {/* Agency Info Card */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <div className="glass-panel p-6">
               <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4">Space Agency</h3>
               <div className="space-y-3 text-sm">
                 {country.spaceAgencyLogo && (
@@ -340,7 +340,7 @@ export default function CountryDetailPage() {
               ))}
             </div>
           ) : (
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-8 text-center text-gray-500 dark:text-gray-400">
+            <div className="glass-panel p-8 text-center text-gray-500 dark:text-gray-400">
               No engines found for this country
             </div>
           )}
@@ -364,7 +364,7 @@ export default function CountryDetailPage() {
           {vehicles && vehicles.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {vehicles.map(vehicle => (
-                <div key={vehicle.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                <div key={vehicle.id} className="glass-panel glass-float p-6">
                   <div className="flex justify-between items-start mb-4">
                     <div>
                       <h3 className="text-xl font-bold text-gray-800 dark:text-white">{vehicle.name}</h3>
@@ -373,33 +373,33 @@ export default function CountryDetailPage() {
                       )}
                     </div>
                     <span className={`px-2 py-1 text-xs rounded-full ${
-                      vehicle.status === 'Active' ? 'bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300' :
-                      vehicle.status === 'In Development' ? 'bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-300' :
-                      vehicle.status === 'Cancelled' ? 'bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300' :
-                      'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300'
+                      vehicle.status === 'Active' ? 'glass-badge-success' :
+                      vehicle.status === 'In Development' ? 'glass-badge-warning' :
+                      vehicle.status === 'Cancelled' ? 'glass-badge-error' :
+                      'glass-badge'
                     }`}>
                       {vehicle.status}
                     </span>
                   </div>
                   <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">{vehicle.manufacturer}</p>
                   <div className="grid grid-cols-2 gap-3 text-sm">
-                    <div className="bg-gray-50 dark:bg-gray-700 p-2 rounded">
+                    <div className="bg-gray-500/10 dark:bg-white/[0.06] p-2 rounded-[10px] border border-gray-200/30 dark:border-white/[0.08]">
                       <p className="text-xs text-gray-500 dark:text-gray-400">LEO Payload</p>
                       <p className="font-semibold text-gray-900 dark:text-white">
                         {vehicle.payloadToLeoKg ? `${(vehicle.payloadToLeoKg / 1000).toFixed(1)}t` : '-'}
                       </p>
                     </div>
-                    <div className="bg-gray-50 dark:bg-gray-700 p-2 rounded">
+                    <div className="bg-gray-500/10 dark:bg-white/[0.06] p-2 rounded-[10px] border border-gray-200/30 dark:border-white/[0.08]">
                       <p className="text-xs text-gray-500 dark:text-gray-400">Launches</p>
                       <p className="font-semibold text-gray-900 dark:text-white">{vehicle.totalLaunches ?? '-'}</p>
                     </div>
-                    <div className="bg-gray-50 dark:bg-gray-700 p-2 rounded">
+                    <div className="bg-gray-500/10 dark:bg-white/[0.06] p-2 rounded-[10px] border border-gray-200/30 dark:border-white/[0.08]">
                       <p className="text-xs text-gray-500 dark:text-gray-400">Success Rate</p>
                       <p className="font-semibold text-gray-900 dark:text-white">
                         {vehicle.successRate ? `${(vehicle.successRate * 100).toFixed(0)}%` : '-'}
                       </p>
                     </div>
-                    <div className="bg-gray-50 dark:bg-gray-700 p-2 rounded">
+                    <div className="bg-gray-500/10 dark:bg-white/[0.06] p-2 rounded-[10px] border border-gray-200/30 dark:border-white/[0.08]">
                       <p className="text-xs text-gray-500 dark:text-gray-400">Cost/Launch</p>
                       <p className="font-semibold text-gray-900 dark:text-white">
                         {vehicle.costPerLaunchUsd ? `$${(vehicle.costPerLaunchUsd / 1e6).toFixed(0)}M` : '-'}
@@ -408,12 +408,12 @@ export default function CountryDetailPage() {
                   </div>
                   <div className="flex gap-2 mt-4">
                     {vehicle.reusable && (
-                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-purple-50 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300 text-xs rounded-full">
+                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-purple-500/15 dark:bg-purple-500/20 text-purple-700 dark:text-purple-300 text-xs rounded-full border border-purple-500/20 dark:border-purple-400/20">
                         <Recycling style={{ fontSize: '0.875rem' }} /> Reusable
                       </span>
                     )}
                     {vehicle.humanRated && (
-                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-50 dark:bg-green-900/50 text-green-700 dark:text-green-300 text-xs rounded-full">
+                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-500/15 dark:bg-green-500/20 text-green-700 dark:text-green-300 text-xs rounded-full border border-green-500/20 dark:border-green-400/20">
                         <PersonOutline style={{ fontSize: '0.875rem' }} /> Human-Rated
                       </span>
                     )}
@@ -422,7 +422,7 @@ export default function CountryDetailPage() {
               ))}
             </div>
           ) : (
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-8 text-center text-gray-500 dark:text-gray-400">
+            <div className="glass-panel p-8 text-center text-gray-500 dark:text-gray-400">
               No launch vehicles found for this country
             </div>
           )}
@@ -483,7 +483,7 @@ export default function CountryDetailPage() {
               )}
             </>
           ) : (
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-8 text-center text-gray-500 dark:text-gray-400">
+            <div className="glass-panel p-8 text-center text-gray-500 dark:text-gray-400">
               No milestones recorded for this country
             </div>
           )}
@@ -508,25 +508,25 @@ export default function CountryDetailPage() {
           {missionSummary && missions && missions.length > 0 ? (
             <>
               {/* Mission Stats Summary */}
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 mb-4">
+              <div className="glass-panel p-4 mb-4">
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
-                  <div className="p-2 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg">
+                  <div className="glass-tinted-indigo p-2">
                     <div className="text-xl font-bold text-indigo-600 dark:text-indigo-400">{missionSummary.totalMissions}</div>
                     <div className="text-xs text-gray-500 dark:text-gray-400">Total</div>
                   </div>
-                  <div className="p-2 bg-green-50 dark:bg-green-900/30 rounded-lg">
+                  <div className="glass-tinted-green p-2">
                     <div className="text-xl font-bold text-green-600 dark:text-green-400">{missionSummary.activeMissions}</div>
                     <div className="text-xs text-gray-500 dark:text-gray-400">Active</div>
                   </div>
-                  <div className="p-2 bg-purple-50 dark:bg-purple-900/30 rounded-lg">
+                  <div className="glass-tinted-purple p-2">
                     <div className="text-xl font-bold text-purple-600 dark:text-purple-400">{missionSummary.crewedMissions}</div>
                     <div className="text-xs text-gray-500 dark:text-gray-400">Crewed</div>
                   </div>
-                  <div className="p-2 bg-teal-50 dark:bg-teal-900/30 rounded-lg">
+                  <div className="glass-tinted-teal p-2">
                     <div className="text-xl font-bold text-teal-600 dark:text-teal-400">{missionSummary.successRate}%</div>
                     <div className="text-xs text-gray-500 dark:text-gray-400">Success</div>
                   </div>
-                  <div className="p-2 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
+                  <div className="glass-tinted-orange p-2">
                     <div className="text-xl font-bold text-orange-600 dark:text-orange-400">{missionSummary.totalCrewMembers}</div>
                     <div className="text-xs text-gray-500 dark:text-gray-400">Astronauts</div>
                   </div>
@@ -552,7 +552,7 @@ export default function CountryDetailPage() {
               )}
             </>
           ) : (
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-8 text-center text-gray-500 dark:text-gray-400">
+            <div className="glass-panel p-8 text-center text-gray-500 dark:text-gray-400">
               No missions recorded for this country
             </div>
           )}

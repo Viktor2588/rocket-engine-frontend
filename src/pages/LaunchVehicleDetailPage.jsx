@@ -67,7 +67,7 @@ function VariantsSection({ variants, formatNumber }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
+    <div className="glass-panel p-6 mb-8">
       <button
         onClick={() => setIsExpanded(!isExpanded)}
         className="w-full flex items-center justify-between text-left"
@@ -94,7 +94,7 @@ function VariantsSection({ variants, formatNumber }) {
             <Link
               key={variant.id}
               to={`/vehicles/${variant.id}`}
-              className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition"
+              className="flex items-center justify-between p-4 bg-gray-500/10 dark:bg-white/[0.06] rounded-[12px] hover:bg-gray-500/15 dark:hover:bg-white/[0.08] transition border border-gray-200/30 dark:border-white/[0.08]"
             >
               <div className="flex items-center gap-4">
                 <div className="text-2xl">🚀</div>
@@ -140,20 +140,20 @@ function VariantsSection({ variants, formatNumber }) {
  */
 function StatBox({ label, value, unit, color = 'indigo' }) {
   const colorClasses = {
-    indigo: 'text-indigo-600',
-    green: 'text-green-600',
-    blue: 'text-blue-600',
-    orange: 'text-orange-600',
-    purple: 'text-purple-600',
+    indigo: 'glass-tinted-indigo text-indigo-600 dark:text-indigo-400',
+    green: 'glass-tinted-green text-green-600 dark:text-green-400',
+    blue: 'glass-tinted-blue text-blue-600 dark:text-blue-400',
+    orange: 'glass-tinted-orange text-orange-600 dark:text-orange-400',
+    purple: 'glass-tinted-purple text-purple-600 dark:text-purple-400',
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
-      <div className={`text-2xl font-bold ${colorClasses[color]}`}>
+    <div className={`${colorClasses[color]} p-4 text-center`}>
+      <div className="text-2xl font-bold">
         {value}
-        {unit && <span className="text-sm text-gray-500 dark:text-gray-400 ml-1">{unit}</span>}
+        {unit && <span className="text-sm opacity-70 ml-1">{unit}</span>}
       </div>
-      <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">{label}</div>
+      <div className="text-sm opacity-70">{label}</div>
     </div>
   );
 }
@@ -167,7 +167,7 @@ export default function LaunchVehicleDetailPage() {
       <div className="container mx-auto px-4 py-12">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Loading vehicle details...</p>
+          <p className="text-gray-600 dark:text-gray-400">Loading vehicle details...</p>
         </div>
       </div>
     );
@@ -176,12 +176,12 @@ export default function LaunchVehicleDetailPage() {
   if (error || !vehicle) {
     return (
       <div className="container mx-auto px-4 py-12">
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 text-center">
+        <div className="glass-tinted-red p-6 text-center">
           <h2 className="text-lg font-semibold text-red-800 dark:text-red-400 mb-2">Vehicle Not Found</h2>
           <p className="text-red-600 dark:text-red-400">{error || 'The requested launch vehicle could not be found.'}</p>
           <Link
             to="/vehicles"
-            className="inline-block mt-4 px-4 py-2 bg-indigo-500 text-white rounded hover:bg-indigo-600"
+            className="inline-block mt-4 glass-button-primary"
           >
             Back to Vehicles
           </Link>
@@ -196,7 +196,7 @@ export default function LaunchVehicleDetailPage() {
       : null);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+    <div className="min-h-screen py-8">
       <div className="container mx-auto px-4">
         {/* Back Link */}
         <Link
@@ -210,7 +210,7 @@ export default function LaunchVehicleDetailPage() {
         </Link>
 
         {/* Header */}
-        <div className="bg-gradient-to-r from-slate-700 to-slate-900 rounded-lg shadow-lg p-6 mb-8 text-white">
+        <div className="glass-panel-heavy bg-gradient-to-r from-slate-600/90 to-slate-800/90 dark:from-slate-700/80 dark:to-slate-900/80 p-6 mb-8 text-white">
           <div className="flex flex-col md:flex-row justify-between items-start gap-4">
             {/* Vehicle Image */}
             {vehicle.imageUrl && (
@@ -319,31 +319,31 @@ export default function LaunchVehicleDetailPage() {
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Payload Capabilities */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+          <div className="glass-panel p-6">
             <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
               🎯 Payload Capabilities
             </h2>
             <div className="space-y-4">
-              <div className="flex justify-between items-center py-2 border-b dark:border-gray-700">
-                <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Low Earth Orbit (LEO)</span>
+              <div className="flex justify-between items-center py-2 border-b border-gray-200/50 dark:border-white/[0.08]">
+                <span className="text-gray-600 dark:text-gray-400">Low Earth Orbit (LEO)</span>
                 <span className="font-bold text-gray-800 dark:text-white">
                   {vehicle.payloadToLeoKg ? `${formatNumber(vehicle.payloadToLeoKg)} kg` : '—'}
                 </span>
               </div>
-              <div className="flex justify-between items-center py-2 border-b dark:border-gray-700">
-                <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Geostationary Transfer (GTO)</span>
+              <div className="flex justify-between items-center py-2 border-b border-gray-200/50 dark:border-white/[0.08]">
+                <span className="text-gray-600 dark:text-gray-400">Geostationary Transfer (GTO)</span>
                 <span className="font-bold text-gray-800 dark:text-white">
                   {vehicle.payloadToGtoKg ? `${formatNumber(vehicle.payloadToGtoKg)} kg` : '—'}
                 </span>
               </div>
-              <div className="flex justify-between items-center py-2 border-b dark:border-gray-700">
-                <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Trans-Lunar Injection (TLI)</span>
+              <div className="flex justify-between items-center py-2 border-b border-gray-200/50 dark:border-white/[0.08]">
+                <span className="text-gray-600 dark:text-gray-400">Trans-Lunar Injection (TLI)</span>
                 <span className="font-bold text-gray-800 dark:text-white">
                   {vehicle.payloadToTliKg ? `${formatNumber(vehicle.payloadToTliKg)} kg` : '—'}
                 </span>
               </div>
               <div className="flex justify-between items-center py-2">
-                <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Mars Transfer</span>
+                <span className="text-gray-600 dark:text-gray-400">Mars Transfer</span>
                 <span className="font-bold text-gray-800 dark:text-white">
                   {vehicle.payloadToMarsKg ? `${formatNumber(vehicle.payloadToMarsKg)} kg` : '—'}
                 </span>
@@ -352,37 +352,37 @@ export default function LaunchVehicleDetailPage() {
           </div>
 
           {/* Physical Specifications */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+          <div className="glass-panel p-6">
             <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
               📐 Physical Specifications
             </h2>
             <div className="space-y-4">
-              <div className="flex justify-between items-center py-2 border-b dark:border-gray-700">
-                <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Height</span>
+              <div className="flex justify-between items-center py-2 border-b border-gray-200/50 dark:border-white/[0.08]">
+                <span className="text-gray-600 dark:text-gray-400">Height</span>
                 <span className="font-bold text-gray-800 dark:text-white">
                   {vehicle.heightMeters ? `${vehicle.heightMeters} m` : '—'}
                 </span>
               </div>
-              <div className="flex justify-between items-center py-2 border-b dark:border-gray-700">
-                <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Diameter</span>
+              <div className="flex justify-between items-center py-2 border-b border-gray-200/50 dark:border-white/[0.08]">
+                <span className="text-gray-600 dark:text-gray-400">Diameter</span>
                 <span className="font-bold text-gray-800 dark:text-white">
                   {vehicle.diameterMeters ? `${vehicle.diameterMeters} m` : '—'}
                 </span>
               </div>
-              <div className="flex justify-between items-center py-2 border-b dark:border-gray-700">
-                <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Liftoff Mass</span>
+              <div className="flex justify-between items-center py-2 border-b border-gray-200/50 dark:border-white/[0.08]">
+                <span className="text-gray-600 dark:text-gray-400">Liftoff Mass</span>
                 <span className="font-bold text-gray-800 dark:text-white">
                   {vehicle.liftoffMassKg ? `${formatNumber(vehicle.liftoffMassKg)} kg` : '—'}
                 </span>
               </div>
-              <div className="flex justify-between items-center py-2 border-b dark:border-gray-700">
-                <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Liftoff Thrust</span>
+              <div className="flex justify-between items-center py-2 border-b border-gray-200/50 dark:border-white/[0.08]">
+                <span className="text-gray-600 dark:text-gray-400">Liftoff Thrust</span>
                 <span className="font-bold text-gray-800 dark:text-white">
                   {vehicle.liftoffThrustKn ? `${formatNumber(vehicle.liftoffThrustKn)} kN` : '—'}
                 </span>
               </div>
               <div className="flex justify-between items-center py-2">
-                <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Number of Stages</span>
+                <span className="text-gray-600 dark:text-gray-400">Number of Stages</span>
                 <span className="font-bold text-gray-800 dark:text-white">
                   {vehicle.stages ?? '—'}
                 </span>
@@ -391,33 +391,33 @@ export default function LaunchVehicleDetailPage() {
           </div>
 
           {/* Launch Statistics */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+          <div className="glass-panel p-6">
             <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
               📊 Launch Statistics
             </h2>
             <div className="space-y-4">
-              <div className="flex justify-between items-center py-2 border-b dark:border-gray-700">
-                <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">First Flight</span>
+              <div className="flex justify-between items-center py-2 border-b border-gray-200/50 dark:border-white/[0.08]">
+                <span className="text-gray-600 dark:text-gray-400">First Flight</span>
                 <span className="font-bold text-gray-800 dark:text-white">
                   {vehicle.firstFlight || '—'}
                 </span>
               </div>
               {vehicle.lastFlight && (
-                <div className="flex justify-between items-center py-2 border-b dark:border-gray-700">
-                  <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Last Flight</span>
+                <div className="flex justify-between items-center py-2 border-b border-gray-200/50 dark:border-white/[0.08]">
+                  <span className="text-gray-600 dark:text-gray-400">Last Flight</span>
                   <span className="font-bold text-gray-800 dark:text-white">{vehicle.lastFlight}</span>
                 </div>
               )}
-              <div className="flex justify-between items-center py-2 border-b dark:border-gray-700">
-                <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Total Launches</span>
+              <div className="flex justify-between items-center py-2 border-b border-gray-200/50 dark:border-white/[0.08]">
+                <span className="text-gray-600 dark:text-gray-400">Total Launches</span>
                 <span className="font-bold text-gray-800 dark:text-white">{vehicle.totalLaunches ?? '—'}</span>
               </div>
-              <div className="flex justify-between items-center py-2 border-b dark:border-gray-700">
-                <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Successful Launches</span>
-                <span className="font-bold text-green-600">{vehicle.successfulLaunches ?? '—'}</span>
+              <div className="flex justify-between items-center py-2 border-b border-gray-200/50 dark:border-white/[0.08]">
+                <span className="text-gray-600 dark:text-gray-400">Successful Launches</span>
+                <span className="font-bold text-green-600 dark:text-green-400">{vehicle.successfulLaunches ?? '—'}</span>
               </div>
-              <div className="flex justify-between items-center py-2 border-b dark:border-gray-700">
-                <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Failed Launches</span>
+              <div className="flex justify-between items-center py-2 border-b border-gray-200/50 dark:border-white/[0.08]">
+                <span className="text-gray-600 dark:text-gray-400">Failed Launches</span>
                 <span className="font-bold text-red-600 dark:text-red-400">
                   {vehicle.failedLaunches ?? (vehicle.totalLaunches && vehicle.successfulLaunches
                     ? vehicle.totalLaunches - vehicle.successfulLaunches
@@ -425,12 +425,12 @@ export default function LaunchVehicleDetailPage() {
                 </span>
               </div>
               <div className="flex justify-between items-center py-2">
-                <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Success Rate</span>
+                <span className="text-gray-600 dark:text-gray-400">Success Rate</span>
                 <span className={`font-bold ${
-                  successRate >= 95 ? 'text-green-600' :
-                  successRate >= 85 ? 'text-blue-600' :
-                  successRate >= 70 ? 'text-yellow-600' :
-                  'text-red-600'
+                  successRate >= 95 ? 'text-green-600 dark:text-green-400' :
+                  successRate >= 85 ? 'text-blue-600 dark:text-blue-400' :
+                  successRate >= 70 ? 'text-yellow-600 dark:text-yellow-400' :
+                  'text-red-600 dark:text-red-400'
                 }`}>
                   {successRate ? `${successRate.toFixed(1)}%` : '—'}
                 </span>
@@ -439,19 +439,19 @@ export default function LaunchVehicleDetailPage() {
           </div>
 
           {/* Economics */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+          <div className="glass-panel p-6">
             <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
               💰 Economics
             </h2>
             <div className="space-y-4">
-              <div className="flex justify-between items-center py-2 border-b dark:border-gray-700">
-                <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Cost per Launch</span>
+              <div className="flex justify-between items-center py-2 border-b border-gray-200/50 dark:border-white/[0.08]">
+                <span className="text-gray-600 dark:text-gray-400">Cost per Launch</span>
                 <span className="font-bold text-gray-800 dark:text-white">
                   {formatCurrency(vehicle.costPerLaunchUsd)}
                 </span>
               </div>
               <div className="flex justify-between items-center py-2">
-                <span className="text-gray-600 dark:text-gray-400 dark:text-gray-400">Cost per kg to LEO</span>
+                <span className="text-gray-600 dark:text-gray-400">Cost per kg to LEO</span>
                 <span className="font-bold text-gray-800 dark:text-white">
                   {vehicle.costPerKgToLeoUsd ? `$${formatNumber(vehicle.costPerKgToLeoUsd)}` : '—'}
                 </span>
@@ -462,9 +462,9 @@ export default function LaunchVehicleDetailPage() {
             {vehicle.costPerKgToLeoUsd && (
               <div className="mt-6">
                 <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">Cost Efficiency ($/kg to LEO)</p>
-                <div className="relative h-8 bg-gray-200 rounded">
+                <div className="relative h-8 bg-gray-500/20 dark:bg-white/10 rounded-full overflow-hidden">
                   <div
-                    className={`absolute h-full rounded ${
+                    className={`absolute h-full rounded-full ${
                       vehicle.costPerKgToLeoUsd < 3000 ? 'bg-green-500' :
                       vehicle.costPerKgToLeoUsd < 7000 ? 'bg-blue-500' :
                       vehicle.costPerKgToLeoUsd < 15000 ? 'bg-yellow-500' :
@@ -484,7 +484,7 @@ export default function LaunchVehicleDetailPage() {
 
         {/* Engines Section */}
         {((vehicle.engines && vehicle.engines.length > 0) || (vehicle.engineIds && vehicle.engineIds.length > 0)) && (
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mt-8">
+          <div className="glass-panel p-6 mt-8">
             <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
               🔥 Propulsion System
             </h2>
@@ -494,7 +494,7 @@ export default function LaunchVehicleDetailPage() {
                   <Link
                     key={engine.id}
                     to={`/engines/${engine.id}`}
-                    className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition"
+                    className="flex items-center gap-4 p-4 bg-gray-500/10 dark:bg-white/[0.06] rounded-[12px] hover:bg-gray-500/15 dark:hover:bg-white/[0.08] transition border border-gray-200/30 dark:border-white/[0.08]"
                   >
                     <div className="text-3xl">🚀</div>
                     <div>
@@ -515,7 +515,7 @@ export default function LaunchVehicleDetailPage() {
                   <Link
                     key={engineId}
                     to={`/engines/${engineId}`}
-                    className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition"
+                    className="flex items-center gap-4 p-4 bg-gray-500/10 dark:bg-white/[0.06] rounded-[12px] hover:bg-gray-500/15 dark:hover:bg-white/[0.08] transition border border-gray-200/30 dark:border-white/[0.08]"
                   >
                     <div className="text-3xl">🚀</div>
                     <div className="font-semibold text-gray-800 dark:text-white">
@@ -535,7 +535,7 @@ export default function LaunchVehicleDetailPage() {
               href={vehicle.wikiUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition"
+              className="glass-button inline-flex items-center gap-2"
             >
               📖 Wikipedia
             </a>
@@ -543,7 +543,7 @@ export default function LaunchVehicleDetailPage() {
           {vehicle.countryId && (
             <Link
               to={`/countries/${vehicle.countryId}`}
-              className="inline-flex items-center px-4 py-2 bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200 transition"
+              className="glass-tinted-indigo px-4 py-2 inline-flex items-center gap-2 hover:bg-indigo-500/25 transition"
             >
               {getCountryFlag(vehicle.countryId)} View Country Profile
             </Link>
