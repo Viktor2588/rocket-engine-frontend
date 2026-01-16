@@ -3,17 +3,17 @@ import { MISSION_TYPE_INFO, DESTINATION_INFO } from '../types';
 import SpaceIcon from './icons/SpaceIcons';
 import { Rocket, PersonOutline, EmojiEvents } from '@mui/icons-material';
 
-// Status badge colors and labels
+// Status badge colors and labels - glass styling
 const STATUS_CONFIG = {
-  PLANNED: { color: 'bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300', label: 'Planned' },
-  IN_DEVELOPMENT: { color: 'bg-purple-100 dark:bg-purple-900/40 text-purple-800 dark:text-purple-300', label: 'In Development' },
-  LAUNCHED: { color: 'bg-yellow-100 dark:bg-yellow-900/40 text-yellow-800 dark:text-yellow-300', label: 'Launched' },
-  IN_TRANSIT: { color: 'bg-orange-100 dark:bg-orange-900/40 text-orange-800 dark:text-orange-300', label: 'In Transit' },
-  ACTIVE: { color: 'bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300', label: 'Active' },
-  COMPLETED: { color: 'bg-teal-100 dark:bg-teal-900/40 text-teal-800 dark:text-teal-300', label: 'Completed' },
-  PARTIAL_SUCCESS: { color: 'bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300', label: 'Partial Success' },
-  FAILED: { color: 'bg-red-100 dark:bg-red-900/40 text-red-800 dark:text-red-300', label: 'Failed' },
-  LOST: { color: 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300', label: 'Lost' }
+  PLANNED: { color: 'bg-blue-500/20 dark:bg-blue-500/25 text-blue-700 dark:text-blue-300 border-blue-400/30 dark:border-blue-400/20', label: 'Planned' },
+  IN_DEVELOPMENT: { color: 'bg-purple-500/20 dark:bg-purple-500/25 text-purple-700 dark:text-purple-300 border-purple-400/30 dark:border-purple-400/20', label: 'In Development' },
+  LAUNCHED: { color: 'bg-yellow-500/20 dark:bg-yellow-500/25 text-yellow-700 dark:text-yellow-300 border-yellow-400/30 dark:border-yellow-400/20', label: 'Launched' },
+  IN_TRANSIT: { color: 'bg-orange-500/20 dark:bg-orange-500/25 text-orange-700 dark:text-orange-300 border-orange-400/30 dark:border-orange-400/20', label: 'In Transit' },
+  ACTIVE: { color: 'bg-green-500/20 dark:bg-green-500/25 text-green-700 dark:text-green-300 border-green-400/30 dark:border-green-400/20', label: 'Active' },
+  COMPLETED: { color: 'bg-teal-500/20 dark:bg-teal-500/25 text-teal-700 dark:text-teal-300 border-teal-400/30 dark:border-teal-400/20', label: 'Completed' },
+  PARTIAL_SUCCESS: { color: 'bg-amber-500/20 dark:bg-amber-500/25 text-amber-700 dark:text-amber-300 border-amber-400/30 dark:border-amber-400/20', label: 'Partial Success' },
+  FAILED: { color: 'bg-red-500/20 dark:bg-red-500/25 text-red-700 dark:text-red-300 border-red-400/30 dark:border-red-400/20', label: 'Failed' },
+  LOST: { color: 'bg-gray-500/20 dark:bg-gray-500/25 text-gray-700 dark:text-gray-300 border-gray-400/30 dark:border-gray-400/20', label: 'Lost' }
 };
 
 // Country flags
@@ -45,9 +45,9 @@ function formatDate(dateString) {
 
 // Status Badge Component
 export function StatusBadge({ status }) {
-  const config = STATUS_CONFIG[status] || { color: 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300', label: status };
+  const config = STATUS_CONFIG[status] || { color: 'bg-gray-500/20 dark:bg-gray-500/25 text-gray-700 dark:text-gray-300 border-gray-400/30 dark:border-gray-400/20', label: status };
   return (
-    <span className={`px-2 py-1 text-xs font-semibold rounded-full ${config.color}`}>
+    <span className={`px-2.5 py-1 text-xs font-semibold rounded-full border backdrop-blur-sm ${config.color}`}>
       {config.label}
     </span>
   );
@@ -59,7 +59,7 @@ export function DestinationBadge({ destination }) {
   if (!info) return null;
 
   return (
-    <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium bg-indigo-50 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 rounded-full">
+    <span className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium bg-indigo-500/15 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 border border-indigo-400/20 rounded-full backdrop-blur-sm">
       <SpaceIcon name={info.icon} size="sm" />
       <span>{info.label}</span>
     </span>
@@ -72,7 +72,7 @@ export function MissionTypeBadge({ missionType }) {
   if (!info) return null;
 
   return (
-    <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full">
+    <span className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium bg-gray-500/15 dark:bg-gray-500/20 text-gray-700 dark:text-gray-300 border border-gray-400/20 rounded-full backdrop-blur-sm">
       <SpaceIcon name={info.icon} size="sm" />
       <span>{info.label}</span>
     </span>
@@ -86,7 +86,7 @@ export function MissionCardCompact({ mission, showCountry = true }) {
   return (
     <Link
       to={`/missions/${mission.id}`}
-      className="block p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-indigo-300 hover:shadow-md transition-all"
+      className="block p-3 glass-panel glass-float"
     >
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
@@ -109,7 +109,7 @@ export function MissionCardCompact({ mission, showCountry = true }) {
         <StatusBadge status={mission.status} />
       </div>
       {mission.crewed && (
-        <div className="mt-2 text-xs text-indigo-600 flex items-center gap-1">
+        <div className="mt-2 text-xs text-indigo-600 dark:text-indigo-400 flex items-center gap-1">
           <PersonOutline style={{ fontSize: '1rem' }} /> Crewed ({mission.crewSize} astronauts)
         </div>
       )}
@@ -120,9 +120,9 @@ export function MissionCardCompact({ mission, showCountry = true }) {
 // Full Mission Card
 export default function MissionCard({ mission, showCountry = true, className = '' }) {
   return (
-    <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow ${className}`}>
+    <div className={`glass-panel glass-float overflow-hidden ${className}`}>
       {/* Header with status bar */}
-      <div className={`h-2 ${
+      <div className={`h-1.5 ${
         mission.status === 'ACTIVE' ? 'bg-green-500' :
         mission.status === 'COMPLETED' ? 'bg-teal-500' :
         mission.status === 'FAILED' ? 'bg-red-500' :
@@ -150,12 +150,12 @@ export default function MissionCard({ mission, showCountry = true, className = '
           <MissionTypeBadge missionType={mission.missionType} />
           <DestinationBadge destination={mission.destination} />
           {mission.crewed && (
-            <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium bg-purple-50 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 rounded-full">
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium bg-purple-500/15 dark:bg-purple-500/20 text-purple-700 dark:text-purple-300 border border-purple-400/20 rounded-full backdrop-blur-sm">
               <PersonOutline style={{ fontSize: '1rem' }} /> Crewed ({mission.crewSize})
             </span>
           )}
           {mission.historicFirst && (
-            <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium bg-yellow-50 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-300 rounded-full">
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium bg-yellow-500/15 dark:bg-yellow-500/20 text-yellow-700 dark:text-yellow-300 border border-yellow-400/20 rounded-full backdrop-blur-sm">
               <EmojiEvents style={{ fontSize: '1rem' }} /> Historic First
             </span>
           )}
@@ -168,7 +168,7 @@ export default function MissionCard({ mission, showCountry = true, className = '
 
         {/* Crew names if crewed */}
         {mission.crewed && Array.isArray(mission.crewNames) && mission.crewNames.length > 0 && (
-          <div className="mb-3 p-2 bg-gray-50 dark:bg-gray-700 rounded text-sm">
+          <div className="mb-3 p-2.5 bg-gray-500/10 dark:bg-white/[0.06] rounded-[10px] border border-gray-200/30 dark:border-white/[0.08] text-sm">
             <span className="font-medium text-gray-700 dark:text-gray-300">Crew: </span>
             <span className="text-gray-600 dark:text-gray-400">{mission.crewNames.join(', ')}</span>
           </div>
@@ -186,14 +186,14 @@ export default function MissionCard({ mission, showCountry = true, className = '
                 </li>
               ))}
               {mission.objectives.length > 2 && (
-                <li className="text-indigo-500 text-xs">+{mission.objectives.length - 2} more</li>
+                <li className="text-indigo-500 dark:text-indigo-400 text-xs">+{mission.objectives.length - 2} more</li>
               )}
             </ul>
           </div>
         )}
 
         {/* Footer */}
-        <div className="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700">
+        <div className="flex items-center justify-between pt-3 border-t border-gray-200/50 dark:border-white/[0.08]">
           {mission.launchVehicle && (
             <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
               <Rocket style={{ fontSize: '1rem' }} /> {mission.launchVehicle}
@@ -201,7 +201,7 @@ export default function MissionCard({ mission, showCountry = true, className = '
           )}
           <Link
             to={`/missions/${mission.id}`}
-            className="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 font-medium"
+            className="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium transition-colors"
           >
             View Details →
           </Link>
@@ -216,23 +216,23 @@ export function MissionStatsCard({ stats }) {
   if (!stats) return null;
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+    <div className="glass-panel p-6">
       <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4">Mission Statistics</h3>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <div className="text-center p-3 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg">
+        <div className="text-center p-3 bg-indigo-500/15 dark:bg-indigo-500/20 rounded-[12px] border border-indigo-400/20">
           <div className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">{stats.totalMissions}</div>
           <div className="text-xs text-gray-500 dark:text-gray-400">Total Missions</div>
         </div>
-        <div className="text-center p-3 bg-green-50 dark:bg-green-900/30 rounded-lg">
+        <div className="text-center p-3 bg-green-500/15 dark:bg-green-500/20 rounded-[12px] border border-green-400/20">
           <div className="text-2xl font-bold text-green-600 dark:text-green-400">{stats.activeMissions}</div>
           <div className="text-xs text-gray-500 dark:text-gray-400">Active</div>
         </div>
-        <div className="text-center p-3 bg-purple-50 dark:bg-purple-900/30 rounded-lg">
+        <div className="text-center p-3 bg-purple-500/15 dark:bg-purple-500/20 rounded-[12px] border border-purple-400/20">
           <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">{stats.crewedMissions}</div>
           <div className="text-xs text-gray-500 dark:text-gray-400">Crewed Missions</div>
         </div>
-        <div className="text-center p-3 bg-teal-50 dark:bg-teal-900/30 rounded-lg">
+        <div className="text-center p-3 bg-teal-500/15 dark:bg-teal-500/20 rounded-[12px] border border-teal-400/20">
           <div className="text-2xl font-bold text-teal-600 dark:text-teal-400">{stats.successRate}%</div>
           <div className="text-xs text-gray-500 dark:text-gray-400">Success Rate</div>
         </div>
@@ -244,7 +244,7 @@ export function MissionStatsCard({ stats }) {
           <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">By Status</h4>
           <div className="flex flex-wrap gap-2">
             {Object.entries(stats.byStatus).map(([status, count]) => (
-              <span key={status} className="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded">
+              <span key={status} className="text-xs px-2.5 py-1 bg-gray-500/15 dark:bg-white/[0.08] text-gray-700 dark:text-gray-300 rounded-full border border-gray-400/20 backdrop-blur-sm">
                 {STATUS_CONFIG[status]?.label || status}: {count}
               </span>
             ))}
@@ -260,7 +260,7 @@ export function MissionStatsCard({ stats }) {
             {Object.entries(stats.byDestination).map(([dest, count]) => {
               const info = DESTINATION_INFO[dest];
               return (
-                <span key={dest} className="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded inline-flex items-center gap-1">
+                <span key={dest} className="text-xs px-2.5 py-1 bg-gray-500/15 dark:bg-white/[0.08] text-gray-700 dark:text-gray-300 rounded-full border border-gray-400/20 backdrop-blur-sm inline-flex items-center gap-1">
                   <SpaceIcon name={info?.icon} size="sm" /> {info?.label || dest}: {count}
                 </span>
               );
@@ -280,11 +280,11 @@ export function MissionTimelineItem({ mission, isFirst = false, isLast = false }
     <div className="relative pl-8 pb-6">
       {/* Timeline line */}
       {!isLast && (
-        <div className="absolute left-3 top-6 bottom-0 w-0.5 bg-gray-200" />
+        <div className="absolute left-3 top-6 bottom-0 w-0.5 bg-gray-200/50 dark:bg-white/[0.1]" />
       )}
 
       {/* Timeline dot */}
-      <div className={`absolute left-0 top-1 w-6 h-6 rounded-full flex items-center justify-center text-xs ${
+      <div className={`absolute left-0 top-1 w-6 h-6 rounded-full flex items-center justify-center text-xs shadow-lg ${
         mission.status === 'ACTIVE' ? 'bg-green-500 text-white' :
         mission.status === 'COMPLETED' ? 'bg-teal-500 text-white' :
         mission.status === 'FAILED' ? 'bg-red-500 text-white' :
@@ -294,12 +294,12 @@ export function MissionTimelineItem({ mission, isFirst = false, isLast = false }
       </div>
 
       {/* Content */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-3 hover:shadow-md transition-shadow">
+      <div className="glass-panel p-3 glass-float">
         <div className="flex items-start justify-between gap-2">
           <div>
             <Link
               to={`/missions/${mission.id}`}
-              className="font-semibold text-gray-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400"
+              className="font-semibold text-gray-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
             >
               {mission.name}
             </Link>

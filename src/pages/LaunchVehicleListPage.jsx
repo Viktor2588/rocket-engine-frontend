@@ -1,9 +1,9 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useLaunchVehicles, useLaunchVehicleStatistics } from '../hooks/useLaunchVehicles';
 import LaunchVehicleCard from '../components/LaunchVehicleCard';
 import Pagination from '../components/Pagination';
-import { Rocket, Recycling, PersonOutline } from '@mui/icons-material';
+import { Rocket, Recycling, PersonOutline, Close, FilterList } from '@mui/icons-material';
 
 const COUNTRIES = [
   { code: 'USA', name: 'United States' },
@@ -12,42 +12,201 @@ const COUNTRIES = [
   { code: 'FRA', name: 'France/ESA' },
   { code: 'JPN', name: 'Japan' },
   { code: 'IND', name: 'India' },
+  { code: 'GBR', name: 'United Kingdom' },
+  { code: 'ISR', name: 'Israel' },
+  { code: 'IRN', name: 'Iran' },
+  { code: 'KOR', name: 'South Korea' },
+  { code: 'PRK', name: 'North Korea' },
+  { code: 'NZL', name: 'New Zealand' },
 ];
+
+const STATUSES = ['Active', 'Retired', 'In Development', 'Cancelled'];
+
+const CAPABILITIES = [
+  { id: 'reusable', label: 'Reusable', icon: Recycling },
+  { id: 'humanRated', label: 'Human-Rated', icon: PersonOutline },
+];
+
+const LIFT_CAPACITIES = [
+  { id: 'small', label: 'Small Lift', description: '<2t', min: 0, max: 2000 },
+  { id: 'medium', label: 'Medium Lift', description: '2-20t', min: 2000, max: 20000 },
+  { id: 'heavy', label: 'Heavy Lift', description: '20-50t', min: 20000, max: 50000 },
+  { id: 'superHeavy', label: 'Super Heavy', description: '50t+', min: 50000, max: Infinity },
+];
+
+// Helper to get lift capacity class for a vehicle
+const getLiftCapacityClass = (payloadKg) => {
+  if (!payloadKg) return null;
+  for (const cap of LIFT_CAPACITIES) {
+    if (payloadKg >= cap.min && payloadKg < cap.max) {
+      return cap.id;
+    }
+  }
+  return null;
+};
+
+// Filter tag component
+function FilterTag({ label, onRemove, color = 'indigo' }) {
+  const colorClasses = {
+    indigo: 'bg-indigo-100 dark:bg-indigo-900/40 text-indigo-800 dark:text-indigo-300 border-indigo-200 dark:border-indigo-700',
+    green: 'bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300 border-green-200 dark:border-green-700',
+    blue: 'bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-700',
+    purple: 'bg-purple-100 dark:bg-purple-900/40 text-purple-800 dark:text-purple-300 border-purple-200 dark:border-purple-700',
+    orange: 'bg-orange-100 dark:bg-orange-900/40 text-orange-800 dark:text-orange-300 border-orange-200 dark:border-orange-700',
+  };
+
+  return (
+    <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-sm font-medium border ${colorClasses[color]}`}>
+      {label}
+      <button
+        onClick={onRemove}
+        className="ml-0.5 hover:bg-black/10 dark:hover:bg-white/10 rounded-full p-0.5 transition-colors"
+        aria-label={`Remove ${label} filter`}
+      >
+        <Close style={{ fontSize: '0.875rem' }} />
+      </button>
+    </span>
+  );
+}
+
+// Filter toggle button component
+function FilterToggle({ label, active, onClick, count }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-all ${
+        active
+          ? 'bg-indigo-500 text-white border-indigo-500 shadow-sm'
+          : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:border-indigo-400 dark:hover:border-indigo-500'
+      }`}
+    >
+      {label}
+      {count !== undefined && (
+        <span className={`ml-1.5 px-1.5 py-0.5 rounded-full text-xs ${
+          active ? 'bg-white/20' : 'bg-gray-100 dark:bg-gray-600'
+        }`}>
+          {count}
+        </span>
+      )}
+    </button>
+  );
+}
 
 export default function LaunchVehicleListPage() {
   const { vehicles, loading, error } = useLaunchVehicles();
   const stats = useLaunchVehicleStatistics();
   const [sortBy, setSortBy] = useState('name');
-  const [filterStatus, setFilterStatus] = useState('all');
-  const [filterCountry, setFilterCountry] = useState('all');
-  const [filterCapability, setFilterCapability] = useState('all');
+
+  // Multi-select filter states (arrays instead of single values)
+  const [selectedCountries, setSelectedCountries] = useState([]);
+  const [selectedStatuses, setSelectedStatuses] = useState([]);
+  const [selectedCapabilities, setSelectedCapabilities] = useState([]);
+  const [selectedLiftCapacities, setSelectedLiftCapacities] = useState([]);
+
   const [viewMode, setViewMode] = useState('grid');
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(25);
+  const [filtersExpanded, setFiltersExpanded] = useState(true);
 
-  // Filter and sort vehicles
+  // Toggle functions for multi-select
+  const toggleCountry = useCallback((code) => {
+    setSelectedCountries(prev =>
+      prev.includes(code) ? prev.filter(c => c !== code) : [...prev, code]
+    );
+    setCurrentPage(1);
+  }, []);
+
+  const toggleStatus = useCallback((status) => {
+    setSelectedStatuses(prev =>
+      prev.includes(status) ? prev.filter(s => s !== status) : [...prev, status]
+    );
+    setCurrentPage(1);
+  }, []);
+
+  const toggleCapability = useCallback((cap) => {
+    setSelectedCapabilities(prev =>
+      prev.includes(cap) ? prev.filter(c => c !== cap) : [...prev, cap]
+    );
+    setCurrentPage(1);
+  }, []);
+
+  const toggleLiftCapacity = useCallback((cap) => {
+    setSelectedLiftCapacities(prev =>
+      prev.includes(cap) ? prev.filter(c => c !== cap) : [...prev, cap]
+    );
+    setCurrentPage(1);
+  }, []);
+
+  const clearAllFilters = useCallback(() => {
+    setSelectedCountries([]);
+    setSelectedStatuses([]);
+    setSelectedCapabilities([]);
+    setSelectedLiftCapacities([]);
+    setCurrentPage(1);
+  }, []);
+
+  const hasActiveFilters = selectedCountries.length > 0 || selectedStatuses.length > 0 ||
+    selectedCapabilities.length > 0 || selectedLiftCapacities.length > 0;
+
+  // Count vehicles per filter option (for showing counts in toggles)
+  const filterCounts = useMemo(() => {
+    const counts = {
+      countries: {},
+      statuses: {},
+      capabilities: {},
+      liftCapacities: {},
+    };
+
+    vehicles.forEach(v => {
+      // Country counts
+      if (v.countryId) {
+        counts.countries[v.countryId] = (counts.countries[v.countryId] || 0) + 1;
+      }
+      // Status counts
+      if (v.status) {
+        counts.statuses[v.status] = (counts.statuses[v.status] || 0) + 1;
+      }
+      // Capability counts
+      if (v.reusable) counts.capabilities.reusable = (counts.capabilities.reusable || 0) + 1;
+      if (v.humanRated) counts.capabilities.humanRated = (counts.capabilities.humanRated || 0) + 1;
+      // Lift capacity counts
+      const liftClass = getLiftCapacityClass(v.payloadToLeoKg);
+      if (liftClass) {
+        counts.liftCapacities[liftClass] = (counts.liftCapacities[liftClass] || 0) + 1;
+      }
+    });
+
+    return counts;
+  }, [vehicles]);
+
+  // Filter and sort vehicles with AND logic across all filter categories
   const filteredAndSortedVehicles = useMemo(() => {
     let result = [...vehicles];
 
-    // Filter by status
-    if (filterStatus !== 'all') {
-      result = result.filter(v => v.status === filterStatus);
+    // Filter by status (OR within category)
+    if (selectedStatuses.length > 0) {
+      result = result.filter(v => selectedStatuses.includes(v.status));
     }
 
-    // Filter by country
-    if (filterCountry !== 'all') {
-      result = result.filter(v => v.countryId === filterCountry);
+    // Filter by country (OR within category)
+    if (selectedCountries.length > 0) {
+      result = result.filter(v => selectedCountries.includes(v.countryId));
     }
 
-    // Filter by capability
-    if (filterCapability !== 'all') {
-      if (filterCapability === 'reusable') {
-        result = result.filter(v => v.reusable);
-      } else if (filterCapability === 'humanRated') {
-        result = result.filter(v => v.humanRated);
-      } else if (filterCapability === 'heavyLift') {
-        result = result.filter(v => (v.payloadToLeoKg || 0) >= 20000);
-      }
+    // Filter by capabilities (AND - must have ALL selected capabilities)
+    if (selectedCapabilities.includes('reusable')) {
+      result = result.filter(v => v.reusable);
+    }
+    if (selectedCapabilities.includes('humanRated')) {
+      result = result.filter(v => v.humanRated);
+    }
+
+    // Filter by lift capacity (OR within category)
+    if (selectedLiftCapacities.length > 0) {
+      result = result.filter(v => {
+        const liftClass = getLiftCapacityClass(v.payloadToLeoKg);
+        return liftClass && selectedLiftCapacities.includes(liftClass);
+      });
     }
 
     // Sort
@@ -69,7 +228,7 @@ export default function LaunchVehicleListPage() {
     });
 
     return result;
-  }, [vehicles, sortBy, filterStatus, filterCountry, filterCapability]);
+  }, [vehicles, sortBy, selectedStatuses, selectedCountries, selectedCapabilities, selectedLiftCapacities]);
 
   // Paginate the filtered results
   const paginatedVehicles = useMemo(() => {
@@ -143,16 +302,38 @@ export default function LaunchVehicleListPage() {
         )}
 
         {/* Filters & Controls */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
-          <div className="flex flex-col lg:flex-row gap-4 justify-between items-start lg:items-center">
-            <div className="flex flex-wrap gap-4">
-              {/* Sort */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md mb-8 overflow-hidden">
+          {/* Filter Header */}
+          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+            <button
+              onClick={() => setFiltersExpanded(!filtersExpanded)}
+              className="flex items-center gap-2 text-gray-700 dark:text-gray-300 font-semibold"
+            >
+              <FilterList />
+              <span>Filters</span>
+              {hasActiveFilters && (
+                <span className="px-2 py-0.5 rounded-full text-xs bg-indigo-500 text-white">
+                  {selectedCountries.length + selectedStatuses.length + selectedCapabilities.length + selectedLiftCapacities.length}
+                </span>
+              )}
+              <svg
+                className={`w-5 h-5 transition-transform ${filtersExpanded ? 'rotate-180' : ''}`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            <div className="flex items-center gap-3">
+              {/* Sort dropdown */}
               <label className="flex items-center gap-2">
-                <span className="text-gray-700 dark:text-gray-300 font-semibold text-sm">Sort:</span>
+                <span className="text-gray-600 dark:text-gray-400 text-sm">Sort:</span>
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+                  className="px-3 py-1.5 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
                 >
                   <option value="payload">Payload Capacity</option>
                   <option value="name">Name</option>
@@ -162,82 +343,169 @@ export default function LaunchVehicleListPage() {
                 </select>
               </label>
 
-              {/* Status Filter */}
-              <label className="flex items-center gap-2">
-                <span className="text-gray-700 dark:text-gray-300 font-semibold text-sm">Status:</span>
-                <select
-                  value={filterStatus}
-                  onChange={(e) => setFilterStatus(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+              {/* View toggle */}
+              <div className="flex gap-1 border border-gray-300 dark:border-gray-600 rounded-md p-0.5">
+                <button
+                  onClick={() => setViewMode('grid')}
+                  className={`px-3 py-1.5 rounded text-sm font-medium transition ${
+                    viewMode === 'grid'
+                      ? 'bg-indigo-500 text-white'
+                      : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  }`}
                 >
-                  <option value="all">All Status</option>
-                  <option value="Active">Active</option>
-                  <option value="Retired">Retired</option>
-                  <option value="In Development">In Development</option>
-                  <option value="Cancelled">Cancelled</option>
-                </select>
-              </label>
-
-              {/* Country Filter */}
-              <label className="flex items-center gap-2">
-                <span className="text-gray-700 dark:text-gray-300 font-semibold text-sm">Country:</span>
-                <select
-                  value={filterCountry}
-                  onChange={(e) => setFilterCountry(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+                  Grid
+                </button>
+                <button
+                  onClick={() => setViewMode('table')}
+                  className={`px-3 py-1.5 rounded text-sm font-medium transition ${
+                    viewMode === 'table'
+                      ? 'bg-indigo-500 text-white'
+                      : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  }`}
                 >
-                  <option value="all">All Countries</option>
-                  {COUNTRIES.map(c => (
-                    <option key={c.code} value={c.code}>{c.flag} {c.name}</option>
-                  ))}
-                </select>
-              </label>
+                  Table
+                </button>
+              </div>
 
-              {/* Capability Filter */}
-              <label className="flex items-center gap-2">
-                <span className="text-gray-700 dark:text-gray-300 font-semibold text-sm">Capability:</span>
-                <select
-                  value={filterCapability}
-                  onChange={(e) => setFilterCapability(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
-                >
-                  <option value="all">All Capabilities</option>
-                  <option value="reusable">Reusable</option>
-                  <option value="humanRated">Human-Rated</option>
-                  <option value="heavyLift">Heavy-Lift (20t+)</option>
-                </select>
-              </label>
-            </div>
-
-            <div className="flex gap-2">
-              <button
-                onClick={() => setViewMode('grid')}
-                className={`px-4 py-2 rounded-md font-semibold transition text-sm ${
-                  viewMode === 'grid'
-                    ? 'bg-indigo-500 text-white'
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
-                }`}
-              >
-                Grid
-              </button>
-              <button
-                onClick={() => setViewMode('table')}
-                className={`px-4 py-2 rounded-md font-semibold transition text-sm ${
-                  viewMode === 'table'
-                    ? 'bg-indigo-500 text-white'
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
-                }`}
-              >
-                Table
-              </button>
               <Link
                 to="/compare/vehicles"
-                className="px-4 py-2 rounded-md font-semibold bg-green-500 text-white hover:bg-green-600 transition text-sm"
+                className="px-4 py-1.5 rounded-md font-medium bg-green-500 text-white hover:bg-green-600 transition text-sm"
               >
                 Compare
               </Link>
             </div>
           </div>
+
+          {/* Expandable Filter Sections */}
+          {filtersExpanded && (
+            <div className="px-6 py-4 space-y-4">
+              {/* Country Filters */}
+              <div>
+                <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Country</h3>
+                <div className="flex flex-wrap gap-2">
+                  {COUNTRIES.map(country => (
+                    <FilterToggle
+                      key={country.code}
+                      label={country.name}
+                      active={selectedCountries.includes(country.code)}
+                      onClick={() => toggleCountry(country.code)}
+                      count={filterCounts.countries[country.code] || 0}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Status Filters */}
+              <div>
+                <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Status</h3>
+                <div className="flex flex-wrap gap-2">
+                  {STATUSES.map(status => (
+                    <FilterToggle
+                      key={status}
+                      label={status}
+                      active={selectedStatuses.includes(status)}
+                      onClick={() => toggleStatus(status)}
+                      count={filterCounts.statuses[status] || 0}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Capability Filters */}
+              <div>
+                <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Capabilities</h3>
+                <div className="flex flex-wrap gap-2">
+                  {CAPABILITIES.map(cap => (
+                    <FilterToggle
+                      key={cap.id}
+                      label={cap.label}
+                      active={selectedCapabilities.includes(cap.id)}
+                      onClick={() => toggleCapability(cap.id)}
+                      count={filterCounts.capabilities[cap.id] || 0}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Lift Capacity Filters */}
+              <div>
+                <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Lift Capacity (LEO)</h3>
+                <div className="flex flex-wrap gap-2">
+                  {LIFT_CAPACITIES.map(cap => (
+                    <FilterToggle
+                      key={cap.id}
+                      label={`${cap.label} (${cap.description})`}
+                      active={selectedLiftCapacities.includes(cap.id)}
+                      onClick={() => toggleLiftCapacity(cap.id)}
+                      count={filterCounts.liftCapacities[cap.id] || 0}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Clear all button */}
+              {hasActiveFilters && (
+                <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+                  <button
+                    onClick={clearAllFilters}
+                    className="text-sm text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 font-medium"
+                  >
+                    Clear all filters
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Active Filters Tags (shown when collapsed or as summary) */}
+          {hasActiveFilters && (
+            <div className="px-6 py-3 bg-gray-50 dark:bg-gray-700/50 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-sm text-gray-600 dark:text-gray-400">Active filters:</span>
+                {selectedCountries.map(code => {
+                  const country = COUNTRIES.find(c => c.code === code);
+                  return (
+                    <FilterTag
+                      key={`country-${code}`}
+                      label={country?.name || code}
+                      onRemove={() => toggleCountry(code)}
+                      color="indigo"
+                    />
+                  );
+                })}
+                {selectedStatuses.map(status => (
+                  <FilterTag
+                    key={`status-${status}`}
+                    label={status}
+                    onRemove={() => toggleStatus(status)}
+                    color="green"
+                  />
+                ))}
+                {selectedCapabilities.map(cap => {
+                  const capability = CAPABILITIES.find(c => c.id === cap);
+                  return (
+                    <FilterTag
+                      key={`cap-${cap}`}
+                      label={capability?.label || cap}
+                      onRemove={() => toggleCapability(cap)}
+                      color="purple"
+                    />
+                  );
+                })}
+                {selectedLiftCapacities.map(cap => {
+                  const liftCap = LIFT_CAPACITIES.find(c => c.id === cap);
+                  return (
+                    <FilterTag
+                      key={`lift-${cap}`}
+                      label={`${liftCap?.label} (${liftCap?.description})`}
+                      onRemove={() => toggleLiftCapacity(cap)}
+                      color="orange"
+                    />
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Results count */}
@@ -327,9 +595,25 @@ export default function LaunchVehicleListPage() {
                         {vehicle.successRate ? `${vehicle.successRate.toFixed(1)}%` : '—'}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex gap-1">
+                        <div className="flex flex-wrap gap-1 items-center">
                           {vehicle.reusable && <Recycling titleAccess="Reusable" className="text-purple-600" style={{ fontSize: '1.25rem' }} />}
                           {vehicle.humanRated && <PersonOutline titleAccess="Human-Rated" className="text-green-600" style={{ fontSize: '1.25rem' }} />}
+                          {(() => {
+                            const liftClass = getLiftCapacityClass(vehicle.payloadToLeoKg);
+                            const liftCap = LIFT_CAPACITIES.find(c => c.id === liftClass);
+                            if (liftCap) {
+                              const colorClass = liftClass === 'small' ? 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300' :
+                                liftClass === 'medium' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300' :
+                                liftClass === 'heavy' ? 'bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300' :
+                                'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300';
+                              return (
+                                <span className={`px-1.5 py-0.5 rounded text-xs font-medium ${colorClass}`}>
+                                  {liftCap.description}
+                                </span>
+                              );
+                            }
+                            return null;
+                          })()}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm">
@@ -360,17 +644,19 @@ export default function LaunchVehicleListPage() {
         {/* No results */}
         {filteredAndSortedVehicles.length === 0 && (
           <div className="text-center py-12">
+            <Rocket style={{ fontSize: '3rem' }} className="text-gray-300 dark:text-gray-600 mx-auto mb-4" />
             <p className="text-gray-500 dark:text-gray-400 text-lg">No vehicles match your filters</p>
-            <button
-              onClick={() => {
-                setFilterStatus('all');
-                setFilterCountry('all');
-                setFilterCapability('all');
-              }}
-              className="mt-4 text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300"
-            >
-              Clear filters
-            </button>
+            <p className="text-gray-400 dark:text-gray-500 text-sm mt-1">
+              Try removing some filters to see more results
+            </p>
+            {hasActiveFilters && (
+              <button
+                onClick={clearAllFilters}
+                className="mt-4 px-4 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 transition text-sm font-medium"
+              >
+                Clear all filters
+              </button>
+            )}
           </div>
         )}
 

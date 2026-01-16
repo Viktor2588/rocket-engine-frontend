@@ -36,15 +36,15 @@ export default function Navigation() {
   };
 
   const linkClass = (path) =>
-    `hover:text-indigo-600 dark:hover:text-indigo-400 transition ${isActive(path) ? 'text-indigo-600 dark:text-indigo-400 font-semibold' : ''}`;
+    `glass-nav-link ${isActive(path) ? 'glass-nav-link-active' : ''}`;
 
   return (
-    <nav id="main-navigation" className="bg-white dark:bg-gray-900 text-gray-800 dark:text-white shadow-lg sticky top-0 z-40" role="navigation" aria-label="Main navigation">
+    <nav id="main-navigation" className="glass-nav sticky top-0 z-40" role="navigation" aria-label="Main navigation">
       <div className="container mx-auto px-4">
         {/* Main Navigation Row */}
         <div className="flex justify-between items-center py-3">
           {/* Logo */}
-          <Link to="/" className="text-xl font-bold flex items-center gap-2 flex-shrink-0">
+          <Link to="/" className="text-xl font-bold flex items-center gap-2 flex-shrink-0 text-gray-800 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
             <Public style={{ fontSize: '1.5rem' }} />
             <span className="hidden md:inline">Space Capabilities</span>
             <span className="md:hidden">Space</span>
@@ -56,7 +56,7 @@ export default function Navigation() {
           </div>
 
           {/* Desktop Navigation Links */}
-          <div className="hidden md:flex items-center gap-1.5 lg:gap-2 xl:gap-3 text-sm">
+          <div className="hidden md:flex items-center gap-1 lg:gap-1.5 text-sm">
             <Link to="/countries" className={linkClass('/')}>
               Countries
             </Link>
@@ -88,27 +88,27 @@ export default function Navigation() {
             {/* Compare dropdown */}
             <div className="relative" ref={dropdownRef}>
               <button
-                className={`hover:text-indigo-600 dark:hover:text-indigo-400 transition flex items-center gap-1 ${isActive('/compare') ? 'text-indigo-600 dark:text-indigo-400 font-semibold' : ''}`}
+                className={`glass-nav-link flex items-center gap-1 ${isActive('/compare') ? 'glass-nav-link-active' : ''}`}
                 onClick={() => setCompareMenuOpen(!compareMenuOpen)}
               >
                 Compare
-                <svg className={`w-4 h-4 transition-transform ${compareMenuOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className={`w-4 h-4 transition-transform duration-200 ${compareMenuOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
 
               {compareMenuOpen && (
-                <div className="absolute top-full right-0 mt-1 bg-white dark:bg-gray-800 rounded-lg shadow-xl py-2 min-w-[160px] z-50 border border-gray-200 dark:border-gray-700">
+                <div className="absolute top-full right-0 mt-2 glass-dropdown py-2 min-w-[160px] z-50 animate-glass-in">
                   <Link
                     to="/compare/countries"
-                    className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+                    className="glass-dropdown-item block"
                     onClick={() => setCompareMenuOpen(false)}
                   >
                     Countries
                   </Link>
                   <Link
                     to="/compare/engines"
-                    className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+                    className="glass-dropdown-item block"
                     onClick={() => setCompareMenuOpen(false)}
                   >
                     Engines
@@ -126,7 +126,7 @@ export default function Navigation() {
             <ThemeToggleButton />
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+              className="glass-button-icon"
               aria-label="Toggle menu"
             >
               {mobileMenuOpen ? (
@@ -149,37 +149,37 @@ export default function Navigation() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-gray-200 dark:border-gray-800">
-            <div className="flex flex-col gap-2">
-              <Link to="/countries" className={`py-2 px-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 ${isActive('/') ? 'bg-gray-100 dark:bg-gray-800 text-indigo-600 dark:text-indigo-400' : ''}`}>
+          <div className="md:hidden py-4 border-t border-white/10 dark:border-white/[0.06] animate-glass-in">
+            <div className="flex flex-col gap-1">
+              <Link to="/countries" className={`${linkClass('/')} block`}>
                 Countries
               </Link>
-              <Link to="/engines" className={`py-2 px-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 ${isActive('/engines') ? 'bg-gray-100 dark:bg-gray-800 text-indigo-600 dark:text-indigo-400' : ''}`}>
+              <Link to="/engines" className={`${linkClass('/engines')} block`}>
                 Engines
               </Link>
-              <Link to="/vehicles" className={`py-2 px-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 ${isActive('/vehicles') ? 'bg-gray-100 dark:bg-gray-800 text-indigo-600 dark:text-indigo-400' : ''}`}>
+              <Link to="/vehicles" className={`${linkClass('/vehicles')} block`}>
                 Vehicles
               </Link>
-              <Link to="/satellites" className={`py-2 px-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 ${isActive('/satellites') ? 'bg-gray-100 dark:bg-gray-800 text-indigo-600 dark:text-indigo-400' : ''}`}>
+              <Link to="/satellites" className={`${linkClass('/satellites')} block`}>
                 Satellites
               </Link>
-              <Link to="/launch-sites" className={`py-2 px-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 ${isActive('/launch-sites') ? 'bg-gray-100 dark:bg-gray-800 text-indigo-600 dark:text-indigo-400' : ''}`}>
+              <Link to="/launch-sites" className={`${linkClass('/launch-sites')} block`}>
                 Launch Sites
               </Link>
-              <Link to="/missions" className={`py-2 px-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 ${isActive('/missions') ? 'bg-gray-100 dark:bg-gray-800 text-indigo-600 dark:text-indigo-400' : ''}`}>
+              <Link to="/missions" className={`${linkClass('/missions')} block`}>
                 Missions
               </Link>
-              <Link to="/rankings" className={`py-2 px-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 ${isActive('/rankings') ? 'bg-gray-100 dark:bg-gray-800 text-indigo-600 dark:text-indigo-400' : ''}`}>
+              <Link to="/rankings" className={`${linkClass('/rankings')} block`}>
                 Rankings
               </Link>
-              <Link to="/analytics" className={`py-2 px-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 ${isActive('/analytics') ? 'bg-gray-100 dark:bg-gray-800 text-indigo-600 dark:text-indigo-400' : ''}`}>
+              <Link to="/analytics" className={`${linkClass('/analytics')} block`}>
                 Analytics
               </Link>
-              <div className="border-t border-gray-200 dark:border-gray-800 my-2"></div>
-              <Link to="/compare/countries" className={`py-2 px-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 ${isActive('/compare/countries') ? 'bg-gray-100 dark:bg-gray-800 text-indigo-600 dark:text-indigo-400' : ''}`}>
+              <div className="border-t border-white/10 dark:border-white/[0.06] my-2"></div>
+              <Link to="/compare/countries" className={`${linkClass('/compare/countries')} block`}>
                 Compare Countries
               </Link>
-              <Link to="/compare/engines" className={`py-2 px-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 ${isActive('/compare/engines') ? 'bg-gray-100 dark:bg-gray-800 text-indigo-600 dark:text-indigo-400' : ''}`}>
+              <Link to="/compare/engines" className={`${linkClass('/compare/engines')} block`}>
                 Compare Engines
               </Link>
             </div>

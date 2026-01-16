@@ -9,18 +9,18 @@ export default function CountryCard({ country, rank }) {
 
   // Determine score color based on value
   const getScoreColor = (score) => {
-    if (score >= 80) return 'text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/30';
-    if (score >= 60) return 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30';
-    if (score >= 40) return 'text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/30';
-    return 'text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-700';
+    if (score >= 80) return 'text-green-600 dark:text-green-400 bg-green-500/15 dark:bg-green-500/20 border-green-400/20';
+    if (score >= 60) return 'text-blue-600 dark:text-blue-400 bg-blue-500/15 dark:bg-blue-500/20 border-blue-400/20';
+    if (score >= 40) return 'text-yellow-600 dark:text-yellow-400 bg-yellow-500/15 dark:bg-yellow-500/20 border-yellow-400/20';
+    return 'text-gray-600 dark:text-gray-400 bg-gray-500/10 dark:bg-gray-500/15 border-gray-400/20';
   };
 
   // Determine rank badge color
   const getRankColor = (rank) => {
-    if (rank === 1) return 'bg-yellow-400 text-yellow-900';
-    if (rank === 2) return 'bg-gray-300 text-gray-800';
-    if (rank === 3) return 'bg-orange-400 text-orange-900';
-    return 'bg-blue-100 text-blue-800';
+    if (rank === 1) return 'bg-gradient-to-br from-yellow-400 to-yellow-500 text-yellow-900 shadow-lg shadow-yellow-500/30';
+    if (rank === 2) return 'bg-gradient-to-br from-gray-300 to-gray-400 text-gray-800 shadow-lg shadow-gray-400/30';
+    if (rank === 3) return 'bg-gradient-to-br from-orange-400 to-orange-500 text-orange-900 shadow-lg shadow-orange-500/30';
+    return 'bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 border border-indigo-400/30';
   };
 
   // Count active capabilities (boolean flags)
@@ -49,7 +49,7 @@ export default function CountryCard({ country, rank }) {
 
   return (
     <Link to={`/countries/${country.isoCode}`}>
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition p-6 cursor-pointer border-l-4 border-indigo-500 relative">
+      <div className="glass-panel glass-float p-6 cursor-pointer border-l-4 border-indigo-500 relative">
         {/* Rank Badge */}
         {rank && (
           <div className={`absolute -top-2 -right-2 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${getRankColor(rank)}`}>
@@ -61,7 +61,7 @@ export default function CountryCard({ country, rank }) {
         <div className="flex items-start gap-3 mb-4">
           <div className="text-4xl">
             {country.flagUrl ? (
-              <img src={country.flagUrl} alt={`${country.name} flag`} className="w-10 h-7 object-cover rounded" />
+              <img src={country.flagUrl} alt={`${country.name} flag`} className="w-10 h-7 object-cover rounded shadow-sm" />
             ) : (
               <span className="text-3xl">🏳️</span>
             )}
@@ -81,11 +81,11 @@ export default function CountryCard({ country, rank }) {
 
         {/* Score Display */}
         <div className="grid grid-cols-2 gap-4 mb-4">
-          <div className={`p-3 rounded ${getScoreColor(score)}`}>
+          <div className={`p-3 rounded-[12px] border ${getScoreColor(score)}`}>
             <p className="text-xs text-gray-500 dark:text-gray-400">Capability Score</p>
             <p className="text-2xl font-bold">{score.toFixed(1)}</p>
           </div>
-          <div className="bg-purple-50 dark:bg-purple-900/30 p-3 rounded">
+          <div className="bg-purple-500/15 dark:bg-purple-500/20 p-3 rounded-[12px] border border-purple-400/20">
             <p className="text-xs text-gray-500 dark:text-gray-400">Region</p>
             <p className="text-sm font-semibold text-purple-700 dark:text-purple-300">{country.region}</p>
           </div>
@@ -93,13 +93,13 @@ export default function CountryCard({ country, rank }) {
 
         {/* Key Stats */}
         <div className="grid grid-cols-3 gap-2 mb-4 text-center">
-          <div className="bg-gray-50 dark:bg-gray-700 p-2 rounded">
+          <div className="bg-gray-500/10 dark:bg-white/[0.06] p-2 rounded-[10px] border border-gray-200/30 dark:border-white/[0.08]">
             <p className="text-xs text-gray-500 dark:text-gray-400">Launches</p>
             <p className="text-sm font-bold text-gray-700 dark:text-gray-200">
               {country.totalLaunches ?? '-'}
             </p>
           </div>
-          <div className="bg-gray-50 dark:bg-gray-700 p-2 rounded">
+          <div className="bg-gray-500/10 dark:bg-white/[0.06] p-2 rounded-[10px] border border-gray-200/30 dark:border-white/[0.08]">
             <p className="text-xs text-gray-500 dark:text-gray-400">Success</p>
             <p className="text-sm font-bold text-gray-700 dark:text-gray-200">
               {country.launchSuccessRate
@@ -107,7 +107,7 @@ export default function CountryCard({ country, rank }) {
                 : '-'}
             </p>
           </div>
-          <div className="bg-gray-50 dark:bg-gray-700 p-2 rounded">
+          <div className="bg-gray-500/10 dark:bg-white/[0.06] p-2 rounded-[10px] border border-gray-200/30 dark:border-white/[0.08]">
             <p className="text-xs text-gray-500 dark:text-gray-400">Astronauts</p>
             <p className="text-sm font-bold text-gray-700 dark:text-gray-200">
               {country.activeAstronauts ?? '-'}
@@ -116,14 +116,14 @@ export default function CountryCard({ country, rank }) {
         </div>
 
         {/* Capability Badges */}
-        <div className="flex flex-wrap gap-1 mb-4">
+        <div className="flex flex-wrap gap-1.5 mb-4">
           {activeCapabilities.map(cap => (
             <span
               key={cap.key}
-              className={`inline-flex items-center gap-1 px-2 py-1 text-xs rounded-full ${
+              className={`inline-flex items-center gap-1 px-2.5 py-1 text-xs rounded-full backdrop-blur-sm border ${
                 cap.inDevelopment
-                  ? 'bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300'
-                  : 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300'
+                  ? 'bg-yellow-500/15 dark:bg-yellow-500/20 text-yellow-700 dark:text-yellow-300 border-yellow-400/20'
+                  : 'bg-indigo-500/15 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 border-indigo-400/20'
               }`}
               title={cap.label}
             >
@@ -137,13 +137,13 @@ export default function CountryCard({ country, rank }) {
         </div>
 
         {/* Footer */}
-        <div className="pt-4 border-t border-gray-200 dark:border-gray-700 flex justify-between items-center">
+        <div className="pt-4 border-t border-gray-200/50 dark:border-white/[0.08] flex justify-between items-center">
           <p className="text-xs text-gray-500 dark:text-gray-400">
             {country.annualBudgetUsd && (
               <span>Budget: ${(country.annualBudgetUsd / 1e9).toFixed(1)}B</span>
             )}
           </p>
-          <p className="text-xs text-indigo-500 dark:text-indigo-400 font-semibold">View Details →</p>
+          <p className="text-xs text-indigo-600 dark:text-indigo-400 font-semibold">View Details →</p>
         </div>
       </div>
     </Link>

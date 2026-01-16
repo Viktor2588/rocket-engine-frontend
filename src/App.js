@@ -34,7 +34,7 @@ function App() {
       <ToastProvider>
         <DataProvider>
           <Router basename={basename}>
-            <div className="App dark:bg-gray-900 dark:text-white min-h-screen flex flex-col">
+            <div className="App min-h-screen flex flex-col">
           <SkipLinks />
           <Navigation />
           <main id="main-content" tabIndex="-1" className="focus:outline-none flex-1">

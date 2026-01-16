@@ -55,14 +55,14 @@ function getCountryFlag(isoCode) {
 }
 
 /**
- * Get color based on score
+ * Get color based on score - glass style
  */
 const getScoreColor = (score) => {
-  if (score >= 80) return { stroke: '#10B981', bg: 'bg-green-500', text: 'text-green-600' };
-  if (score >= 60) return { stroke: '#3B82F6', bg: 'bg-blue-500', text: 'text-blue-600' };
-  if (score >= 40) return { stroke: '#F59E0B', bg: 'bg-yellow-500', text: 'text-yellow-600' };
-  if (score >= 20) return { stroke: '#F97316', bg: 'bg-orange-500', text: 'text-orange-600' };
-  return { stroke: '#6B7280', bg: 'bg-gray-500', text: 'text-gray-600' };
+  if (score >= 80) return { stroke: '#10B981', bg: 'bg-green-500/15 dark:bg-green-500/20', text: 'text-green-600 dark:text-green-400', border: 'border-green-400/20' };
+  if (score >= 60) return { stroke: '#3B82F6', bg: 'bg-blue-500/15 dark:bg-blue-500/20', text: 'text-blue-600 dark:text-blue-400', border: 'border-blue-400/20' };
+  if (score >= 40) return { stroke: '#F59E0B', bg: 'bg-yellow-500/15 dark:bg-yellow-500/20', text: 'text-yellow-600 dark:text-yellow-400', border: 'border-yellow-400/20' };
+  if (score >= 20) return { stroke: '#F97316', bg: 'bg-orange-500/15 dark:bg-orange-500/20', text: 'text-orange-600 dark:text-orange-400', border: 'border-orange-400/20' };
+  return { stroke: '#6B7280', bg: 'bg-gray-500/15 dark:bg-gray-500/20', text: 'text-gray-600 dark:text-gray-400', border: 'border-gray-400/20' };
 };
 
 /**
@@ -92,10 +92,10 @@ export default function CapabilityScoreCard({
 
   if (compact) {
     return (
-      <div className="flex items-center gap-4 p-4 bg-white rounded-lg shadow">
+      <div className="flex items-center gap-4 p-4 glass-panel glass-float">
         <div className="relative flex-shrink-0">
           <svg width="90" height="90" className="transform -rotate-90">
-            <circle cx="45" cy="45" r={radius} fill="none" stroke="#E5E7EB" strokeWidth="8" />
+            <circle cx="45" cy="45" r={radius} fill="none" stroke="rgba(229, 231, 235, 0.5)" strokeWidth="8" className="dark:stroke-white/10" />
             <circle
               cx="45" cy="45" r={radius} fill="none"
               stroke={scoreColor.stroke} strokeWidth="8" strokeLinecap="round"
@@ -108,15 +108,15 @@ export default function CapabilityScoreCard({
           </div>
         </div>
         <div className="flex-1 min-w-0">
-          <h4 className="font-semibold text-gray-800">Capability Score</h4>
-          <p className="text-sm text-gray-500">
+          <h4 className="font-semibold text-gray-800 dark:text-white">Capability Score</h4>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
             {globalAverage && (
               <>
                 Global avg: {globalAverage.toFixed(0)}
                 {overallScore > globalAverage ? (
-                  <span className="text-green-600 ml-2">+{(overallScore - globalAverage).toFixed(0)}</span>
+                  <span className="text-green-600 dark:text-green-400 ml-2">+{(overallScore - globalAverage).toFixed(0)}</span>
                 ) : (
-                  <span className="text-red-600 ml-2">{(overallScore - globalAverage).toFixed(0)}</span>
+                  <span className="text-red-600 dark:text-red-400 ml-2">{(overallScore - globalAverage).toFixed(0)}</span>
                 )}
               </>
             )}
@@ -127,13 +127,13 @@ export default function CapabilityScoreCard({
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
-      <h3 className="text-lg font-bold text-gray-800 mb-6">Space Capability Index (SCI)</h3>
+    <div className="glass-panel p-6">
+      <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-6">Space Capability Index (SCI)</h3>
       <div className="flex flex-col md:flex-row gap-8">
         <div className="flex flex-col items-center">
           <div className="relative">
             <svg width="160" height="160" className="transform -rotate-90">
-              <circle cx="80" cy="80" r={radius} fill="none" stroke="#E5E7EB" strokeWidth="12" />
+              <circle cx="80" cy="80" r={radius} fill="none" stroke="rgba(229, 231, 235, 0.5)" strokeWidth="12" className="dark:stroke-white/10" />
               <circle
                 cx="80" cy="80" r={radius} fill="none"
                 stroke={scoreColor.stroke} strokeWidth="12" strokeLinecap="round"
@@ -143,24 +143,24 @@ export default function CapabilityScoreCard({
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
               <span className={`text-4xl font-bold ${scoreColor.text}`}>{overallScore.toFixed(0)}</span>
-              <span className="text-sm text-gray-500">out of 100</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">out of 100</span>
             </div>
           </div>
           {globalAverage && (
             <div className="mt-4 text-center">
-              <p className="text-sm text-gray-500">Global Average: {globalAverage.toFixed(0)}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Global Average: {globalAverage.toFixed(0)}</p>
               {overallScore > globalAverage ? (
-                <p className="text-sm text-green-600 font-semibold">+{(overallScore - globalAverage).toFixed(0)} above average</p>
+                <p className="text-sm text-green-600 dark:text-green-400 font-semibold">+{(overallScore - globalAverage).toFixed(0)} above average</p>
               ) : overallScore < globalAverage ? (
-                <p className="text-sm text-red-600 font-semibold">{(overallScore - globalAverage).toFixed(0)} below average</p>
+                <p className="text-sm text-red-600 dark:text-red-400 font-semibold">{(overallScore - globalAverage).toFixed(0)} below average</p>
               ) : (
-                <p className="text-sm text-gray-600 font-semibold">At average</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400 font-semibold">At average</p>
               )}
             </div>
           )}
         </div>
         <div className="flex-1">
-          <h4 className="text-sm font-semibold text-gray-600 mb-4 uppercase tracking-wide">Category Breakdown</h4>
+          <h4 className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-4 uppercase tracking-wide">Category Breakdown</h4>
           <div className="space-y-3">
             {Object.entries(CAPABILITY_CATEGORIES).map(([key, category]) => {
               const categoryScore = categoryScores[key] || 0;
@@ -168,24 +168,24 @@ export default function CapabilityScoreCard({
               return (
                 <div key={key}>
                   <div className="flex justify-between items-center mb-1">
-                    <span className="text-sm text-gray-700 flex items-center gap-2">
+                    <span className="text-sm text-gray-700 dark:text-gray-300 flex items-center gap-2">
                       <SpaceIcon name={category.icon} size="sm" />
                       {category.label}
                     </span>
                     <span className={`text-sm font-semibold ${categoryColor.text}`}>{categoryScore.toFixed(0)}</span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className={`h-2 rounded-full transition-all duration-500 ${categoryColor.bg}`} style={{ width: `${categoryScore}%` }} />
+                  <div className="w-full bg-gray-200/50 dark:bg-white/[0.08] rounded-full h-2">
+                    <div className={`h-2 rounded-full transition-all duration-500`} style={{ width: `${categoryScore}%`, backgroundColor: categoryColor.stroke }} />
                   </div>
-                  <p className="text-xs text-gray-400 mt-1">{category.description}</p>
+                  <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">{category.description}</p>
                 </div>
               );
             })}
           </div>
         </div>
       </div>
-      <div className="mt-6 pt-4 border-t border-gray-200">
-        <p className="text-xs text-gray-500">
+      <div className="mt-6 pt-4 border-t border-gray-200/50 dark:border-white/[0.08]">
+        <p className="text-xs text-gray-500 dark:text-gray-400">
           <strong>Score Calculation:</strong> Weighted average of all categories.
           Launch Capability (20%), Human Spaceflight (20%), Propulsion (15%),
           Deep Space (15%), Satellites (15%), Infrastructure (10%), Independence (5%).
@@ -249,21 +249,21 @@ function SCIBreakdownCard({ breakdown, showDetails = true, compact = false }) {
 
   if (compact) {
     return (
-      <div className="bg-white rounded-lg shadow-md p-4">
+      <div className="glass-panel glass-float p-4">
         <div className="flex items-center gap-3 mb-3">
           <span className="text-2xl">{getCountryFlag(breakdown.countryId)}</span>
           <div>
-            <h3 className="font-bold text-gray-800">{breakdown.countryName}</h3>
+            <h3 className="font-bold text-gray-800 dark:text-white">{breakdown.countryName}</h3>
             <span
-              className="text-xs px-2 py-0.5 rounded-full font-medium"
-              style={{ backgroundColor: tierInfo.color + '20', color: tierInfo.color }}
+              className="text-xs px-2 py-0.5 rounded-full font-medium backdrop-blur-sm"
+              style={{ backgroundColor: tierInfo.color + '25', color: tierInfo.color, border: `1px solid ${tierInfo.color}40` }}
             >
               {breakdown.tier}
             </span>
           </div>
           <div className="ml-auto text-right">
-            <div className="text-2xl font-bold text-indigo-600">{breakdown.overallScore?.toFixed(1)}</div>
-            <div className="text-xs text-gray-500">Rank #{breakdown.globalRank}</div>
+            <div className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">{breakdown.overallScore?.toFixed(1)}</div>
+            <div className="text-xs text-gray-500 dark:text-gray-400">Rank #{breakdown.globalRank}</div>
           </div>
         </div>
         <div className="h-32">
@@ -274,9 +274,9 @@ function SCIBreakdownCard({ breakdown, showDetails = true, compact = false }) {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+    <div className="glass-panel overflow-hidden">
       {/* Header */}
-      <div className="bg-gradient-to-r from-indigo-600 to-purple-700 p-6 text-white">
+      <div className="bg-gradient-to-r from-indigo-600/90 to-purple-700/90 backdrop-blur-sm p-6 text-white">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <span className="text-4xl">{getCountryFlag(breakdown.countryId)}</span>
@@ -292,7 +292,7 @@ function SCIBreakdownCard({ breakdown, showDetails = true, compact = false }) {
         </div>
         <div className="mt-4 flex items-center gap-4 flex-wrap">
           <span
-            className="px-3 py-1 rounded-full text-sm font-medium"
+            className="px-3 py-1 rounded-full text-sm font-medium backdrop-blur-sm"
             style={{ backgroundColor: tierInfo.color, color: '#000' }}
           >
             {breakdown.tier}
@@ -319,7 +319,7 @@ function SCIBreakdownCard({ breakdown, showDetails = true, compact = false }) {
       {/* Category Scores */}
       {showDetails && (
         <div className="px-6 pb-6">
-          <h3 className="text-lg font-semibold text-gray-800 mb-4">Category Breakdown</h3>
+          <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Category Breakdown</h3>
           <div className="space-y-3">
             {breakdown.categoryScores?.map((catScore) => {
               const catInfo = CATEGORY_WEIGHTS?.find(cw => cw.category === catScore.category);
@@ -328,19 +328,19 @@ function SCIBreakdownCard({ breakdown, showDetails = true, compact = false }) {
                   <span className="w-8"><SpaceIcon name={catInfo?.icon} size="lg" /></span>
                   <div className="flex-1">
                     <div className="flex justify-between items-center mb-1">
-                      <span className="text-sm font-medium text-gray-700">{catInfo?.label}</span>
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{catInfo?.label}</span>
                       <span className="text-sm font-bold" style={{ color: catInfo?.color }}>
                         {catScore.score?.toFixed(1)}
                       </span>
                     </div>
-                    <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="h-2 bg-gray-200/50 dark:bg-white/[0.08] rounded-full overflow-hidden">
                       <div
                         className="h-full rounded-full transition-all duration-500"
                         style={{ width: `${catScore.score}%`, backgroundColor: catInfo?.color }}
                       />
                     </div>
                   </div>
-                  <span className="text-xs text-gray-500 w-12 text-right">
+                  <span className="text-xs text-gray-500 dark:text-gray-400 w-12 text-right">
                     {((catInfo?.weight || 0) * 100).toFixed(0)}% wt
                   </span>
                 </div>
@@ -354,13 +354,13 @@ function SCIBreakdownCard({ breakdown, showDetails = true, compact = false }) {
       {showDetails && (breakdown.strengths?.length > 0 || breakdown.weaknesses?.length > 0) && (
         <div className="px-6 pb-6 grid grid-cols-2 gap-4">
           {breakdown.strengths?.length > 0 && (
-            <div className="bg-green-50 rounded-lg p-4">
-              <h4 className="text-sm font-semibold text-green-800 mb-2">Strengths</h4>
+            <div className="bg-green-500/10 dark:bg-green-500/15 rounded-[12px] p-4 border border-green-400/20 backdrop-blur-sm">
+              <h4 className="text-sm font-semibold text-green-800 dark:text-green-300 mb-2">Strengths</h4>
               <ul className="space-y-1">
                 {breakdown.strengths.map(s => {
                   const catInfo = CATEGORY_WEIGHTS?.find(cw => cw.category === s);
                   return (
-                    <li key={s} className="text-sm text-green-700 flex items-center gap-2">
+                    <li key={s} className="text-sm text-green-700 dark:text-green-400 flex items-center gap-2">
                       <SpaceIcon name={catInfo?.icon} size="sm" />
                       {catInfo?.label}
                     </li>
@@ -370,13 +370,13 @@ function SCIBreakdownCard({ breakdown, showDetails = true, compact = false }) {
             </div>
           )}
           {breakdown.weaknesses?.length > 0 && (
-            <div className="bg-amber-50 rounded-lg p-4">
-              <h4 className="text-sm font-semibold text-amber-800 mb-2">Areas for Growth</h4>
+            <div className="bg-amber-500/10 dark:bg-amber-500/15 rounded-[12px] p-4 border border-amber-400/20 backdrop-blur-sm">
+              <h4 className="text-sm font-semibold text-amber-800 dark:text-amber-300 mb-2">Areas for Growth</h4>
               <ul className="space-y-1">
                 {breakdown.weaknesses.map(w => {
                   const catInfo = CATEGORY_WEIGHTS?.find(cw => cw.category === w);
                   return (
-                    <li key={w} className="text-sm text-amber-700 flex items-center gap-2">
+                    <li key={w} className="text-sm text-amber-700 dark:text-amber-400 flex items-center gap-2">
                       <SpaceIcon name={catInfo?.icon} size="sm" />
                       {catInfo?.label}
                     </li>
@@ -396,14 +396,14 @@ function SCIBreakdownCard({ breakdown, showDetails = true, compact = false }) {
  */
 export function CapabilityScoreBadge({ score }) {
   const getColor = (s) => {
-    if (s >= 80) return 'bg-green-100 text-green-800';
-    if (s >= 60) return 'bg-blue-100 text-blue-800';
-    if (s >= 40) return 'bg-yellow-100 text-yellow-800';
-    return 'bg-gray-100 text-gray-800';
+    if (s >= 80) return 'bg-green-500/20 dark:bg-green-500/25 text-green-700 dark:text-green-300 border-green-400/20';
+    if (s >= 60) return 'bg-blue-500/20 dark:bg-blue-500/25 text-blue-700 dark:text-blue-300 border-blue-400/20';
+    if (s >= 40) return 'bg-yellow-500/20 dark:bg-yellow-500/25 text-yellow-700 dark:text-yellow-300 border-yellow-400/20';
+    return 'bg-gray-500/20 dark:bg-gray-500/25 text-gray-700 dark:text-gray-300 border-gray-400/20';
   };
 
   return (
-    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium ${getColor(score)}`}>
+    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium border backdrop-blur-sm ${getColor(score)}`}>
       {score?.toFixed(0) || '—'}
     </span>
   );
@@ -422,8 +422,8 @@ export function TierBadge({ tier, size = 'md' }) {
 
   return (
     <span
-      className={`rounded-full font-medium ${sizeClasses[size]}`}
-      style={{ backgroundColor: tierInfo.color + '20', color: tierInfo.color }}
+      className={`rounded-full font-medium backdrop-blur-sm border ${sizeClasses[size]}`}
+      style={{ backgroundColor: tierInfo.color + '25', color: tierInfo.color, borderColor: tierInfo.color + '40' }}
     >
       {tier}
     </span>
@@ -455,7 +455,8 @@ export function ScoreGauge({ score, size = 'md' }) {
       <svg width={config.width} height={config.width} className="-rotate-90">
         <circle
           cx={config.width / 2} cy={config.width / 2} r={radius}
-          fill="none" stroke="#E5E7EB" strokeWidth={config.strokeWidth}
+          fill="none" stroke="rgba(229, 231, 235, 0.5)" strokeWidth={config.strokeWidth}
+          className="dark:stroke-white/10"
         />
         <circle
           cx={config.width / 2} cy={config.width / 2} r={radius}
@@ -579,23 +580,23 @@ export function MiniScoreCard({ breakdown, onClick, selected }) {
   return (
     <div
       onClick={() => onClick?.(breakdown)}
-      className={`bg-white rounded-lg border p-3 cursor-pointer hover:shadow-md transition ${
-        selected ? 'border-indigo-500 ring-2 ring-indigo-200' : 'border-gray-200'
+      className={`glass-panel p-3 cursor-pointer hover:bg-white/80 dark:hover:bg-white/[0.1] transition ${
+        selected ? 'ring-2 ring-indigo-500 border-indigo-500/50' : ''
       }`}
     >
       <div className="flex items-center gap-3">
         <span className="text-2xl">{getCountryFlag(breakdown.countryId)}</span>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <h4 className="font-semibold text-gray-800 truncate">{breakdown.countryName}</h4>
+            <h4 className="font-semibold text-gray-800 dark:text-white truncate">{breakdown.countryName}</h4>
             <span
-              className="px-1.5 py-0.5 rounded text-xs font-medium shrink-0"
-              style={{ backgroundColor: tierInfo.color + '20', color: tierInfo.color }}
+              className="px-1.5 py-0.5 rounded text-xs font-medium shrink-0 backdrop-blur-sm"
+              style={{ backgroundColor: tierInfo.color + '25', color: tierInfo.color, border: `1px solid ${tierInfo.color}40` }}
             >
               {breakdown.tier}
             </span>
           </div>
-          <p className="text-xs text-gray-500">Rank #{breakdown.globalRank}</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400">Rank #{breakdown.globalRank}</p>
         </div>
         <div className="text-right shrink-0">
           <ScoreGauge score={breakdown.overallScore} size="sm" />
@@ -616,9 +617,9 @@ export function CategoryScoreBar({ category, score, showLabel = true }) {
     <div className="flex items-center gap-2">
       <SpaceIcon name={catInfo.icon} size="md" />
       {showLabel && (
-        <span className="text-sm text-gray-600 w-28 truncate">{catInfo.label}</span>
+        <span className="text-sm text-gray-600 dark:text-gray-400 w-28 truncate">{catInfo.label}</span>
       )}
-      <div className="flex-1 h-3 bg-gray-100 rounded-full overflow-hidden">
+      <div className="flex-1 h-3 bg-gray-200/50 dark:bg-white/[0.08] rounded-full overflow-hidden">
         <div
           className="h-full rounded-full transition-all duration-500"
           style={{ width: `${score}%`, backgroundColor: catInfo.color }}
@@ -640,27 +641,27 @@ export function CategoryMetricsDetail({ categoryScore }) {
   const catInfo = CATEGORY_WEIGHTS?.find(cw => cw.category === categoryScore.category);
 
   return (
-    <div className="bg-white rounded-lg shadow p-4">
+    <div className="glass-panel p-4">
       <div className="flex items-center gap-2 mb-3">
         <SpaceIcon name={catInfo?.icon} size="xl" />
-        <h3 className="text-lg font-semibold text-gray-800">{catInfo?.label}</h3>
+        <h3 className="text-lg font-semibold text-gray-800 dark:text-white">{catInfo?.label}</h3>
         <span className="ml-auto text-2xl font-bold" style={{ color: catInfo?.color }}>
           {categoryScore.score?.toFixed(1)}
         </span>
       </div>
-      <p className="text-sm text-gray-600 mb-4">{catInfo?.description}</p>
+      <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">{catInfo?.description}</p>
       <div className="space-y-2">
         {categoryScore.metrics.map((metric, index) => (
-          <div key={index} className="flex justify-between items-center text-sm">
-            <span className="text-gray-600">{metric.name}</span>
+          <div key={index} className="flex justify-between items-center text-sm p-2 bg-gray-500/10 dark:bg-white/[0.06] rounded-[8px]">
+            <span className="text-gray-600 dark:text-gray-400">{metric.name}</span>
             <div className="flex items-center gap-2">
-              <span className="font-medium text-gray-800">
+              <span className="font-medium text-gray-800 dark:text-white">
                 {typeof metric.value === 'boolean'
                   ? (metric.value ? 'Yes' : 'No')
                   : `${metric.value?.toLocaleString()}${metric.unit ? ` ${metric.unit}` : ''}`
                 }
               </span>
-              <span className="text-xs text-indigo-600">
+              <span className="text-xs text-indigo-600 dark:text-indigo-400 px-1.5 py-0.5 bg-indigo-500/15 dark:bg-indigo-500/20 rounded-full">
                 +{metric.contribution?.toFixed(1)} pts
               </span>
             </div>

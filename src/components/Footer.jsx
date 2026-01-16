@@ -2,24 +2,24 @@ import { Link } from 'react-router-dom';
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-100 dark:bg-gray-900 text-gray-600 dark:text-gray-300 py-8 mt-16">
-      <div className="container mx-auto px-4">
+    <footer className="glass-panel-light mt-16 rounded-none">
+      <div className="container mx-auto px-4 py-8">
         {/* Quick Links */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
           <div>
             <h4 className="font-semibold text-gray-800 dark:text-white mb-3">Explore</h4>
             <ul className="space-y-2 text-sm">
-              <li><Link to="/countries" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Countries</Link></li>
-              <li><Link to="/engines" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Engines</Link></li>
-              <li><Link to="/compare" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Compare</Link></li>
+              <li><Link to="/countries" className="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition">Countries</Link></li>
+              <li><Link to="/engines" className="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition">Engines</Link></li>
+              <li><Link to="/compare" className="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition">Compare</Link></li>
             </ul>
           </div>
           <div>
             <h4 className="font-semibold text-gray-800 dark:text-white mb-3">Top Programs</h4>
             <ul className="space-y-2 text-sm">
-              <li><Link to="/countries/USA" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition">United States</Link></li>
-              <li><Link to="/countries/CHN" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition">China</Link></li>
-              <li><Link to="/countries/RUS" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Russia</Link></li>
+              <li><Link to="/countries/USA" className="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition">United States</Link></li>
+              <li><Link to="/countries/CHN" className="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition">China</Link></li>
+              <li><Link to="/countries/RUS" className="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition">Russia</Link></li>
             </ul>
           </div>
           <div>
@@ -39,8 +39,8 @@ export default function Footer() {
         </div>
 
         {/* Data Sources */}
-        <div className="border-t border-gray-300 dark:border-gray-700 pt-8">
-          <p className="text-sm leading-relaxed mb-4">
+        <div className="border-t border-gray-200/50 dark:border-white/[0.08] pt-8">
+          <p className="text-sm leading-relaxed mb-4 text-gray-600 dark:text-gray-300">
             <span className="font-semibold text-gray-800 dark:text-white">Data Sources:</span> Space program data is compiled from{' '}
             <a
               href="https://en.wikipedia.org/wiki/Comparison_of_orbital_rocket_engines"
@@ -55,10 +55,10 @@ export default function Footer() {
             infrastructure, ground infrastructure, and technological independence.
           </p>
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-gray-500 dark:text-gray-400">
               Last updated: December 2025 | Built with React & Tailwind CSS
             </p>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-gray-500 dark:text-gray-400">
               Space Capabilities Dashboard v2.0
             </p>
           </div>
