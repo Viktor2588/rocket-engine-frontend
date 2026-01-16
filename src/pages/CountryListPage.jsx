@@ -110,7 +110,7 @@ export default function CountryListPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+    <div className="min-h-screen py-8">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
@@ -124,30 +124,30 @@ export default function CountryListPage() {
 
         {/* Quick Stats */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
+          <div className="glass-tinted-indigo p-4 text-center">
             <p className="text-3xl font-bold text-indigo-600 dark:text-indigo-400">{stats.totalCountries}</p>
             <p className="text-sm text-gray-500 dark:text-gray-400">Space Programs</p>
           </div>
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
+          <div className="glass-tinted-green p-4 text-center">
             <p className="text-3xl font-bold text-green-600 dark:text-green-400">{stats.humanSpaceflight}</p>
             <p className="text-sm text-gray-500 dark:text-gray-400">Human Spaceflight</p>
           </div>
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
+          <div className="glass-tinted-blue p-4 text-center">
             <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">{stats.independentLaunch}</p>
             <p className="text-sm text-gray-500 dark:text-gray-400">Independent Launch</p>
           </div>
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
+          <div className="glass-tinted-purple p-4 text-center">
             <p className="text-3xl font-bold text-purple-600 dark:text-purple-400">{stats.reusableRockets}</p>
             <p className="text-sm text-gray-500 dark:text-gray-400">Reusable Rockets</p>
           </div>
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
+          <div className="glass-tinted-orange p-4 text-center">
             <p className="text-3xl font-bold text-orange-600 dark:text-orange-400">{stats.averageScore.toFixed(0)}</p>
             <p className="text-sm text-gray-500 dark:text-gray-400">Avg. Score</p>
           </div>
         </div>
 
         {/* Controls */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
+        <div className="glass-panel p-6 mb-8">
           <div className="flex flex-col lg:flex-row gap-4 justify-between items-start lg:items-center">
             <div className="flex flex-wrap gap-4">
               {/* Filter by Region */}
@@ -156,7 +156,7 @@ export default function CountryListPage() {
                 <select
                   value={filterRegion}
                   onChange={(e) => setFilterRegion(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="glass-select"
                 >
                   <option value="all">All Regions</option>
                   {Object.values(REGIONS).map(region => (
@@ -171,7 +171,7 @@ export default function CountryListPage() {
                 <select
                   value={filterCapability}
                   onChange={(e) => setFilterCapability(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="glass-select"
                 >
                   <option value="all">All Capabilities</option>
                   <option value="humanSpaceflightCapable">Human Spaceflight</option>
@@ -189,7 +189,7 @@ export default function CountryListPage() {
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    className="glass-select"
                   >
                     <option value="score">Capability Score</option>
                     <option value="name">Name</option>
@@ -203,37 +203,25 @@ export default function CountryListPage() {
             <div className="flex gap-2">
               <button
                 onClick={() => setViewMode('map')}
-                className={`px-4 py-2 rounded-md font-semibold transition text-sm ${
-                  viewMode === 'map'
-                    ? 'bg-indigo-500 text-white'
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
-                }`}
+                className={viewMode === 'map' ? 'glass-button-primary' : 'glass-button'}
               >
                 Map
               </button>
               <button
                 onClick={() => setViewMode('grid')}
-                className={`px-4 py-2 rounded-md font-semibold transition text-sm ${
-                  viewMode === 'grid'
-                    ? 'bg-indigo-500 text-white'
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
-                }`}
+                className={viewMode === 'grid' ? 'glass-button-primary' : 'glass-button'}
               >
                 Grid
               </button>
               <button
                 onClick={() => setViewMode('table')}
-                className={`px-4 py-2 rounded-md font-semibold transition text-sm ${
-                  viewMode === 'table'
-                    ? 'bg-indigo-500 text-white'
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
-                }`}
+                className={viewMode === 'table' ? 'glass-button-primary' : 'glass-button'}
               >
                 Table
               </button>
               <Link
                 to="/compare/countries"
-                className="px-4 py-2 rounded-md font-semibold bg-green-500 text-white hover:bg-green-600 transition text-sm"
+                className="glass-button-primary bg-green-500/80 hover:bg-green-500"
               >
                 Compare
               </Link>
@@ -258,9 +246,9 @@ export default function CountryListPage() {
             ))}
           </div>
         ) : (
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
-            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-              <thead className="bg-gray-50 dark:bg-gray-700">
+          <div className="glass-panel overflow-hidden">
+            <table className="min-w-full divide-y divide-gray-200/50 dark:divide-white/[0.08]">
+              <thead className="glass-header-gradient">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                     Rank
@@ -285,9 +273,9 @@ export default function CountryListPage() {
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+              <tbody className="divide-y divide-gray-200/50 dark:divide-white/[0.08]">
                 {filteredAndSortedCountries.map((country, index) => (
-                  <tr key={country.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                  <tr key={country.id} className="hover:bg-gray-500/[0.05] dark:hover:bg-white/[0.03] transition-colors">
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                       {sortBy === 'score' ? rankingMap[country.id] || index + 1 : index + 1}
                     </td>
@@ -312,17 +300,17 @@ export default function CountryListPage() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex gap-1">
-                        {country.humanSpaceflightCapable && <PersonOutline titleAccess="Human Spaceflight" className="text-green-600" style={{ fontSize: '1.25rem' }} />}
-                        {country.independentLaunchCapable && <Rocket titleAccess="Independent Launch" className="text-blue-600" style={{ fontSize: '1.25rem' }} />}
-                        {country.reusableRocketCapable && <Recycling titleAccess="Reusable Rockets" className="text-purple-600" style={{ fontSize: '1.25rem' }} />}
-                        {country.deepSpaceCapable && <NightlightRound titleAccess="Deep Space" className="text-indigo-600" style={{ fontSize: '1.25rem' }} />}
-                        {country.spaceStationCapable && <SatelliteAlt titleAccess="Space Station" className="text-orange-600" style={{ fontSize: '1.25rem' }} />}
+                        {country.humanSpaceflightCapable && <PersonOutline titleAccess="Human Spaceflight" className="text-green-600 dark:text-green-400" style={{ fontSize: '1.25rem' }} />}
+                        {country.independentLaunchCapable && <Rocket titleAccess="Independent Launch" className="text-blue-600 dark:text-blue-400" style={{ fontSize: '1.25rem' }} />}
+                        {country.reusableRocketCapable && <Recycling titleAccess="Reusable Rockets" className="text-purple-600 dark:text-purple-400" style={{ fontSize: '1.25rem' }} />}
+                        {country.deepSpaceCapable && <NightlightRound titleAccess="Deep Space" className="text-indigo-600 dark:text-indigo-400" style={{ fontSize: '1.25rem' }} />}
+                        {country.spaceStationCapable && <SatelliteAlt titleAccess="Space Station" className="text-orange-600 dark:text-orange-400" style={{ fontSize: '1.25rem' }} />}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm">
                       <Link
                         to={`/countries/${country.isoCode}`}
-                        className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300"
+                        className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium"
                       >
                         View Details
                       </Link>

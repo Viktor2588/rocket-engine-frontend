@@ -22,12 +22,12 @@ import {
 // World TopoJSON URL
 const GEO_URL = 'https://unpkg.com/world-atlas@2.0.2/countries-110m.json';
 
-// Status colors
+// Status colors - glass styled
 const STATUS_COLORS = {
-  Active: 'bg-green-100 text-green-800 border-green-200',
-  Inactive: 'bg-gray-100 text-gray-800 border-gray-200 dark:border-gray-700',
-  Under_Construction: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-  Decommissioned: 'bg-red-100 text-red-800 border-red-200',
+  Active: 'glass-badge-success',
+  Inactive: 'glass-badge',
+  Under_Construction: 'glass-badge-warning',
+  Decommissioned: 'glass-badge-error',
 };
 
 // Region colors for map dots
@@ -42,14 +42,14 @@ const REGION_COLORS = {
 
 function StatCard({ label, value, IconComponent, color = 'indigo' }) {
   const colorClasses = {
-    indigo: 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600',
-    green: 'bg-green-50 dark:bg-green-900/30 text-green-600',
-    blue: 'bg-blue-50 dark:bg-blue-900/30 text-blue-600',
-    purple: 'bg-purple-50 dark:bg-purple-900/30 text-purple-600',
+    indigo: 'glass-tinted-indigo text-indigo-600 dark:text-indigo-400',
+    green: 'glass-tinted-green text-green-600 dark:text-green-400',
+    blue: 'glass-tinted-blue text-blue-600 dark:text-blue-400',
+    purple: 'glass-tinted-purple text-purple-600 dark:text-purple-400',
   };
 
   return (
-    <div className={`${colorClasses[color]} rounded-lg p-4`}>
+    <div className={`${colorClasses[color]} p-4`}>
       <div className="flex items-center gap-2 mb-1">
         <IconComponent style={{ fontSize: '1.25rem' }} />
         <span className="text-sm font-medium">{label}</span>
@@ -65,17 +65,17 @@ function LaunchSiteCard({ site }) {
   return (
     <Link
       to={`/launch-sites/${site.id}`}
-      className="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 overflow-hidden group"
+      className="glass-panel glass-float overflow-hidden group"
     >
       <div className="p-4">
         <div className="flex items-start justify-between mb-3">
           <div>
-            <h3 className="font-bold text-gray-800 group-hover:text-indigo-600 transition">
+            <h3 className="font-bold text-gray-800 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">
               {site.name}
             </h3>
-            <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">{site.countryId} | {site.region}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">{site.countryId} | {site.region}</p>
           </div>
-          <span className={`px-2 py-1 rounded-full text-xs font-medium border ${statusClass}`}>
+          <span className={statusClass}>
             {site.status}
           </span>
         </div>
@@ -84,33 +84,33 @@ function LaunchSiteCard({ site }) {
 
         {/* Stats Row */}
         <div className="grid grid-cols-3 gap-2 text-center text-xs">
-          <div className="bg-gray-50 dark:bg-gray-700 rounded p-2">
-            <div className="font-bold text-indigo-600">{site.totalLaunches || 0}</div>
-            <div className="text-gray-500 dark:text-gray-400 dark:text-gray-400">Launches</div>
+          <div className="bg-gray-500/10 dark:bg-white/[0.06] rounded-[10px] p-2 border border-gray-200/30 dark:border-white/[0.08]">
+            <div className="font-bold text-indigo-600 dark:text-indigo-400">{site.totalLaunches || 0}</div>
+            <div className="text-gray-500 dark:text-gray-400">Launches</div>
           </div>
-          <div className="bg-gray-50 dark:bg-gray-700 rounded p-2">
-            <div className="font-bold text-green-600">{site.successRate?.toFixed(1) || 0}%</div>
-            <div className="text-gray-500 dark:text-gray-400 dark:text-gray-400">Success</div>
+          <div className="bg-gray-500/10 dark:bg-white/[0.06] rounded-[10px] p-2 border border-gray-200/30 dark:border-white/[0.08]">
+            <div className="font-bold text-green-600 dark:text-green-400">{site.successRate?.toFixed(1) || 0}%</div>
+            <div className="text-gray-500 dark:text-gray-400">Success</div>
           </div>
-          <div className="bg-gray-50 dark:bg-gray-700 rounded p-2">
-            <div className="font-bold text-blue-600">{site.established || '-'}</div>
-            <div className="text-gray-500 dark:text-gray-400 dark:text-gray-400">Est.</div>
+          <div className="bg-gray-500/10 dark:bg-white/[0.06] rounded-[10px] p-2 border border-gray-200/30 dark:border-white/[0.08]">
+            <div className="font-bold text-blue-600 dark:text-blue-400">{site.established || '-'}</div>
+            <div className="text-gray-500 dark:text-gray-400">Est.</div>
           </div>
         </div>
 
         {/* Capabilities */}
         <div className="flex gap-1 mt-3 flex-wrap">
           {site.humanRated && (
-            <span className="px-2 py-0.5 bg-purple-100 text-purple-700 rounded text-xs">Human Rated</span>
+            <span className="px-2 py-0.5 bg-purple-500/15 dark:bg-purple-500/25 text-purple-700 dark:text-purple-300 rounded-full text-xs border border-purple-400/20 backdrop-blur-sm">Human Rated</span>
           )}
           {site.geoCapable && (
-            <span className="px-2 py-0.5 bg-blue-100 text-blue-700 rounded text-xs">GEO</span>
+            <span className="px-2 py-0.5 bg-blue-500/15 dark:bg-blue-500/25 text-blue-700 dark:text-blue-300 rounded-full text-xs border border-blue-400/20 backdrop-blur-sm">GEO</span>
           )}
           {site.polarCapable && (
-            <span className="px-2 py-0.5 bg-cyan-100 text-cyan-700 rounded text-xs">Polar</span>
+            <span className="px-2 py-0.5 bg-cyan-500/15 dark:bg-cyan-500/25 text-cyan-700 dark:text-cyan-300 rounded-full text-xs border border-cyan-400/20 backdrop-blur-sm">Polar</span>
           )}
           {site.hasLanding && (
-            <span className="px-2 py-0.5 bg-green-100 text-green-700 rounded text-xs">Landing</span>
+            <span className="px-2 py-0.5 bg-green-500/15 dark:bg-green-500/25 text-green-700 dark:text-green-300 rounded-full text-xs border border-green-400/20 backdrop-blur-sm">Landing</span>
           )}
         </div>
       </div>
@@ -153,13 +153,13 @@ function LaunchSiteWorldMap({ launchSites, onSiteHover, hoveredSite, onSiteClick
   };
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-lg p-4 relative overflow-hidden border border-gray-200 dark:border-gray-700">
+    <div className="glass-panel p-4 relative overflow-hidden">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-gray-800 dark:text-white text-lg font-semibold">Launch Sites Worldwide</h3>
         <div className="flex items-center gap-1">
           <button
             onClick={handleZoomIn}
-            className="p-1 rounded bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-white transition"
+            className="p-1.5 rounded-[10px] bg-gray-500/10 dark:bg-white/[0.08] hover:bg-gray-500/20 dark:hover:bg-white/[0.12] text-gray-700 dark:text-white transition border border-gray-200/30 dark:border-white/[0.08]"
             title="Zoom in"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -168,7 +168,7 @@ function LaunchSiteWorldMap({ launchSites, onSiteHover, hoveredSite, onSiteClick
           </button>
           <button
             onClick={handleZoomOut}
-            className="p-1 rounded bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-white transition"
+            className="p-1.5 rounded-[10px] bg-gray-500/10 dark:bg-white/[0.08] hover:bg-gray-500/20 dark:hover:bg-white/[0.12] text-gray-700 dark:text-white transition border border-gray-200/30 dark:border-white/[0.08]"
             title="Zoom out"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -177,7 +177,7 @@ function LaunchSiteWorldMap({ launchSites, onSiteHover, hoveredSite, onSiteClick
           </button>
           <button
             onClick={handleReset}
-            className="p-1 rounded bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-white transition"
+            className="p-1.5 rounded-[10px] bg-gray-500/10 dark:bg-white/[0.08] hover:bg-gray-500/20 dark:hover:bg-white/[0.12] text-gray-700 dark:text-white transition border border-gray-200/30 dark:border-white/[0.08]"
             title="Reset view"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -262,7 +262,7 @@ function LaunchSiteWorldMap({ launchSites, onSiteHover, hoveredSite, onSiteClick
         {/* Tooltip */}
         {hoveredSite && (
           <div
-            className="absolute bg-white dark:bg-gray-900/95 rounded-lg shadow-xl p-3 z-20 pointer-events-none border border-gray-200 dark:border-gray-700"
+            className="absolute glass-panel shadow-glass-lg p-3 z-20 pointer-events-none"
             style={{
               left: `${Math.min(Math.max(tooltipPos.x, 100), 300)}px`,
               top: `${Math.max(tooltipPos.y, 10)}px`,
@@ -287,11 +287,11 @@ function LaunchSiteWorldMap({ launchSites, onSiteHover, hoveredSite, onSiteClick
                 </span>
               </div>
             </div>
-            <div className="flex gap-1 mt-2 pt-2 border-t border-gray-200 dark:border-gray-700">
-              {hoveredSite.humanRated && <PersonOutline titleAccess="Human Rated" style={{ fontSize: '1rem' }} />}
-              {hoveredSite.geoCapable && <Public titleAccess="GEO Capable" style={{ fontSize: '1rem' }} />}
-              {hoveredSite.polarCapable && <AcUnit titleAccess="Polar Capable" style={{ fontSize: '1rem' }} />}
-              {hoveredSite.hasLanding && <FlightLand titleAccess="Landing Capable" style={{ fontSize: '1rem' }} />}
+            <div className="flex gap-1 mt-2 pt-2 border-t border-gray-200/50 dark:border-white/[0.08]">
+              {hoveredSite.humanRated && <PersonOutline titleAccess="Human Rated" className="text-purple-600 dark:text-purple-400" style={{ fontSize: '1rem' }} />}
+              {hoveredSite.geoCapable && <Public titleAccess="GEO Capable" className="text-blue-600 dark:text-blue-400" style={{ fontSize: '1rem' }} />}
+              {hoveredSite.polarCapable && <AcUnit titleAccess="Polar Capable" className="text-cyan-600 dark:text-cyan-400" style={{ fontSize: '1rem' }} />}
+              {hoveredSite.hasLanding && <FlightLand titleAccess="Landing Capable" className="text-green-600 dark:text-green-400" style={{ fontSize: '1rem' }} />}
             </div>
           </div>
         )}

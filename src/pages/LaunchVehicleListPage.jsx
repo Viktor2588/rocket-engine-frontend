@@ -74,16 +74,16 @@ function FilterToggle({ label, active, onClick, count }) {
   return (
     <button
       onClick={onClick}
-      className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-all ${
+      className={`px-3 py-1.5 rounded-full text-sm font-medium border backdrop-blur-sm transition-all ${
         active
-          ? 'bg-indigo-500 text-white border-indigo-500 shadow-sm'
-          : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:border-indigo-400 dark:hover:border-indigo-500'
+          ? 'bg-indigo-500/90 text-white border-indigo-400/50 shadow-sm'
+          : 'bg-white/60 dark:bg-white/[0.08] text-gray-700 dark:text-gray-300 border-gray-200/50 dark:border-white/[0.12] hover:border-indigo-400/50 dark:hover:border-indigo-400/30'
       }`}
     >
       {label}
       {count !== undefined && (
         <span className={`ml-1.5 px-1.5 py-0.5 rounded-full text-xs ${
-          active ? 'bg-white/20' : 'bg-gray-100 dark:bg-gray-600'
+          active ? 'bg-white/20' : 'bg-gray-500/10 dark:bg-white/10'
         }`}>
           {count}
         </span>
@@ -259,7 +259,7 @@ export default function LaunchVehicleListPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+    <div className="min-h-screen py-8">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
@@ -274,37 +274,37 @@ export default function LaunchVehicleListPage() {
         {/* Quick Stats */}
         {stats && (
           <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mb-8">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
-              <p className="text-3xl font-bold text-indigo-600">{stats.total}</p>
-              <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Total Vehicles</p>
+            <div className="glass-tinted-indigo p-4 text-center">
+              <p className="text-3xl font-bold text-indigo-600 dark:text-indigo-400">{stats.total}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Total Vehicles</p>
             </div>
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
-              <p className="text-3xl font-bold text-green-600">{stats.active}</p>
-              <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Active</p>
+            <div className="glass-tinted-green p-4 text-center">
+              <p className="text-3xl font-bold text-green-600 dark:text-green-400">{stats.active}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Active</p>
             </div>
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
-              <p className="text-3xl font-bold text-gray-600 dark:text-gray-400 dark:text-gray-400">{stats.retired}</p>
-              <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Retired</p>
+            <div className="glass-panel p-4 text-center">
+              <p className="text-3xl font-bold text-gray-600 dark:text-gray-400">{stats.retired}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Retired</p>
             </div>
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
-              <p className="text-3xl font-bold text-blue-600">{stats.development}</p>
-              <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">In Development</p>
+            <div className="glass-tinted-blue p-4 text-center">
+              <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">{stats.development}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">In Development</p>
             </div>
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
-              <p className="text-3xl font-bold text-purple-600">{stats.reusable}</p>
-              <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Reusable</p>
+            <div className="glass-tinted-purple p-4 text-center">
+              <p className="text-3xl font-bold text-purple-600 dark:text-purple-400">{stats.reusable}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Reusable</p>
             </div>
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center">
-              <p className="text-3xl font-bold text-orange-600">{stats.humanRated}</p>
-              <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Human-Rated</p>
+            <div className="glass-tinted-orange p-4 text-center">
+              <p className="text-3xl font-bold text-orange-600 dark:text-orange-400">{stats.humanRated}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Human-Rated</p>
             </div>
           </div>
         )}
 
         {/* Filters & Controls */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md mb-8 overflow-hidden">
+        <div className="glass-panel mb-8 overflow-hidden">
           {/* Filter Header */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200/50 dark:border-white/[0.08]">
             <button
               onClick={() => setFiltersExpanded(!filtersExpanded)}
               className="flex items-center gap-2 text-gray-700 dark:text-gray-300 font-semibold"
@@ -333,7 +333,7 @@ export default function LaunchVehicleListPage() {
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="px-3 py-1.5 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+                  className="glass-select"
                 >
                   <option value="payload">Payload Capacity</option>
                   <option value="name">Name</option>
@@ -344,24 +344,16 @@ export default function LaunchVehicleListPage() {
               </label>
 
               {/* View toggle */}
-              <div className="flex gap-1 border border-gray-300 dark:border-gray-600 rounded-md p-0.5">
+              <div className="flex gap-2">
                 <button
                   onClick={() => setViewMode('grid')}
-                  className={`px-3 py-1.5 rounded text-sm font-medium transition ${
-                    viewMode === 'grid'
-                      ? 'bg-indigo-500 text-white'
-                      : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
-                  }`}
+                  className={viewMode === 'grid' ? 'glass-button-primary' : 'glass-button'}
                 >
                   Grid
                 </button>
                 <button
                   onClick={() => setViewMode('table')}
-                  className={`px-3 py-1.5 rounded text-sm font-medium transition ${
-                    viewMode === 'table'
-                      ? 'bg-indigo-500 text-white'
-                      : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
-                  }`}
+                  className={viewMode === 'table' ? 'glass-button-primary' : 'glass-button'}
                 >
                   Table
                 </button>
@@ -369,7 +361,7 @@ export default function LaunchVehicleListPage() {
 
               <Link
                 to="/compare/vehicles"
-                className="px-4 py-1.5 rounded-md font-medium bg-green-500 text-white hover:bg-green-600 transition text-sm"
+                className="glass-button-primary bg-green-500/80 hover:bg-green-500"
               >
                 Compare
               </Link>
@@ -445,7 +437,7 @@ export default function LaunchVehicleListPage() {
 
               {/* Clear all button */}
               {hasActiveFilters && (
-                <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+                <div className="pt-2 border-t border-gray-200/50 dark:border-white/[0.08]">
                   <button
                     onClick={clearAllFilters}
                     className="text-sm text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 font-medium"
@@ -459,7 +451,7 @@ export default function LaunchVehicleListPage() {
 
           {/* Active Filters Tags (shown when collapsed or as summary) */}
           {hasActiveFilters && (
-            <div className="px-6 py-3 bg-gray-50 dark:bg-gray-700/50 border-t border-gray-200 dark:border-gray-700">
+            <div className="px-6 py-3 glass-header-gradient border-t border-gray-200/50 dark:border-white/[0.08]">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="text-sm text-gray-600 dark:text-gray-400">Active filters:</span>
                 {selectedCountries.map(code => {
@@ -532,82 +524,82 @@ export default function LaunchVehicleListPage() {
           </>
         ) : (
           <>
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+            <div className="glass-panel overflow-hidden">
               <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                <thead className="bg-gray-50 dark:bg-gray-700">
+                <table className="min-w-full divide-y divide-gray-200/50 dark:divide-white/[0.08]">
+                <thead className="glass-header-gradient">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                       Vehicle
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                       Manufacturer
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                       Status
                     </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                       Payload (LEO)
                     </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                       Launches
                     </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                       Success Rate
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                       Capabilities
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                <tbody className="divide-y divide-gray-200/50 dark:divide-white/[0.08]">
                   {paginatedVehicles.map((vehicle, index) => (
-                    <tr key={vehicle.id} className={index % 2 === 0 ? 'bg-white dark:bg-gray-800' : 'bg-gray-50 dark:bg-gray-700'}>
+                    <tr key={vehicle.id} className={index % 2 === 0 ? 'bg-transparent' : 'bg-gray-500/[0.03] dark:bg-white/[0.02]'}>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="font-medium text-gray-900 dark:text-white">{vehicle.name}</div>
                         {vehicle.variant && (
-                          <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">{vehicle.variant}</div>
+                          <div className="text-sm text-gray-500 dark:text-gray-400">{vehicle.variant}</div>
                         )}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                         {vehicle.manufacturer}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-2 py-1 rounded text-xs font-medium ${
-                          vehicle.status === 'Active' ? 'bg-green-100 text-green-800' :
-                          vehicle.status === 'Retired' ? 'bg-gray-100 text-gray-800' :
-                          vehicle.status === 'In Development' ? 'bg-blue-100 text-blue-800' :
-                          'bg-red-100 text-red-800'
+                        <span className={`glass-badge ${
+                          vehicle.status === 'Active' ? 'glass-badge-success' :
+                          vehicle.status === 'Retired' ? '' :
+                          vehicle.status === 'In Development' ? 'glass-badge-info' :
+                          'glass-badge-error'
                         }`}>
                           {vehicle.status}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-900 dark:text-gray-200">
                         {vehicle.payloadToLeoKg ? `${vehicle.payloadToLeoKg.toLocaleString()} kg` : '—'}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-900 dark:text-gray-200">
                         {vehicle.totalLaunches ?? '—'}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-900 dark:text-gray-200">
                         {vehicle.successRate ? `${vehicle.successRate.toFixed(1)}%` : '—'}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex flex-wrap gap-1 items-center">
-                          {vehicle.reusable && <Recycling titleAccess="Reusable" className="text-purple-600" style={{ fontSize: '1.25rem' }} />}
-                          {vehicle.humanRated && <PersonOutline titleAccess="Human-Rated" className="text-green-600" style={{ fontSize: '1.25rem' }} />}
+                          {vehicle.reusable && <Recycling titleAccess="Reusable" className="text-purple-600 dark:text-purple-400" style={{ fontSize: '1.25rem' }} />}
+                          {vehicle.humanRated && <PersonOutline titleAccess="Human-Rated" className="text-green-600 dark:text-green-400" style={{ fontSize: '1.25rem' }} />}
                           {(() => {
                             const liftClass = getLiftCapacityClass(vehicle.payloadToLeoKg);
                             const liftCap = LIFT_CAPACITIES.find(c => c.id === liftClass);
                             if (liftCap) {
-                              const colorClass = liftClass === 'small' ? 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300' :
-                                liftClass === 'medium' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300' :
-                                liftClass === 'heavy' ? 'bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300' :
-                                'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300';
+                              const colorClass = liftClass === 'small' ? 'bg-gray-500/15 text-gray-700 dark:bg-gray-500/25 dark:text-gray-300 border-gray-400/20' :
+                                liftClass === 'medium' ? 'bg-blue-500/15 text-blue-700 dark:bg-blue-500/25 dark:text-blue-300 border-blue-400/20' :
+                                liftClass === 'heavy' ? 'bg-orange-500/15 text-orange-700 dark:bg-orange-500/25 dark:text-orange-300 border-orange-400/20' :
+                                'bg-red-500/15 text-red-700 dark:bg-red-500/25 dark:text-red-300 border-red-400/20';
                               return (
-                                <span className={`px-1.5 py-0.5 rounded text-xs font-medium ${colorClass}`}>
+                                <span className={`px-1.5 py-0.5 rounded-full text-xs font-medium border backdrop-blur-sm ${colorClass}`}>
                                   {liftCap.description}
                                 </span>
                               );
@@ -619,7 +611,7 @@ export default function LaunchVehicleListPage() {
                       <td className="px-6 py-4 whitespace-nowrap text-sm">
                         <Link
                           to={`/vehicles/${vehicle.id}`}
-                          className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300"
+                          className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium"
                         >
                           View Details
                         </Link>

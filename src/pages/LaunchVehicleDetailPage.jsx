@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useLaunchVehicle } from '../hooks/useLaunchVehicles';
 
@@ -57,6 +58,81 @@ function getCountryName(countryId) {
     KOR: 'South Korea',
   };
   return names[countryId] || countryId;
+}
+
+/**
+ * Expandable Variants Section Component
+ */
+function VariantsSection({ variants, formatNumber }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  return (
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="w-full flex items-center justify-between text-left"
+      >
+        <h2 className="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
+          🔀 Variants
+          <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
+            ({variants.length} version{variants.length !== 1 ? 's' : ''})
+          </span>
+        </h2>
+        <svg
+          className={`w-6 h-6 text-gray-500 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+
+      {isExpanded && (
+        <div className="mt-4 space-y-3">
+          {variants.map((variant) => (
+            <Link
+              key={variant.id}
+              to={`/vehicles/${variant.id}`}
+              className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition"
+            >
+              <div className="flex items-center gap-4">
+                <div className="text-2xl">🚀</div>
+                <div>
+                  <div className="font-semibold text-gray-800 dark:text-white">
+                    {variant.name}
+                    {variant.variant && (
+                      <span className="text-gray-500 dark:text-gray-400 ml-1">({variant.variant})</span>
+                    )}
+                  </div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400 flex gap-4">
+                    <span className={`${
+                      variant.status === 'Active' ? 'text-green-600' :
+                      variant.status === 'Retired' ? 'text-gray-500' :
+                      variant.status === 'In Development' ? 'text-blue-600' : ''
+                    }`}>
+                      {variant.status}
+                    </span>
+                    {variant.firstFlight && <span>First Flight: {variant.firstFlight}</span>}
+                  </div>
+                </div>
+              </div>
+              <div className="text-right text-sm">
+                <div className="text-gray-800 dark:text-white font-medium">
+                  {variant.totalLaunches ?? 0} launches
+                </div>
+                {variant.payloadToLeoKg && (
+                  <div className="text-gray-500 dark:text-gray-400">
+                    {formatNumber(variant.payloadToLeoKg)} kg to LEO
+                  </div>
+                )}
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 }
 
 /**
@@ -234,6 +310,11 @@ export default function LaunchVehicleDetailPage() {
             color="indigo"
           />
         </div>
+
+        {/* Variants Section (for parent entities with child variants) */}
+        {vehicle.variants && vehicle.variants.length > 0 && (
+          <VariantsSection variants={vehicle.variants} formatNumber={formatNumber} />
+        )}
 
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

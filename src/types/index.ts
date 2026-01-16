@@ -303,6 +303,11 @@ export interface LaunchVehicle {
   engineIds?: (string | number)[];
   engines?: Engine[];
 
+  // Parent/Variant Hierarchy
+  parentId?: string | number;
+  parent?: LaunchVehicle;
+  variants?: LaunchVehicle[];
+
   // Image
   imageUrl?: string;
   wikiUrl?: string;
@@ -401,6 +406,12 @@ export interface Engine {
   successorEngine?: Engine;
   engineFamily?: string;           // e.g., "Merlin", "RS-25", "RD-180"
   variant?: string;                // e.g., "1D", "1D+", "1D Vacuum"
+
+  // Parent/Variant Hierarchy
+  parentId?: string | number;
+  parent?: Engine;
+  variants?: Engine[];
+  family?: string;                 // e.g., "Merlin", "Raptor", "RD-170"
 
   // Technology Classification
   advancedCycle?: boolean;         // Staged combustion or full-flow

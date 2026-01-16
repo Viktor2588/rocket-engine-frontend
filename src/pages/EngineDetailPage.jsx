@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useEngine, useEngineEvolution } from '../hooks/useEngines';
 
@@ -41,6 +42,83 @@ function getCountryName(countryId) {
 function formatNumber(num) {
   if (num === null || num === undefined) return '—';
   return num.toLocaleString();
+}
+
+/**
+ * Expandable Variants Section Component for Engines
+ */
+function EngineVariantsSection({ variants, formatNumber }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  return (
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="w-full flex items-center justify-between text-left"
+      >
+        <h2 className="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
+          🔀 Variants
+          <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
+            ({variants.length} version{variants.length !== 1 ? 's' : ''})
+          </span>
+        </h2>
+        <svg
+          className={`w-6 h-6 text-gray-500 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+
+      {isExpanded && (
+        <div className="mt-4 space-y-3">
+          {variants.map((variant) => (
+            <Link
+              key={variant.id}
+              to={`/engines/${variant.id}`}
+              className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition"
+            >
+              <div className="flex items-center gap-4">
+                <div className="text-2xl">🔥</div>
+                <div>
+                  <div className="font-semibold text-gray-800 dark:text-white">
+                    {variant.name}
+                    {variant.variant && (
+                      <span className="text-gray-500 dark:text-gray-400 ml-1">({variant.variant})</span>
+                    )}
+                  </div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400 flex gap-4">
+                    <span className={`${
+                      variant.status === 'Active' ? 'text-green-600' :
+                      variant.status === 'Retired' ? 'text-gray-500' :
+                      variant.status === 'Development' ? 'text-blue-600' : ''
+                    }`}>
+                      {variant.status}
+                    </span>
+                    {variant.propellant && <span>{variant.propellant}</span>}
+                  </div>
+                </div>
+              </div>
+              <div className="text-right text-sm">
+                {variant.thrustKn && (
+                  <div className="text-gray-800 dark:text-white font-medium">
+                    {formatNumber(variant.thrustKn)} kN
+                  </div>
+                )}
+                {(variant.ispVacuum || variant.isp_s || variant.isp) && (
+                  <div className="text-gray-500 dark:text-gray-400">
+                    ISP: {variant.ispVacuum || variant.isp_s || variant.isp} s
+                  </div>
+                )}
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 }
 
 /**
@@ -252,6 +330,11 @@ export default function EngineDetailPage() {
             />
           )}
         </div>
+
+        {/* Variants Section (for parent entities with child variants) */}
+        {engine.variants && engine.variants.length > 0 && (
+          <EngineVariantsSection variants={engine.variants} formatNumber={formatNumber} />
+        )}
 
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
