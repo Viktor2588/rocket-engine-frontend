@@ -1,8 +1,9 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useAllMissions, useFilteredMissions, useMissionStatistics } from '../hooks/useMissions';
 import MissionCard, { StatusBadge, MissionTypeBadge, DestinationBadge } from '../components/MissionCard';
 import Pagination from '../components/Pagination';
+import SortableHeader, { SortableGridHeader } from '../components/SortableHeader';
 import { MISSION_TYPE_INFO, DESTINATION_INFO } from '../types';
 import {
   Rocket,
@@ -43,6 +44,20 @@ export default function MissionListPage() {
     sortOrder,
     setSortOrder
   } = useFilteredMissions(allMissions);
+
+  // Sort handler for table/grid headers
+  const handleSort = useCallback((key, order) => {
+    setSortBy(key);
+    setSortOrder(order);
+  }, [setSortBy, setSortOrder]);
+
+  // Sort columns configuration
+  const sortColumns = [
+    { key: 'launchDate', label: 'Launch Date' },
+    { key: 'name', label: 'Name' },
+    { key: 'status', label: 'Status' },
+    { key: 'destination', label: 'Destination' },
+  ];
 
   // Paginate the filtered results
   const paginatedMissions = useMemo(() => {
@@ -188,27 +203,6 @@ export default function MissionListPage() {
             </div>
 
             <div className="flex items-center gap-4">
-              {/* Sort */}
-              <div className="flex items-center gap-2">
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="glass-select text-sm"
-                >
-                  <option value="launchDate">Launch Date</option>
-                  <option value="name">Name</option>
-                  <option value="status">Status</option>
-                  <option value="destination">Destination</option>
-                </select>
-                <button
-                  onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-                  className="glass-button px-2 py-1.5"
-                  title={sortOrder === 'asc' ? 'Ascending' : 'Descending'}
-                >
-                  {sortOrder === 'asc' ? '↑' : '↓'}
-                </button>
-              </div>
-
               {/* View Mode */}
               <div className="flex gap-2">
                 <button
@@ -273,10 +267,18 @@ export default function MissionListPage() {
           </div>
         ) : viewMode === 'grid' ? (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {paginatedMissions.map(mission => (
-                <MissionCard key={mission.id} mission={mission} />
-              ))}
+            <div className="space-y-4">
+              <SortableGridHeader
+                columns={sortColumns}
+                currentSort={sortBy}
+                sortOrder={sortOrder}
+                onSort={handleSort}
+              />
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {paginatedMissions.map(mission => (
+                  <MissionCard key={mission.id} mission={mission} />
+                ))}
+              </div>
             </div>
             <Pagination
               totalItems={filteredMissions.length}
@@ -293,24 +295,36 @@ export default function MissionListPage() {
               <table className="min-w-full divide-y divide-gray-200/50 dark:divide-white/[0.08]">
                 <thead className="glass-header-gradient">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Mission
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Country
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Type
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Destination
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Launch Date
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Status
-                  </th>
+                  <SortableHeader
+                    label="Mission"
+                    sortKey="name"
+                    currentSort={sortBy}
+                    sortOrder={sortOrder}
+                    onSort={handleSort}
+                  />
+                  <SortableHeader label="Country" sortKey={null} />
+                  <SortableHeader label="Type" sortKey={null} />
+                  <SortableHeader
+                    label="Destination"
+                    sortKey="destination"
+                    currentSort={sortBy}
+                    sortOrder={sortOrder}
+                    onSort={handleSort}
+                  />
+                  <SortableHeader
+                    label="Launch Date"
+                    sortKey="launchDate"
+                    currentSort={sortBy}
+                    sortOrder={sortOrder}
+                    onSort={handleSort}
+                  />
+                  <SortableHeader
+                    label="Status"
+                    sortKey="status"
+                    currentSort={sortBy}
+                    sortOrder={sortOrder}
+                    onSort={handleSort}
+                  />
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200/50 dark:divide-white/[0.08]">

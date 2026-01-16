@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import {
   useSCIRankings,
@@ -14,6 +14,7 @@ import CapabilityScoreCard, {
   TierDistributionChart,
   CategoryScoreBar,
 } from '../components/CapabilityScoreCard';
+import { SortableGridHeader } from '../components/SortableHeader';
 import { CATEGORY_WEIGHTS, SCI_TIER_THRESHOLDS } from '../types';
 import SpaceIcon from '../components/icons/SpaceIcons';
 import { EmojiEvents } from '@mui/icons-material';
@@ -57,6 +58,19 @@ export default function RankingsPage() {
   const [sortOrder, setSortOrder] = useState('desc');
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState('list'); // list, grid, compare
+
+  // Sort handler for grid headers
+  const handleSort = useCallback((key, order) => {
+    setSortBy(key);
+    setSortOrder(order);
+  }, []);
+
+  // Sort columns configuration
+  const sortColumns = [
+    { key: 'overall', label: 'Score' },
+    { key: 'rank', label: 'Rank' },
+    { key: 'name', label: 'Name' },
+  ];
 
   // Filter and sort rankings
   const filteredRankings = useFilteredRankings(rankings, {
@@ -207,30 +221,6 @@ export default function RankingsPage() {
             ))}
           </select>
 
-          {/* Sort By */}
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            className="glass-select"
-          >
-            <option value="overall">Overall Score</option>
-            <option value="rank">Global Rank</option>
-            <option value="name">Country Name</option>
-            {CATEGORY_WEIGHTS?.map(cw => (
-              <option key={cw.category} value={cw.category}>
-                {cw.icon} {cw.label}
-              </option>
-            ))}
-          </select>
-
-          {/* Sort Order */}
-          <button
-            onClick={() => setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc')}
-            className="glass-button"
-          >
-            {sortOrder === 'desc' ? '↓ Desc' : '↑ Asc'}
-          </button>
-
           {/* View Mode */}
           <div className="flex rounded-[12px] overflow-hidden border border-gray-200/50 dark:border-white/[0.08]">
             <button
@@ -282,31 +272,47 @@ export default function RankingsPage() {
       {viewMode === 'compare' && selectedCountries.length >= 2 && comparison ? (
         <ComparisonView comparison={comparison} />
       ) : viewMode === 'grid' ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredRankings.map((breakdown) => (
-            <div
-              key={breakdown.countryId}
-              onClick={() => toggleCountry(String(breakdown.countryId))}
-              className={`cursor-pointer transition ${
-                isSelected(String(breakdown.countryId)) ? 'ring-2 ring-indigo-500' : ''
-              }`}
-            >
-              <CapabilityScoreCard breakdown={breakdown} compact />
-            </div>
-          ))}
+        <div className="space-y-4">
+          <SortableGridHeader
+            columns={sortColumns}
+            currentSort={sortBy}
+            sortOrder={sortOrder}
+            onSort={handleSort}
+          />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filteredRankings.map((breakdown) => (
+              <div
+                key={breakdown.countryId}
+                onClick={() => toggleCountry(String(breakdown.countryId))}
+                className={`cursor-pointer transition ${
+                  isSelected(String(breakdown.countryId)) ? 'ring-2 ring-indigo-500' : ''
+                }`}
+              >
+                <CapabilityScoreCard breakdown={breakdown} compact />
+              </div>
+            ))}
+          </div>
         </div>
       ) : (
-        <div className="space-y-2">
-          {filteredRankings.map((breakdown, index) => (
-            <RankingRow
-              key={breakdown.countryId}
-              breakdown={breakdown}
-              rank={breakdown.globalRank}
-              isSelected={isSelected(String(breakdown.countryId))}
-              onToggleSelect={() => toggleCountry(String(breakdown.countryId))}
-              canSelect={canSelectMore || isSelected(String(breakdown.countryId))}
-            />
-          ))}
+        <div className="space-y-4">
+          <SortableGridHeader
+            columns={sortColumns}
+            currentSort={sortBy}
+            sortOrder={sortOrder}
+            onSort={handleSort}
+          />
+          <div className="space-y-2">
+            {filteredRankings.map((breakdown, index) => (
+              <RankingRow
+                key={breakdown.countryId}
+                breakdown={breakdown}
+                rank={breakdown.globalRank}
+                isSelected={isSelected(String(breakdown.countryId))}
+                onToggleSelect={() => toggleCountry(String(breakdown.countryId))}
+                canSelect={canSelectMore || isSelected(String(breakdown.countryId))}
+              />
+            ))}
+          </div>
         </div>
       )}
 

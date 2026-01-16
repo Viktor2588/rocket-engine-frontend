@@ -1,6 +1,7 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useSatellites, useFilteredSatellites, useSatelliteStatistics } from '../hooks/useSatellites';
+import SortableHeader, { SortableGridHeader } from '../components/SortableHeader';
 import {
   SettingsInputAntenna,
   Explore,
@@ -179,9 +180,24 @@ export default function SatelliteListPage() {
     search: '',
   });
   const [sortBy, setSortBy] = useState('name');
+  const [sortOrder, setSortOrder] = useState('asc');
   const [viewMode, setViewMode] = useState('grid');
 
   const filteredSatellites = useFilteredSatellites(satellites, filters);
+
+  // Sort handler for table/grid headers
+  const handleSort = useCallback((key, order) => {
+    setSortBy(key);
+    setSortOrder(order);
+  }, []);
+
+  // Sort columns configuration
+  const sortColumns = [
+    { key: 'name', label: 'Name' },
+    { key: 'launchYear', label: 'Launch Year' },
+    { key: 'altitude', label: 'Altitude' },
+    { key: 'mass', label: 'Mass' },
+  ];
 
   // Get unique values for filters
   const filterOptions = useMemo(() => {
@@ -197,19 +213,28 @@ export default function SatelliteListPage() {
   // Sort satellites
   const sortedSatellites = useMemo(() => {
     const sorted = [...filteredSatellites];
-    switch (sortBy) {
-      case 'name':
-        return sorted.sort((a, b) => a.name.localeCompare(b.name));
-      case 'launchYear':
-        return sorted.sort((a, b) => (b.launchYear || 0) - (a.launchYear || 0));
-      case 'altitude':
-        return sorted.sort((a, b) => (b.altitude || 0) - (a.altitude || 0));
-      case 'mass':
-        return sorted.sort((a, b) => (b.massKg || 0) - (a.massKg || 0));
-      default:
-        return sorted;
-    }
-  }, [filteredSatellites, sortBy]);
+    sorted.sort((a, b) => {
+      let comparison = 0;
+      switch (sortBy) {
+        case 'name':
+          comparison = a.name.localeCompare(b.name);
+          break;
+        case 'launchYear':
+          comparison = (a.launchYear || 0) - (b.launchYear || 0);
+          break;
+        case 'altitude':
+          comparison = (a.altitude || 0) - (b.altitude || 0);
+          break;
+        case 'mass':
+          comparison = (a.massKg || 0) - (b.massKg || 0);
+          break;
+        default:
+          comparison = 0;
+      }
+      return sortOrder === 'asc' ? comparison : -comparison;
+    });
+    return sorted;
+  }, [filteredSatellites, sortBy, sortOrder]);
 
   const handleFilterChange = (key, value) => {
     setFilters(prev => ({ ...prev, [key]: value }));
@@ -363,21 +388,6 @@ export default function SatelliteListPage() {
             </select>
           </div>
 
-          {/* Sort by */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Sort by</label>
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="glass-select w-full"
-            >
-              <option value="name">Name</option>
-              <option value="launchYear">Launch Year</option>
-              <option value="altitude">Altitude</option>
-              <option value="mass">Mass</option>
-            </select>
-          </div>
-
           {/* View mode */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">View</label>
@@ -416,22 +426,42 @@ export default function SatelliteListPage() {
           </button>
         </div>
       ) : viewMode === 'grid' ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {sortedSatellites.map(satellite => (
-            <SatelliteCard key={satellite.id} satellite={satellite} />
-          ))}
+        <div className="space-y-4">
+          <SortableGridHeader
+            columns={sortColumns}
+            currentSort={sortBy}
+            sortOrder={sortOrder}
+            onSort={handleSort}
+          />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {sortedSatellites.map(satellite => (
+              <SatelliteCard key={satellite.id} satellite={satellite} />
+            ))}
+          </div>
         </div>
       ) : (
         <div className="glass-panel overflow-hidden">
           <table className="w-full">
             <thead className="glass-header-gradient">
               <tr>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Name</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Type</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Orbit</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Status</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Country</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Launch</th>
+                <SortableHeader
+                  label="Name"
+                  sortKey="name"
+                  currentSort={sortBy}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                />
+                <SortableHeader label="Type" sortKey={null} />
+                <SortableHeader label="Orbit" sortKey={null} />
+                <SortableHeader label="Status" sortKey={null} />
+                <SortableHeader label="Country" sortKey={null} />
+                <SortableHeader
+                  label="Launch"
+                  sortKey="launchYear"
+                  currentSort={sortBy}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                />
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200/50 dark:divide-white/[0.08]">

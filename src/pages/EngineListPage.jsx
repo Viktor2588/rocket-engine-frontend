@@ -4,6 +4,7 @@ import { useEngines, useEngineStatistics } from '../hooks/useEngines';
 import EngineCard from '../components/EngineCard';
 import EngineChart from '../components/EngineChart';
 import Pagination from '../components/Pagination';
+import SortableHeader, { SortableGridHeader } from '../components/SortableHeader';
 import { Rocket, Bolt, Recycling, Tune, Refresh } from '@mui/icons-material';
 
 const COUNTRIES = [
@@ -35,7 +36,8 @@ export default function EngineListPage() {
   const { engines, loading, error } = useEngines();
   const { statistics } = useEngineStatistics();
   const [viewMode, setViewMode] = useState('grid');
-  const [sortBy, setSortBy] = useState('name');
+  const [sortBy, setSortBy] = useState('sophistication');
+  const [sortOrder, setSortOrder] = useState('desc');
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterCountry, setFilterCountry] = useState('all');
   const [filterPropellant, setFilterPropellant] = useState('all');
@@ -43,6 +45,22 @@ export default function EngineListPage() {
   const [filterCapability, setFilterCapability] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(25);
+
+  // Sort handler for table/grid headers
+  const handleSort = (key, order) => {
+    setSortBy(key);
+    setSortOrder(order);
+  };
+
+  // Sort columns configuration
+  const sortColumns = [
+    { key: 'sophistication', label: 'Tech Score' },
+    { key: 'name', label: 'Name' },
+    { key: 'isp', label: 'ISP' },
+    { key: 'thrust', label: 'Thrust' },
+    { key: 'twr', label: 'T/W Ratio' },
+    { key: 'reliability', label: 'Reliability' },
+  ];
 
   // Filter and sort engines
   const filteredAndSortedEngines = useMemo(() => {
@@ -91,26 +109,34 @@ export default function EngineListPage() {
 
     // Sort
     result.sort((a, b) => {
+      let comparison = 0;
       switch (sortBy) {
         case 'sophistication':
-          return (b.sophisticationScore || 0) - (a.sophisticationScore || 0);
+          comparison = (a.sophisticationScore || 0) - (b.sophisticationScore || 0);
+          break;
         case 'isp':
-          return (b.ispVacuum || b.isp || 0) - (a.ispVacuum || a.isp || 0);
+          comparison = (a.ispVacuum || a.isp || 0) - (b.ispVacuum || b.isp || 0);
+          break;
         case 'thrust':
-          return (b.thrustKn || 0) - (a.thrustKn || 0);
+          comparison = (a.thrustKn || 0) - (b.thrustKn || 0);
+          break;
         case 'twr':
-          return (b.calculateThrustToWeightRatio || b.twr || 0) - (a.calculateThrustToWeightRatio || a.twr || 0);
+          comparison = (a.calculateThrustToWeightRatio || a.twr || 0) - (b.calculateThrustToWeightRatio || b.twr || 0);
+          break;
         case 'reliability':
-          return (b.reliabilityRate || 0) - (a.reliabilityRate || 0);
+          comparison = (a.reliabilityRate || 0) - (b.reliabilityRate || 0);
+          break;
         case 'name':
-          return a.name.localeCompare(b.name);
+          comparison = a.name.localeCompare(b.name);
+          break;
         default:
-          return 0;
+          comparison = 0;
       }
+      return sortOrder === 'asc' ? comparison : -comparison;
     });
 
     return result;
-  }, [engines, sortBy, filterStatus, filterCountry, filterPropellant, filterCycle, filterCapability]);
+  }, [engines, sortBy, sortOrder, filterStatus, filterCountry, filterPropellant, filterCycle, filterCapability]);
 
   // Paginate the filtered results
   const paginatedEngines = useMemo(() => {
@@ -188,26 +214,9 @@ export default function EngineListPage() {
         {/* Filters & Controls */}
         <div className="glass-panel p-6 mb-8">
           <div className="flex flex-col gap-4">
-            {/* First Row: Sort and View */}
+            {/* First Row: Filters and View */}
             <div className="flex flex-col lg:flex-row gap-4 justify-between items-start lg:items-center">
               <div className="flex flex-wrap gap-4">
-                {/* Sort */}
-                <label className="flex items-center gap-2">
-                  <span className="text-gray-700 dark:text-gray-300 font-semibold text-sm">Sort:</span>
-                  <select
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value)}
-                    className="glass-select"
-                  >
-                    <option value="sophistication">Technology Score</option>
-                    <option value="isp">ISP (High to Low)</option>
-                    <option value="thrust">Thrust (High to Low)</option>
-                    <option value="twr">T/W Ratio (High to Low)</option>
-                    <option value="reliability">Reliability (High to Low)</option>
-                    <option value="name">Name</option>
-                  </select>
-                </label>
-
                 {/* Status Filter */}
                 <label className="flex items-center gap-2">
                   <span className="text-gray-700 dark:text-gray-300 font-semibold text-sm">Status:</span>
@@ -326,10 +335,18 @@ export default function EngineListPage() {
         {/* Results */}
         {viewMode === 'grid' && (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {paginatedEngines.map((engine) => (
-                <EngineCard key={engine.id} engine={engine} />
-              ))}
+            <div className="space-y-4">
+              <SortableGridHeader
+                columns={sortColumns}
+                currentSort={sortBy}
+                sortOrder={sortOrder}
+                onSort={handleSort}
+              />
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {paginatedEngines.map((engine) => (
+                  <EngineCard key={engine.id} engine={engine} />
+                ))}
+              </div>
             </div>
             <Pagination
               totalItems={filteredAndSortedEngines.length}
@@ -349,30 +366,41 @@ export default function EngineListPage() {
                 <table className="min-w-full divide-y divide-gray-200/50 dark:divide-white/[0.08]">
                   <thead className="glass-header-gradient">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        Engine
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        Designer
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        Status
-                      </th>
-                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        ISP (Vac)
-                      </th>
-                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        Thrust
-                      </th>
-                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        Reliability
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        Capabilities
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        Actions
-                      </th>
+                      <SortableHeader
+                        label="Engine"
+                        sortKey="name"
+                        currentSort={sortBy}
+                        sortOrder={sortOrder}
+                        onSort={handleSort}
+                      />
+                      <SortableHeader label="Designer" sortKey={null} />
+                      <SortableHeader label="Status" sortKey={null} />
+                      <SortableHeader
+                        label="ISP (Vac)"
+                        sortKey="isp"
+                        currentSort={sortBy}
+                        sortOrder={sortOrder}
+                        onSort={handleSort}
+                        align="right"
+                      />
+                      <SortableHeader
+                        label="Thrust"
+                        sortKey="thrust"
+                        currentSort={sortBy}
+                        sortOrder={sortOrder}
+                        onSort={handleSort}
+                        align="right"
+                      />
+                      <SortableHeader
+                        label="Reliability"
+                        sortKey="reliability"
+                        currentSort={sortBy}
+                        sortOrder={sortOrder}
+                        onSort={handleSort}
+                        align="right"
+                      />
+                      <SortableHeader label="Capabilities" sortKey={null} />
+                      <SortableHeader label="Actions" sortKey={null} />
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200/50 dark:divide-white/[0.08]">

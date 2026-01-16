@@ -1,6 +1,7 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useLaunchSites, useFilteredLaunchSites, useLaunchSiteStatistics } from '../hooks/useLaunchSites';
+import SortableHeader, { SortableGridHeader } from '../components/SortableHeader';
 import {
   ComposableMap,
   Geographies,
@@ -329,6 +330,20 @@ export default function LaunchSiteListPage() {
 
   const filteredSites = useFilteredLaunchSites(launchSites, filters);
 
+  // Sort handler for table/grid headers
+  const handleSort = useCallback((key, order) => {
+    setSortBy(key);
+    setSortOrder(order);
+  }, []);
+
+  // Sort columns configuration
+  const sortColumns = [
+    { key: 'name', label: 'Name' },
+    { key: 'totalLaunches', label: 'Launches' },
+    { key: 'successRate', label: 'Success Rate' },
+    { key: 'established', label: 'Established' },
+  ];
+
   // Sort the filtered sites
   const sortedSites = useMemo(() => {
     const sorted = [...filteredSites].sort((a, b) => {
@@ -532,69 +547,73 @@ export default function LaunchSiteListPage() {
           </div>
         </div>
 
-        {/* Sort and View Controls */}
+        {/* Results count and View Controls */}
         <div className="flex items-center justify-between mb-4">
           <div className="text-sm text-gray-600 dark:text-gray-400">
             Showing {sortedSites.length} of {launchSites.length} launch sites
           </div>
-          <div className="flex items-center gap-4">
-            {/* Sort */}
-            <div className="flex items-center gap-2">
-              <label className="text-sm text-gray-600 dark:text-gray-400">Sort by:</label>
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="glass-select text-sm"
-              >
-                <option value="name">Name</option>
-                <option value="totalLaunches">Total Launches</option>
-                <option value="successRate">Success Rate</option>
-                <option value="established">Year Established</option>
-              </select>
-              <button
-                onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
-                className="glass-button text-sm"
-              >
-                {sortOrder === 'asc' ? '↑' : '↓'}
-              </button>
-            </div>
-
-            {/* View Mode */}
-            <div className="flex gap-2">
-              <button
-                onClick={() => setViewMode('grid')}
-                className={viewMode === 'grid' ? 'glass-button-primary' : 'glass-button'}
-              >
-                Grid
-              </button>
-              <button
-                onClick={() => setViewMode('list')}
-                className={viewMode === 'list' ? 'glass-button-primary' : 'glass-button'}
-              >
-                List
-              </button>
-            </div>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setViewMode('grid')}
+              className={viewMode === 'grid' ? 'glass-button-primary' : 'glass-button'}
+            >
+              Grid
+            </button>
+            <button
+              onClick={() => setViewMode('list')}
+              className={viewMode === 'list' ? 'glass-button-primary' : 'glass-button'}
+            >
+              List
+            </button>
           </div>
         </div>
 
         {/* Launch Sites Grid/List */}
         {viewMode === 'grid' ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {sortedSites.map(site => (
-              <LaunchSiteCard key={site.id} site={site} />
-            ))}
+          <div className="space-y-4">
+            <SortableGridHeader
+              columns={sortColumns}
+              currentSort={sortBy}
+              sortOrder={sortOrder}
+              onSort={handleSort}
+            />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {sortedSites.map(site => (
+                <LaunchSiteCard key={site.id} site={site} />
+              ))}
+            </div>
           </div>
         ) : (
           <div className="glass-panel overflow-hidden">
             <table className="w-full">
               <thead className="glass-header-gradient">
                 <tr>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600 dark:text-gray-300">Name</th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600 dark:text-gray-300">Country</th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600 dark:text-gray-300">Status</th>
-                  <th className="px-4 py-3 text-right text-sm font-semibold text-gray-600 dark:text-gray-300">Launches</th>
-                  <th className="px-4 py-3 text-right text-sm font-semibold text-gray-600 dark:text-gray-300">Success Rate</th>
-                  <th className="px-4 py-3 text-center text-sm font-semibold text-gray-600 dark:text-gray-300">Capabilities</th>
+                  <SortableHeader
+                    label="Name"
+                    sortKey="name"
+                    currentSort={sortBy}
+                    sortOrder={sortOrder}
+                    onSort={handleSort}
+                  />
+                  <SortableHeader label="Country" sortKey={null} />
+                  <SortableHeader label="Status" sortKey={null} />
+                  <SortableHeader
+                    label="Launches"
+                    sortKey="totalLaunches"
+                    currentSort={sortBy}
+                    sortOrder={sortOrder}
+                    onSort={handleSort}
+                    align="right"
+                  />
+                  <SortableHeader
+                    label="Success Rate"
+                    sortKey="successRate"
+                    currentSort={sortBy}
+                    sortOrder={sortOrder}
+                    onSort={handleSort}
+                    align="right"
+                  />
+                  <SortableHeader label="Capabilities" sortKey={null} align="center" />
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200/50 dark:divide-white/[0.08]">

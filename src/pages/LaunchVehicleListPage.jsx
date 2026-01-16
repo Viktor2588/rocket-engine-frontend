@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useLaunchVehicles, useLaunchVehicleStatistics } from '../hooks/useLaunchVehicles';
 import LaunchVehicleCard from '../components/LaunchVehicleCard';
 import Pagination from '../components/Pagination';
+import SortableHeader, { SortableGridHeader } from '../components/SortableHeader';
 import { Rocket, Recycling, PersonOutline, Close, FilterList } from '@mui/icons-material';
 
 const COUNTRIES = [
@@ -95,7 +96,8 @@ function FilterToggle({ label, active, onClick, count }) {
 export default function LaunchVehicleListPage() {
   const { vehicles, loading, error } = useLaunchVehicles();
   const stats = useLaunchVehicleStatistics();
-  const [sortBy, setSortBy] = useState('name');
+  const [sortBy, setSortBy] = useState('payload');
+  const [sortOrder, setSortOrder] = useState('desc');
 
   // Multi-select filter states (arrays instead of single values)
   const [selectedCountries, setSelectedCountries] = useState([]);
@@ -147,6 +149,21 @@ export default function LaunchVehicleListPage() {
 
   const hasActiveFilters = selectedCountries.length > 0 || selectedStatuses.length > 0 ||
     selectedCapabilities.length > 0 || selectedLiftCapacities.length > 0;
+
+  // Sort handler for table/grid headers
+  const handleSort = useCallback((key, order) => {
+    setSortBy(key);
+    setSortOrder(order);
+  }, []);
+
+  // Sort columns configuration
+  const sortColumns = [
+    { key: 'payload', label: 'Payload' },
+    { key: 'name', label: 'Name' },
+    { key: 'launches', label: 'Launches' },
+    { key: 'successRate', label: 'Success Rate' },
+    { key: 'cost', label: 'Cost' },
+  ];
 
   // Count vehicles per filter option (for showing counts in toggles)
   const filterCounts = useMemo(() => {
@@ -211,24 +228,31 @@ export default function LaunchVehicleListPage() {
 
     // Sort
     result.sort((a, b) => {
+      let comparison = 0;
       switch (sortBy) {
         case 'payload':
-          return (b.payloadToLeoKg || 0) - (a.payloadToLeoKg || 0);
+          comparison = (a.payloadToLeoKg || 0) - (b.payloadToLeoKg || 0);
+          break;
         case 'name':
-          return a.name.localeCompare(b.name);
+          comparison = a.name.localeCompare(b.name);
+          break;
         case 'launches':
-          return (b.totalLaunches || 0) - (a.totalLaunches || 0);
+          comparison = (a.totalLaunches || 0) - (b.totalLaunches || 0);
+          break;
         case 'successRate':
-          return (b.successRate || 0) - (a.successRate || 0);
+          comparison = (a.successRate || 0) - (b.successRate || 0);
+          break;
         case 'cost':
-          return (a.costPerLaunchUsd || Infinity) - (b.costPerLaunchUsd || Infinity);
+          comparison = (a.costPerLaunchUsd || Infinity) - (b.costPerLaunchUsd || Infinity);
+          break;
         default:
-          return 0;
+          comparison = 0;
       }
+      return sortOrder === 'asc' ? comparison : -comparison;
     });
 
     return result;
-  }, [vehicles, sortBy, selectedStatuses, selectedCountries, selectedCapabilities, selectedLiftCapacities]);
+  }, [vehicles, sortBy, sortOrder, selectedStatuses, selectedCountries, selectedCapabilities, selectedLiftCapacities]);
 
   // Paginate the filtered results
   const paginatedVehicles = useMemo(() => {
@@ -327,22 +351,6 @@ export default function LaunchVehicleListPage() {
             </button>
 
             <div className="flex items-center gap-3">
-              {/* Sort dropdown */}
-              <label className="flex items-center gap-2">
-                <span className="text-gray-600 dark:text-gray-400 text-sm">Sort:</span>
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="glass-select"
-                >
-                  <option value="payload">Payload Capacity</option>
-                  <option value="name">Name</option>
-                  <option value="launches">Total Launches</option>
-                  <option value="successRate">Success Rate</option>
-                  <option value="cost">Cost (Low to High)</option>
-                </select>
-              </label>
-
               {/* View toggle */}
               <div className="flex gap-2">
                 <button
@@ -508,10 +516,18 @@ export default function LaunchVehicleListPage() {
         {/* Results */}
         {viewMode === 'grid' ? (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {paginatedVehicles.map((vehicle) => (
-                <LaunchVehicleCard key={vehicle.id} vehicle={vehicle} />
-              ))}
+            <div className="space-y-4">
+              <SortableGridHeader
+                columns={sortColumns}
+                currentSort={sortBy}
+                sortOrder={sortOrder}
+                onSort={handleSort}
+              />
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {paginatedVehicles.map((vehicle) => (
+                  <LaunchVehicleCard key={vehicle.id} vehicle={vehicle} />
+                ))}
+              </div>
             </div>
             <Pagination
               totalItems={filteredAndSortedVehicles.length}
@@ -529,30 +545,41 @@ export default function LaunchVehicleListPage() {
                 <table className="min-w-full divide-y divide-gray-200/50 dark:divide-white/[0.08]">
                 <thead className="glass-header-gradient">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                      Vehicle
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                      Manufacturer
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                      Status
-                    </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                      Payload (LEO)
-                    </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                      Launches
-                    </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                      Success Rate
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                      Capabilities
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                      Actions
-                    </th>
+                    <SortableHeader
+                      label="Vehicle"
+                      sortKey="name"
+                      currentSort={sortBy}
+                      sortOrder={sortOrder}
+                      onSort={handleSort}
+                    />
+                    <SortableHeader label="Manufacturer" sortKey={null} />
+                    <SortableHeader label="Status" sortKey={null} />
+                    <SortableHeader
+                      label="Payload (LEO)"
+                      sortKey="payload"
+                      currentSort={sortBy}
+                      sortOrder={sortOrder}
+                      onSort={handleSort}
+                      align="right"
+                    />
+                    <SortableHeader
+                      label="Launches"
+                      sortKey="launches"
+                      currentSort={sortBy}
+                      sortOrder={sortOrder}
+                      onSort={handleSort}
+                      align="right"
+                    />
+                    <SortableHeader
+                      label="Success Rate"
+                      sortKey="successRate"
+                      currentSort={sortBy}
+                      sortOrder={sortOrder}
+                      onSort={handleSort}
+                      align="right"
+                    />
+                    <SortableHeader label="Capabilities" sortKey={null} />
+                    <SortableHeader label="Actions" sortKey={null} />
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200/50 dark:divide-white/[0.08]">

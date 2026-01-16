@@ -4,6 +4,7 @@ import { useCountries, useCountryRankings } from '../hooks/useCountries';
 import CountryCard from '../components/CountryCard';
 import { CapabilityScoreBadge } from '../components/CapabilityScoreCard';
 import WorldMapView from '../components/maps/WorldMapView';
+import SortableHeader, { SortableGridHeader } from '../components/SortableHeader';
 import { REGIONS } from '../constants';
 import {
   Public,
@@ -20,8 +21,23 @@ export default function CountryListPage() {
   const { rankings } = useCountryRankings();
   const [viewMode, setViewMode] = useState('map');
   const [sortBy, setSortBy] = useState('score');
+  const [sortOrder, setSortOrder] = useState('desc');
   const [filterRegion, setFilterRegion] = useState('all');
   const [filterCapability, setFilterCapability] = useState('all');
+
+  // Sort handler for table/grid headers
+  const handleSort = (key, order) => {
+    setSortBy(key);
+    setSortOrder(order);
+  };
+
+  // Sort columns configuration
+  const sortColumns = [
+    { key: 'score', label: 'Score' },
+    { key: 'name', label: 'Name' },
+    { key: 'launches', label: 'Launches' },
+    { key: 'budget', label: 'Budget' },
+  ];
 
   // Create a map of country rankings
   const rankingMap = useMemo(() => {
@@ -51,22 +67,28 @@ export default function CountryListPage() {
 
     // Sort
     result.sort((a, b) => {
+      let comparison = 0;
       switch (sortBy) {
         case 'score':
-          return (b.overallCapabilityScore || 0) - (a.overallCapabilityScore || 0);
+          comparison = (a.overallCapabilityScore || 0) - (b.overallCapabilityScore || 0);
+          break;
         case 'name':
-          return a.name.localeCompare(b.name);
+          comparison = a.name.localeCompare(b.name);
+          break;
         case 'launches':
-          return (b.totalLaunches || 0) - (a.totalLaunches || 0);
+          comparison = (a.totalLaunches || 0) - (b.totalLaunches || 0);
+          break;
         case 'budget':
-          return (b.annualBudgetUsd || 0) - (a.annualBudgetUsd || 0);
+          comparison = (a.annualBudgetUsd || 0) - (b.annualBudgetUsd || 0);
+          break;
         default:
-          return 0;
+          comparison = 0;
       }
+      return sortOrder === 'asc' ? comparison : -comparison;
     });
 
     return result;
-  }, [countries, sortBy, filterRegion, filterCapability]);
+  }, [countries, sortBy, sortOrder, filterRegion, filterCapability]);
 
   // Calculate stats
   const stats = useMemo(() => {
@@ -181,23 +203,6 @@ export default function CountryListPage() {
                   <option value="spaceStationCapable">Space Station</option>
                 </select>
               </label>
-
-              {/* Sort - only show when not in map view */}
-              {viewMode !== 'map' && (
-                <label className="flex items-center gap-2">
-                  <span className="text-gray-700 dark:text-gray-300 font-semibold text-sm">Sort:</span>
-                  <select
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value)}
-                    className="glass-select"
-                  >
-                    <option value="score">Capability Score</option>
-                    <option value="name">Name</option>
-                    <option value="launches">Total Launches</option>
-                    <option value="budget">Budget</option>
-                  </select>
-                </label>
-              )}
             </div>
 
             <div className="flex gap-2">
@@ -236,41 +241,53 @@ export default function CountryListPage() {
             showLabels={true}
           />
         ) : viewMode === 'grid' ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredAndSortedCountries.map((country) => (
-              <CountryCard
-                key={country.id}
-                country={country}
-                rank={sortBy === 'score' ? rankingMap[country.id] : null}
-              />
-            ))}
+          <div className="space-y-4">
+            <SortableGridHeader
+              columns={sortColumns}
+              currentSort={sortBy}
+              sortOrder={sortOrder}
+              onSort={handleSort}
+            />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredAndSortedCountries.map((country) => (
+                <CountryCard
+                  key={country.id}
+                  country={country}
+                  rank={sortBy === 'score' ? rankingMap[country.id] : null}
+                />
+              ))}
+            </div>
           </div>
         ) : (
           <div className="glass-panel overflow-hidden">
             <table className="min-w-full divide-y divide-gray-200/50 dark:divide-white/[0.08]">
               <thead className="glass-header-gradient">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Rank
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Country
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Agency
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Score
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Launches
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Capabilities
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Actions
-                  </th>
+                  <SortableHeader label="Rank" sortKey={null} />
+                  <SortableHeader
+                    label="Country"
+                    sortKey="name"
+                    currentSort={sortBy}
+                    sortOrder={sortOrder}
+                    onSort={handleSort}
+                  />
+                  <SortableHeader label="Agency" sortKey={null} />
+                  <SortableHeader
+                    label="Score"
+                    sortKey="score"
+                    currentSort={sortBy}
+                    sortOrder={sortOrder}
+                    onSort={handleSort}
+                  />
+                  <SortableHeader
+                    label="Launches"
+                    sortKey="launches"
+                    currentSort={sortBy}
+                    sortOrder={sortOrder}
+                    onSort={handleSort}
+                  />
+                  <SortableHeader label="Capabilities" sortKey={null} />
+                  <SortableHeader label="Actions" sortKey={null} />
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200/50 dark:divide-white/[0.08]">
