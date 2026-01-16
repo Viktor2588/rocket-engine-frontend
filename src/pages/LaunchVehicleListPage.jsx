@@ -17,7 +17,7 @@ const COUNTRIES = [
 export default function LaunchVehicleListPage() {
   const { vehicles, loading, error } = useLaunchVehicles();
   const stats = useLaunchVehicleStatistics();
-  const [sortBy, setSortBy] = useState('payload');
+  const [sortBy, setSortBy] = useState('name');
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterCountry, setFilterCountry] = useState('all');
   const [filterCapability, setFilterCapability] = useState('all');

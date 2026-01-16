@@ -120,7 +120,18 @@ export default function EngineDetailPage() {
         {/* Header */}
         <div className="bg-gradient-to-r from-indigo-700 to-indigo-900 rounded-lg shadow-lg p-6 mb-8 text-white">
           <div className="flex flex-col md:flex-row justify-between items-start gap-4">
-            <div>
+            {/* Engine Image */}
+            {engine.imageUrl && (
+              <div className="flex-shrink-0">
+                <img
+                  src={engine.imageUrl}
+                  alt={engine.name}
+                  className="w-32 h-32 md:w-40 md:h-40 object-cover rounded-lg shadow-lg bg-white/10"
+                  onError={(e) => { e.target.style.display = 'none'; }}
+                />
+              </div>
+            )}
+            <div className="flex-1">
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-3xl">{getCountryFlag(engine.countryId)}</span>
                 <span className={`px-3 py-1 rounded text-sm font-medium ${
@@ -131,6 +142,11 @@ export default function EngineDetailPage() {
                 }`}>
                   {engine.status}
                 </span>
+                {engine.type && (
+                  <span className="px-3 py-1 rounded text-sm font-medium bg-indigo-600">
+                    {engine.type}
+                  </span>
+                )}
               </div>
               <h1 className="text-4xl font-bold mb-1">
                 {engine.name}
@@ -164,6 +180,27 @@ export default function EngineDetailPage() {
               {engine.restartCapable && (
                 <span className="inline-flex items-center px-3 py-1 rounded-full bg-green-500 text-white text-sm">
                   🔄 Restartable
+                </span>
+              )}
+              {/* Propellant Type Badges */}
+              {engine.methalox && (
+                <span className="inline-flex items-center px-3 py-1 rounded-full bg-teal-500 text-white text-sm">
+                  🧪 Methalox
+                </span>
+              )}
+              {engine.hydrolox && (
+                <span className="inline-flex items-center px-3 py-1 rounded-full bg-blue-400 text-white text-sm">
+                  💧 Hydrolox
+                </span>
+              )}
+              {engine.hypergolic && (
+                <span className="inline-flex items-center px-3 py-1 rounded-full bg-orange-500 text-white text-sm">
+                  ⚗️ Hypergolic
+                </span>
+              )}
+              {engine.solidFuel && (
+                <span className="inline-flex items-center px-3 py-1 rounded-full bg-gray-600 text-white text-sm">
+                  �ite Solid
                 </span>
               )}
             </div>
@@ -452,6 +489,111 @@ export default function EngineDetailPage() {
                     </span>
                   </div>
                 )}
+              </div>
+            </div>
+          )}
+
+          {/* Development Info */}
+          {(engine.developmentStartYear || engine.developmentCost) && (
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+              <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
+                🔬 Development
+              </h2>
+              <div className="space-y-4">
+                {engine.developmentStartYear && (
+                  <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700">
+                    <span className="text-gray-600 dark:text-gray-400">Development Started</span>
+                    <span className="font-bold text-gray-800 dark:text-white">{engine.developmentStartYear}</span>
+                  </div>
+                )}
+                {engine.developmentCost && (
+                  <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700">
+                    <span className="text-gray-600 dark:text-gray-400">Development Cost</span>
+                    <span className="font-bold text-gray-800 dark:text-white">
+                      ${(engine.developmentCost / 1e6).toFixed(0)}M
+                    </span>
+                  </div>
+                )}
+                {engine.firstFlightYear && engine.developmentStartYear && (
+                  <div className="flex justify-between items-center py-2">
+                    <span className="text-gray-600 dark:text-gray-400">Development Time</span>
+                    <span className="font-bold text-gray-800 dark:text-white">
+                      {engine.firstFlightYear - engine.developmentStartYear} years
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Engine Evolution - Predecessor/Successor */}
+          {(engine.predecessorEngineId || engine.successorEngineId) && (
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+              <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
+                🔗 Engine Evolution
+              </h2>
+              <div className="space-y-4">
+                {engine.predecessorEngineId && (
+                  <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                    <div>
+                      <span className="text-sm text-gray-500 dark:text-gray-400">Predecessor</span>
+                      <div className="font-semibold text-gray-800 dark:text-white">
+                        {engine.predecessorEngine?.name || `Engine #${engine.predecessorEngineId}`}
+                      </div>
+                    </div>
+                    <Link
+                      to={`/engines/${engine.predecessorEngineId}`}
+                      className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 text-sm"
+                    >
+                      View →
+                    </Link>
+                  </div>
+                )}
+                <div className="flex items-center justify-center">
+                  <div className="p-3 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg border-2 border-indigo-300 dark:border-indigo-600">
+                    <span className="font-bold text-indigo-700 dark:text-indigo-300">{engine.name}</span>
+                    <span className="text-sm text-indigo-500 ml-2">(Current)</span>
+                  </div>
+                </div>
+                {engine.successorEngineId && (
+                  <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                    <div>
+                      <span className="text-sm text-gray-500 dark:text-gray-400">Successor</span>
+                      <div className="font-semibold text-gray-800 dark:text-white">
+                        {engine.successorEngine?.name || `Engine #${engine.successorEngineId}`}
+                      </div>
+                    </div>
+                    <Link
+                      to={`/engines/${engine.successorEngineId}`}
+                      className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 text-sm"
+                    >
+                      View →
+                    </Link>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Launch Vehicles Using This Engine */}
+          {engine.launchVehicleIds && engine.launchVehicleIds.length > 0 && (
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+              <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
+                🚀 Used On Vehicles
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {engine.launchVehicleIds.map((vehicleId) => (
+                  <Link
+                    key={vehicleId}
+                    to={`/vehicles/${vehicleId}`}
+                    className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition"
+                  >
+                    <span className="text-2xl">🚀</span>
+                    <span className="font-medium text-gray-800 dark:text-white">
+                      {typeof vehicleId === 'object' ? vehicleId.name : `Vehicle #${vehicleId}`}
+                    </span>
+                  </Link>
+                ))}
               </div>
             </div>
           )}

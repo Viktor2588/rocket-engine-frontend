@@ -198,10 +198,14 @@ export default function CountryDetailPage() {
           )}
 
           {/* Key Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
             <div className="bg-blue-50 dark:bg-blue-900/30 p-4 rounded-lg text-center">
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Total Launches</p>
               <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{country.totalLaunches ?? '-'}</p>
+            </div>
+            <div className="bg-teal-50 dark:bg-teal-900/30 p-4 rounded-lg text-center">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Successful</p>
+              <p className="text-2xl font-bold text-teal-600 dark:text-teal-400">{country.successfulLaunches ?? '-'}</p>
             </div>
             <div className="bg-green-50 dark:bg-green-900/30 p-4 rounded-lg text-center">
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Success Rate</p>

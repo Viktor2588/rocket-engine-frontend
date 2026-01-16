@@ -109,16 +109,36 @@ export default function MissionDetailPage() {
           <div className="p-6">
             <div className="flex flex-col lg:flex-row items-start justify-between gap-6">
               <div className="flex items-start gap-4">
-                <span className="text-5xl">{countryInfo.flag}</span>
+                {/* Mission Patch */}
+                {mission.patchUrl ? (
+                  <img
+                    src={mission.patchUrl}
+                    alt={`${mission.name} mission patch`}
+                    className="w-20 h-20 object-contain rounded-lg bg-white shadow"
+                    onError={(e) => { e.target.style.display = 'none'; }}
+                  />
+                ) : (
+                  <span className="text-5xl">{countryInfo.flag}</span>
+                )}
                 <div>
                   <div className="flex items-center gap-3 mb-2">
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{mission.name}</h1>
-                    {mission.historicFirst && (
+                    {mission.isHistoricFirst && (
                       <span className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm font-semibold">
-                        🥇 Historic First
+                        🥇 {mission.historicFirstType || 'Historic First'}
+                      </span>
+                    )}
+                    {mission.successLevel && mission.successLevel !== 'Full' && (
+                      <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                        mission.successLevel === 'Partial' ? 'bg-orange-100 text-orange-800' : 'bg-red-100 text-red-800'
+                      }`}>
+                        {mission.successLevel} Success
                       </span>
                     )}
                   </div>
+                  {mission.missionDesignation && (
+                    <p className="text-sm text-gray-500 dark:text-gray-400 font-mono mb-1">{mission.missionDesignation}</p>
+                  )}
                   <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400">{countryInfo.name}</p>
                   <div className="flex flex-wrap gap-2 mt-3">
                     <StatusBadge status={mission.status} />
@@ -215,6 +235,14 @@ export default function MissionDetailPage() {
                 </ul>
               </div>
             )}
+
+            {/* Mission Outcomes */}
+            {mission.outcomes && (
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">📋 Mission Outcomes</h2>
+                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">{mission.outcomes}</p>
+              </div>
+            )}
           </div>
 
           {/* Sidebar */}
@@ -243,6 +271,12 @@ export default function MissionDetailPage() {
                   <div>
                     <dt className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Launch Site</dt>
                     <dd className="font-medium text-gray-800 dark:text-white">{mission.launchSite}</dd>
+                  </div>
+                )}
+                {mission.missionMassKg && (
+                  <div>
+                    <dt className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">Mission Mass</dt>
+                    <dd className="font-medium text-gray-800 dark:text-white">{mission.missionMassKg.toLocaleString()} kg</dd>
                   </div>
                 )}
                 <div>

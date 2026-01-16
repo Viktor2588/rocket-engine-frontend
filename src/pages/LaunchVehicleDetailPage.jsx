@@ -136,7 +136,18 @@ export default function LaunchVehicleDetailPage() {
         {/* Header */}
         <div className="bg-gradient-to-r from-slate-700 to-slate-900 rounded-lg shadow-lg p-6 mb-8 text-white">
           <div className="flex flex-col md:flex-row justify-between items-start gap-4">
-            <div>
+            {/* Vehicle Image */}
+            {vehicle.imageUrl && (
+              <div className="flex-shrink-0">
+                <img
+                  src={vehicle.imageUrl}
+                  alt={vehicle.name}
+                  className="w-32 h-48 md:w-40 md:h-60 object-contain rounded-lg bg-white/10"
+                  onError={(e) => { e.target.style.display = 'none'; }}
+                />
+              </div>
+            )}
+            <div className="flex-1">
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-3xl">{getCountryFlag(vehicle.countryId)}</span>
                 <span className={`px-3 py-1 rounded text-sm font-medium ${
@@ -390,6 +401,52 @@ export default function LaunchVehicleDetailPage() {
           </div>
         </div>
 
+        {/* Engines Section */}
+        {((vehicle.engines && vehicle.engines.length > 0) || (vehicle.engineIds && vehicle.engineIds.length > 0)) && (
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mt-8">
+            <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
+              🔥 Propulsion System
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {vehicle.engines ? (
+                vehicle.engines.map((engine) => (
+                  <Link
+                    key={engine.id}
+                    to={`/engines/${engine.id}`}
+                    className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition"
+                  >
+                    <div className="text-3xl">🚀</div>
+                    <div>
+                      <div className="font-semibold text-gray-800 dark:text-white">{engine.name}</div>
+                      {engine.thrustKn && (
+                        <div className="text-sm text-gray-500 dark:text-gray-400">
+                          {formatNumber(engine.thrustKn)} kN thrust
+                        </div>
+                      )}
+                      {engine.propellant && (
+                        <div className="text-xs text-gray-400 dark:text-gray-500">{engine.propellant}</div>
+                      )}
+                    </div>
+                  </Link>
+                ))
+              ) : (
+                vehicle.engineIds.map((engineId) => (
+                  <Link
+                    key={engineId}
+                    to={`/engines/${engineId}`}
+                    className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition"
+                  >
+                    <div className="text-3xl">🚀</div>
+                    <div className="font-semibold text-gray-800 dark:text-white">
+                      Engine #{engineId}
+                    </div>
+                  </Link>
+                ))
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Related Links */}
         <div className="mt-8 flex flex-wrap gap-4">
           {vehicle.wikiUrl && (
@@ -402,12 +459,12 @@ export default function LaunchVehicleDetailPage() {
               📖 Wikipedia
             </a>
           )}
-          {vehicle.country?.isoCode && (
+          {vehicle.countryId && (
             <Link
-              to={`/countries/${vehicle.country.isoCode}`}
+              to={`/countries/${vehicle.countryId}`}
               className="inline-flex items-center px-4 py-2 bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200 transition"
             >
-              {getCountryFlag(vehicle.country.isoCode)} View Country Profile
+              {getCountryFlag(vehicle.countryId)} View Country Profile
             </Link>
           )}
         </div>

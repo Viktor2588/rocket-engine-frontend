@@ -35,7 +35,7 @@ export default function EngineListPage() {
   const { engines, loading, error } = useEngines();
   const { statistics } = useEngineStatistics();
   const [viewMode, setViewMode] = useState('grid');
-  const [sortBy, setSortBy] = useState('sophistication');
+  const [sortBy, setSortBy] = useState('name');
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterCountry, setFilterCountry] = useState('all');
   const [filterPropellant, setFilterPropellant] = useState('all');
