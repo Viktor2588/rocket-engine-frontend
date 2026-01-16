@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useEngines, useEngineStatistics } from '../hooks/useEngines';
 import EngineCard from '../components/EngineCard';
@@ -6,6 +6,8 @@ import EngineChart from '../components/EngineChart';
 import Pagination from '../components/Pagination';
 import SortableHeader, { SortableGridHeader } from '../components/SortableHeader';
 import LoadingSpinner from '../components/LoadingSpinner';
+import ViewToggle from '../components/ViewToggle';
+import { FilterPanel, FilterSection, FilterToggle } from '../components/filters';
 import { Rocket, Bolt, Recycling, Tune, Refresh } from '@mui/icons-material';
 
 const COUNTRIES = [
@@ -15,22 +17,32 @@ const COUNTRIES = [
   { code: 'FRA', name: 'France/ESA' },
   { code: 'JPN', name: 'Japan' },
   { code: 'IND', name: 'India' },
+  { code: 'GBR', name: 'United Kingdom' },
+  { code: 'UKR', name: 'Ukraine' },
 ];
 
+const STATUSES = ['Active', 'Retired', 'Development'];
+
 const PROPELLANTS = [
-  'LOX/RP-1',
-  'LOX/LH2',
-  'LOX/CH4',
-  'N2O4/UDMH',
+  { id: 'lox-rp1', label: 'LOX/RP-1', match: 'lox/rp' },
+  { id: 'lox-lh2', label: 'LOX/LH2', match: 'lox/lh' },
+  { id: 'lox-ch4', label: 'LOX/CH4', match: 'lox/ch4' },
+  { id: 'n2o4-udmh', label: 'N2O4/UDMH', match: 'n2o4' },
 ];
 
 const POWER_CYCLES = [
-  'Gas Generator',
-  'Staged Combustion',
-  'Full-Flow Staged Combustion',
-  'Expander',
-  'Expander Bleed',
-  'Electric Pump-Fed',
+  { id: 'gas-generator', label: 'Gas Generator', match: 'gas generator' },
+  { id: 'staged-combustion', label: 'Staged Combustion', match: 'staged combustion' },
+  { id: 'full-flow', label: 'Full-Flow', match: 'full-flow' },
+  { id: 'expander', label: 'Expander', match: 'expander' },
+  { id: 'electric', label: 'Electric Pump-Fed', match: 'electric' },
+];
+
+const CAPABILITIES = [
+  { id: 'reusable', label: 'Reusable' },
+  { id: 'advanced', label: 'Advanced Cycle' },
+  { id: 'throttle', label: 'Throttleable' },
+  { id: 'restart', label: 'Restartable' },
 ];
 
 export default function EngineListPage() {
@@ -39,19 +51,70 @@ export default function EngineListPage() {
   const [viewMode, setViewMode] = useState('grid');
   const [sortBy, setSortBy] = useState('sophistication');
   const [sortOrder, setSortOrder] = useState('desc');
-  const [filterStatus, setFilterStatus] = useState('all');
-  const [filterCountry, setFilterCountry] = useState('all');
-  const [filterPropellant, setFilterPropellant] = useState('all');
-  const [filterCycle, setFilterCycle] = useState('all');
-  const [filterCapability, setFilterCapability] = useState('all');
+
+  // Multi-select filter states
+  const [selectedStatuses, setSelectedStatuses] = useState([]);
+  const [selectedCountries, setSelectedCountries] = useState([]);
+  const [selectedPropellants, setSelectedPropellants] = useState([]);
+  const [selectedCycles, setSelectedCycles] = useState([]);
+  const [selectedCapabilities, setSelectedCapabilities] = useState([]);
+
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(25);
 
+  // Toggle functions for multi-select
+  const toggleStatus = useCallback((status) => {
+    setSelectedStatuses(prev =>
+      prev.includes(status) ? prev.filter(s => s !== status) : [...prev, status]
+    );
+    setCurrentPage(1);
+  }, []);
+
+  const toggleCountry = useCallback((code) => {
+    setSelectedCountries(prev =>
+      prev.includes(code) ? prev.filter(c => c !== code) : [...prev, code]
+    );
+    setCurrentPage(1);
+  }, []);
+
+  const togglePropellant = useCallback((id) => {
+    setSelectedPropellants(prev =>
+      prev.includes(id) ? prev.filter(p => p !== id) : [...prev, id]
+    );
+    setCurrentPage(1);
+  }, []);
+
+  const toggleCycle = useCallback((id) => {
+    setSelectedCycles(prev =>
+      prev.includes(id) ? prev.filter(c => c !== id) : [...prev, id]
+    );
+    setCurrentPage(1);
+  }, []);
+
+  const toggleCapability = useCallback((id) => {
+    setSelectedCapabilities(prev =>
+      prev.includes(id) ? prev.filter(c => c !== id) : [...prev, id]
+    );
+    setCurrentPage(1);
+  }, []);
+
+  const clearAllFilters = useCallback(() => {
+    setSelectedStatuses([]);
+    setSelectedCountries([]);
+    setSelectedPropellants([]);
+    setSelectedCycles([]);
+    setSelectedCapabilities([]);
+    setCurrentPage(1);
+  }, []);
+
+  const hasActiveFilters = selectedStatuses.length > 0 || selectedCountries.length > 0 ||
+    selectedPropellants.length > 0 || selectedCycles.length > 0 || selectedCapabilities.length > 0;
+
   // Sort handler for table/grid headers
-  const handleSort = (key, order) => {
+  const handleSort = useCallback((key, order) => {
     setSortBy(key);
     setSortOrder(order);
-  };
+  }, []);
 
   // Sort columns configuration
   const sortColumns = [
@@ -63,49 +126,93 @@ export default function EngineListPage() {
     { key: 'reliability', label: 'Reliability' },
   ];
 
+  // Count engines per filter option
+  const filterCounts = useMemo(() => {
+    const counts = {
+      statuses: {},
+      countries: {},
+      propellants: {},
+      cycles: {},
+      capabilities: {},
+    };
+
+    engines.forEach(e => {
+      // Status counts
+      if (e.status) {
+        counts.statuses[e.status] = (counts.statuses[e.status] || 0) + 1;
+      }
+      // Country counts
+      if (e.countryId) {
+        counts.countries[e.countryId] = (counts.countries[e.countryId] || 0) + 1;
+      }
+      // Propellant counts
+      PROPELLANTS.forEach(p => {
+        if (e.propellant?.toLowerCase().includes(p.match)) {
+          counts.propellants[p.id] = (counts.propellants[p.id] || 0) + 1;
+        }
+      });
+      // Cycle counts
+      POWER_CYCLES.forEach(c => {
+        if (e.powerCycle?.toLowerCase().includes(c.match)) {
+          counts.cycles[c.id] = (counts.cycles[c.id] || 0) + 1;
+        }
+      });
+      // Capability counts
+      if (e.reusable) counts.capabilities.reusable = (counts.capabilities.reusable || 0) + 1;
+      if (e.advancedCycle) counts.capabilities.advanced = (counts.capabilities.advanced || 0) + 1;
+      if (e.throttleCapable) counts.capabilities.throttle = (counts.capabilities.throttle || 0) + 1;
+      if (e.restartCapable) counts.capabilities.restart = (counts.capabilities.restart || 0) + 1;
+    });
+
+    return counts;
+  }, [engines]);
+
   // Filter and sort engines
   const filteredAndSortedEngines = useMemo(() => {
-    // Safety check: ensure engines is an array before spreading
     let result = Array.isArray(engines) ? [...engines] : [];
 
-    // Filter by status
-    if (filterStatus !== 'all') {
-      result = result.filter(e => e.status === filterStatus);
+    // Filter by status (OR within category)
+    if (selectedStatuses.length > 0) {
+      result = result.filter(e => selectedStatuses.includes(e.status));
     }
 
-    // Filter by country (check both countryId and origin)
-    if (filterCountry !== 'all') {
-      result = result.filter(e =>
-        e.countryId === filterCountry ||
-        e.origin?.toLowerCase().includes(filterCountry.toLowerCase())
-      );
+    // Filter by country (OR within category)
+    if (selectedCountries.length > 0) {
+      result = result.filter(e => selectedCountries.includes(e.countryId));
     }
 
-    // Filter by propellant (case-insensitive partial match)
-    if (filterPropellant !== 'all') {
-      result = result.filter(e =>
-        e.propellant?.toLowerCase().includes(filterPropellant.toLowerCase())
-      );
+    // Filter by propellant (OR within category)
+    if (selectedPropellants.length > 0) {
+      result = result.filter(e => {
+        return selectedPropellants.some(pId => {
+          const prop = PROPELLANTS.find(p => p.id === pId);
+          return prop && e.propellant?.toLowerCase().includes(prop.match);
+        });
+      });
     }
 
-    // Filter by power cycle (case-insensitive partial match)
-    if (filterCycle !== 'all') {
-      result = result.filter(e =>
-        e.powerCycle?.toLowerCase().includes(filterCycle.toLowerCase())
-      );
+    // Filter by power cycle (OR within category)
+    if (selectedCycles.length > 0) {
+      result = result.filter(e => {
+        return selectedCycles.some(cId => {
+          const cycle = POWER_CYCLES.find(c => c.id === cId);
+          return cycle && e.powerCycle?.toLowerCase().includes(cycle.match);
+        });
+      });
     }
 
-    // Filter by capability
-    if (filterCapability !== 'all') {
-      if (filterCapability === 'reusable') {
-        result = result.filter(e => e.reusable);
-      } else if (filterCapability === 'advanced') {
-        result = result.filter(e => e.advancedCycle);
-      } else if (filterCapability === 'throttle') {
-        result = result.filter(e => e.throttleCapable);
-      } else if (filterCapability === 'restart') {
-        result = result.filter(e => e.restartCapable);
-      }
+    // Filter by capabilities (AND - must have ALL selected capabilities)
+    if (selectedCapabilities.includes('reusable')) {
+      result = result.filter(e => e.reusable);
+    }
+    if (selectedCapabilities.includes('advanced')) {
+      result = result.filter(e => e.advancedCycle);
+    }
+    if (selectedCapabilities.includes('throttle')) {
+      result = result.filter(e => e.throttleCapable);
+    }
+    if (selectedCapabilities.includes('restart')) {
+      result = result.filter(e => e.restartCapable);
     }
 
     // Sort
@@ -137,13 +244,69 @@ export default function EngineListPage() {
     });
 
     return result;
-  }, [engines, sortBy, sortOrder, filterStatus, filterCountry, filterPropellant, filterCycle, filterCapability]);
+  }, [engines, sortBy, sortOrder, selectedStatuses, selectedCountries, selectedPropellants, selectedCycles, selectedCapabilities]);
 
   // Paginate the filtered results
   const paginatedEngines = useMemo(() => {
     const startIndex = (currentPage - 1) * pageSize;
     return filteredAndSortedEngines.slice(startIndex, startIndex + pageSize);
   }, [filteredAndSortedEngines, currentPage, pageSize]);
+
+  // Build active filters array for FilterPanel
+  const activeFilters = useMemo(() => {
+    const filters = [];
+
+    selectedStatuses.forEach(status => {
+      filters.push({
+        key: `status-${status}`,
+        label: status,
+        color: 'green',
+        onRemove: () => toggleStatus(status),
+      });
+    });
+
+    selectedCountries.forEach(code => {
+      const country = COUNTRIES.find(c => c.code === code);
+      filters.push({
+        key: `country-${code}`,
+        label: country?.name || code,
+        color: 'indigo',
+        onRemove: () => toggleCountry(code),
+      });
+    });
+
+    selectedPropellants.forEach(id => {
+      const prop = PROPELLANTS.find(p => p.id === id);
+      filters.push({
+        key: `propellant-${id}`,
+        label: prop?.label || id,
+        color: 'blue',
+        onRemove: () => togglePropellant(id),
+      });
+    });
+
+    selectedCycles.forEach(id => {
+      const cycle = POWER_CYCLES.find(c => c.id === id);
+      filters.push({
+        key: `cycle-${id}`,
+        label: cycle?.label || id,
+        color: 'purple',
+        onRemove: () => toggleCycle(id),
+      });
+    });
+
+    selectedCapabilities.forEach(id => {
+      const cap = CAPABILITIES.find(c => c.id === id);
+      filters.push({
+        key: `cap-${id}`,
+        label: cap?.label || id,
+        color: 'orange',
+        onRemove: () => toggleCapability(id),
+      });
+    });
+
+    return filters;
+  }, [selectedStatuses, selectedCountries, selectedPropellants, selectedCycles, selectedCapabilities, toggleStatus, toggleCountry, togglePropellant, toggleCycle, toggleCapability]);
 
   if (loading) {
     return (
@@ -210,120 +373,83 @@ export default function EngineListPage() {
         )}
 
         {/* Filters & Controls */}
-        <div className="glass-panel p-6 mb-8">
-          <div className="flex flex-col gap-4">
-            {/* First Row: Filters and View */}
-            <div className="flex flex-col lg:flex-row gap-4 justify-between items-start lg:items-center">
-              <div className="flex flex-wrap gap-4">
-                {/* Status Filter */}
-                <label className="flex items-center gap-2">
-                  <span className="text-gray-700 dark:text-gray-300 font-semibold text-sm">Status:</span>
-                  <select
-                    value={filterStatus}
-                    onChange={(e) => setFilterStatus(e.target.value)}
-                    className="glass-select"
-                  >
-                    <option value="all">All Status</option>
-                    <option value="Active">Active</option>
-                    <option value="Retired">Retired</option>
-                    <option value="Development">Development</option>
-                  </select>
-                </label>
+        <FilterPanel
+          activeFilters={activeFilters}
+          onClearAll={clearAllFilters}
+          headerActions={
+            <ViewToggle
+              viewMode={viewMode}
+              setViewMode={setViewMode}
+              options={['grid', 'table', 'chart']}
+              compareLink="/compare/engines"
+            />
+          }
+        >
+          {/* Status Filters */}
+          <FilterSection title="Status">
+            {STATUSES.map(status => (
+              <FilterToggle
+                key={status}
+                label={status}
+                active={selectedStatuses.includes(status)}
+                onClick={() => toggleStatus(status)}
+                count={filterCounts.statuses[status] || 0}
+              />
+            ))}
+          </FilterSection>
 
-                {/* Country Filter */}
-                <label className="flex items-center gap-2">
-                  <span className="text-gray-700 dark:text-gray-300 font-semibold text-sm">Country:</span>
-                  <select
-                    value={filterCountry}
-                    onChange={(e) => setFilterCountry(e.target.value)}
-                    className="glass-select"
-                  >
-                    <option value="all">All Countries</option>
-                    {COUNTRIES.map(c => (
-                      <option key={c.code} value={c.code}>{c.flag} {c.name}</option>
-                    ))}
-                  </select>
-                </label>
-              </div>
+          {/* Country Filters */}
+          <FilterSection title="Country">
+            {COUNTRIES.map(country => (
+              <FilterToggle
+                key={country.code}
+                label={country.name}
+                active={selectedCountries.includes(country.code)}
+                onClick={() => toggleCountry(country.code)}
+                count={filterCounts.countries[country.code] || 0}
+              />
+            ))}
+          </FilterSection>
 
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setViewMode('grid')}
-                  className={viewMode === 'grid' ? 'glass-button-primary' : 'glass-button'}
-                >
-                  Grid
-                </button>
-                <button
-                  onClick={() => setViewMode('table')}
-                  className={viewMode === 'table' ? 'glass-button-primary' : 'glass-button'}
-                >
-                  Table
-                </button>
-                <button
-                  onClick={() => setViewMode('chart')}
-                  className={viewMode === 'chart' ? 'glass-button-primary' : 'glass-button'}
-                >
-                  Chart
-                </button>
-                <Link
-                  to="/compare/engines"
-                  className="glass-button-primary bg-green-500/80 hover:bg-green-500"
-                >
-                  Compare
-                </Link>
-              </div>
-            </div>
+          {/* Propellant Filters */}
+          <FilterSection title="Propellant">
+            {PROPELLANTS.map(prop => (
+              <FilterToggle
+                key={prop.id}
+                label={prop.label}
+                active={selectedPropellants.includes(prop.id)}
+                onClick={() => togglePropellant(prop.id)}
+                count={filterCounts.propellants[prop.id] || 0}
+              />
+            ))}
+          </FilterSection>
 
-            {/* Second Row: Technical Filters */}
-            <div className="flex flex-wrap gap-4 pt-4 border-t border-gray-200/50 dark:border-white/[0.08]">
-              {/* Propellant Filter */}
-              <label className="flex items-center gap-2">
-                <span className="text-gray-700 dark:text-gray-300 font-semibold text-sm">Propellant:</span>
-                <select
-                  value={filterPropellant}
-                  onChange={(e) => setFilterPropellant(e.target.value)}
-                  className="glass-select"
-                >
-                  <option value="all">All Propellants</option>
-                  {PROPELLANTS.map(p => (
-                    <option key={p} value={p}>{p}</option>
-                  ))}
-                </select>
-              </label>
+          {/* Power Cycle Filters */}
+          <FilterSection title="Power Cycle">
+            {POWER_CYCLES.map(cycle => (
+              <FilterToggle
+                key={cycle.id}
+                label={cycle.label}
+                active={selectedCycles.includes(cycle.id)}
+                onClick={() => toggleCycle(cycle.id)}
+                count={filterCounts.cycles[cycle.id] || 0}
+              />
+            ))}
+          </FilterSection>
 
-              {/* Power Cycle Filter */}
-              <label className="flex items-center gap-2">
-                <span className="text-gray-700 dark:text-gray-300 font-semibold text-sm">Cycle:</span>
-                <select
-                  value={filterCycle}
-                  onChange={(e) => setFilterCycle(e.target.value)}
-                  className="glass-select"
-                >
-                  <option value="all">All Cycles</option>
-                  {POWER_CYCLES.map(c => (
-                    <option key={c} value={c}>{c}</option>
-                  ))}
-                </select>
-              </label>
-
-              {/* Capability Filter */}
-              <label className="flex items-center gap-2">
-                <span className="text-gray-700 dark:text-gray-300 font-semibold text-sm">Capability:</span>
-                <select
-                  value={filterCapability}
-                  onChange={(e) => setFilterCapability(e.target.value)}
-                  className="glass-select"
-                >
-                  <option value="all">All Capabilities</option>
-                  <option value="reusable">Reusable</option>
-                  <option value="advanced">Advanced Cycle</option>
-                  <option value="throttle">Throttleable</option>
-                  <option value="restart">Restartable</option>
-                </select>
-              </label>
-            </div>
-          </div>
-        </div>
+          {/* Capability Filters */}
+          <FilterSection title="Capabilities">
+            {CAPABILITIES.map(cap => (
+              <FilterToggle
+                key={cap.id}
+                label={cap.label}
+                active={selectedCapabilities.includes(cap.id)}
+                onClick={() => toggleCapability(cap.id)}
+                count={filterCounts.capabilities[cap.id] || 0}
+              />
+            ))}
+          </FilterSection>
+        </FilterPanel>
 
         {/* Results count */}
         <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
@@ -475,19 +601,19 @@ export default function EngineListPage() {
         {/* No results */}
         {filteredAndSortedEngines.length === 0 && (
           <div className="text-center py-12">
+            <Rocket style={{ fontSize: '3rem' }} className="text-gray-300 dark:text-gray-600 mx-auto mb-4" />
             <p className="text-gray-500 dark:text-gray-400 text-lg">No engines match your filters</p>
-            <button
-              onClick={() => {
-                setFilterStatus('all');
-                setFilterCountry('all');
-                setFilterPropellant('all');
-                setFilterCycle('all');
-                setFilterCapability('all');
-              }}
-              className="mt-4 text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300"
-            >
-              Clear filters
-            </button>
+            <p className="text-gray-400 dark:text-gray-500 text-sm mt-1">
+              Try removing some filters to see more results
+            </p>
+            {hasActiveFilters && (
+              <button
+                onClick={clearAllFilters}
+                className="mt-4 px-4 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 transition text-sm font-medium"
+              >
+                Clear all filters
+              </button>
+            )}
           </div>
         )}
 

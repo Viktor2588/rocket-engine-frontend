@@ -1,8 +1,11 @@
 import { useState, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { useSatellites, useFilteredSatellites, useSatelliteStatistics } from '../hooks/useSatellites';
+import { useSatellites, useSatelliteStatistics } from '../hooks/useSatellites';
 import SortableHeader, { SortableGridHeader } from '../components/SortableHeader';
 import LoadingSpinner from '../components/LoadingSpinner';
+import ViewToggle from '../components/ViewToggle';
+import { FilterPanel, FilterSection, FilterToggle } from '../components/filters';
+import Pagination from '../components/Pagination';
 import {
   SettingsInputAntenna,
   Explore,
@@ -141,50 +144,73 @@ function SatelliteCard({ satellite }) {
   );
 }
 
-function StatisticsCard({ statistics }) {
-  if (!statistics) return null;
-
-  return (
-    <div className="glass-panel p-6 mb-6">
-      <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Satellite Statistics</h3>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="text-center p-4 glass-tinted-indigo">
-          <p className="text-3xl font-bold text-indigo-600 dark:text-indigo-400">{statistics.total}</p>
-          <p className="text-sm text-gray-600 dark:text-gray-400">Total Satellites</p>
-        </div>
-        <div className="text-center p-4 glass-tinted-green">
-          <p className="text-3xl font-bold text-green-600 dark:text-green-400">{statistics.active}</p>
-          <p className="text-sm text-gray-600 dark:text-gray-400">Active</p>
-        </div>
-        <div className="text-center p-4 glass-tinted-purple">
-          <p className="text-3xl font-bold text-purple-600 dark:text-purple-400">{statistics.byType?.length || 0}</p>
-          <p className="text-sm text-gray-600 dark:text-gray-400">Types</p>
-        </div>
-        <div className="text-center p-4 glass-tinted-yellow">
-          <p className="text-3xl font-bold text-amber-600 dark:text-amber-400">{statistics.byCountry?.length || 0}</p>
-          <p className="text-sm text-gray-600 dark:text-gray-400">Countries</p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export default function SatelliteListPage() {
   const { satellites, loading, error } = useSatellites();
   const { statistics } = useSatelliteStatistics();
-  const [filters, setFilters] = useState({
-    type: '',
-    orbitType: '',
-    status: '',
-    countryId: '',
-    constellation: '',
-    search: '',
-  });
+
+  // Multi-select filter states
+  const [selectedTypes, setSelectedTypes] = useState([]);
+  const [selectedOrbits, setSelectedOrbits] = useState([]);
+  const [selectedStatuses, setSelectedStatuses] = useState([]);
+  const [selectedCountries, setSelectedCountries] = useState([]);
+  const [selectedConstellations, setSelectedConstellations] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+
   const [sortBy, setSortBy] = useState('name');
   const [sortOrder, setSortOrder] = useState('asc');
   const [viewMode, setViewMode] = useState('grid');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(25);
 
-  const filteredSatellites = useFilteredSatellites(satellites, filters);
+  // Toggle functions for multi-select
+  const toggleType = useCallback((type) => {
+    setSelectedTypes(prev =>
+      prev.includes(type) ? prev.filter(t => t !== type) : [...prev, type]
+    );
+    setCurrentPage(1);
+  }, []);
+
+  const toggleOrbit = useCallback((orbit) => {
+    setSelectedOrbits(prev =>
+      prev.includes(orbit) ? prev.filter(o => o !== orbit) : [...prev, orbit]
+    );
+    setCurrentPage(1);
+  }, []);
+
+  const toggleStatus = useCallback((status) => {
+    setSelectedStatuses(prev =>
+      prev.includes(status) ? prev.filter(s => s !== status) : [...prev, status]
+    );
+    setCurrentPage(1);
+  }, []);
+
+  const toggleCountry = useCallback((country) => {
+    setSelectedCountries(prev =>
+      prev.includes(country) ? prev.filter(c => c !== country) : [...prev, country]
+    );
+    setCurrentPage(1);
+  }, []);
+
+  const toggleConstellation = useCallback((constellation) => {
+    setSelectedConstellations(prev =>
+      prev.includes(constellation) ? prev.filter(c => c !== constellation) : [...prev, constellation]
+    );
+    setCurrentPage(1);
+  }, []);
+
+  const clearAllFilters = useCallback(() => {
+    setSelectedTypes([]);
+    setSelectedOrbits([]);
+    setSelectedStatuses([]);
+    setSelectedCountries([]);
+    setSelectedConstellations([]);
+    setSearchQuery('');
+    setCurrentPage(1);
+  }, []);
+
+  const hasActiveFilters = selectedTypes.length > 0 || selectedOrbits.length > 0 ||
+    selectedStatuses.length > 0 || selectedCountries.length > 0 ||
+    selectedConstellations.length > 0 || searchQuery;
 
   // Sort handler for table/grid headers
   const handleSort = useCallback((key, order) => {
@@ -211,14 +237,72 @@ export default function SatelliteListPage() {
     };
   }, [satellites]);
 
-  // Sort satellites
-  const sortedSatellites = useMemo(() => {
-    const sorted = [...filteredSatellites];
-    sorted.sort((a, b) => {
+  // Count satellites per filter option
+  const filterCounts = useMemo(() => {
+    const counts = {
+      types: {},
+      orbits: {},
+      statuses: {},
+      countries: {},
+      constellations: {},
+    };
+
+    satellites.forEach(s => {
+      if (s.type) counts.types[s.type] = (counts.types[s.type] || 0) + 1;
+      if (s.orbitType) counts.orbits[s.orbitType] = (counts.orbits[s.orbitType] || 0) + 1;
+      if (s.status) counts.statuses[s.status] = (counts.statuses[s.status] || 0) + 1;
+      if (s.countryId) counts.countries[s.countryId] = (counts.countries[s.countryId] || 0) + 1;
+      if (s.constellation) counts.constellations[s.constellation] = (counts.constellations[s.constellation] || 0) + 1;
+    });
+
+    return counts;
+  }, [satellites]);
+
+  // Filter and sort satellites
+  const filteredAndSortedSatellites = useMemo(() => {
+    let result = [...satellites];
+
+    // Filter by search query
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter(s =>
+        s.name?.toLowerCase().includes(query) ||
+        s.operator?.toLowerCase().includes(query) ||
+        s.purpose?.toLowerCase().includes(query)
+      );
+    }
+
+    // Filter by type (OR within category)
+    if (selectedTypes.length > 0) {
+      result = result.filter(s => selectedTypes.includes(s.type));
+    }
+
+    // Filter by orbit (OR within category)
+    if (selectedOrbits.length > 0) {
+      result = result.filter(s => selectedOrbits.includes(s.orbitType));
+    }
+
+    // Filter by status (OR within category)
+    if (selectedStatuses.length > 0) {
+      result = result.filter(s => selectedStatuses.includes(s.status));
+    }
+
+    // Filter by country (OR within category)
+    if (selectedCountries.length > 0) {
+      result = result.filter(s => selectedCountries.includes(s.countryId));
+    }
+
+    // Filter by constellation (OR within category)
+    if (selectedConstellations.length > 0) {
+      result = result.filter(s => selectedConstellations.includes(s.constellation));
+    }
+
+    // Sort
+    result.sort((a, b) => {
       let comparison = 0;
       switch (sortBy) {
         case 'name':
-          comparison = a.name.localeCompare(b.name);
+          comparison = (a.name || '').localeCompare(b.name || '');
           break;
         case 'launchYear':
           comparison = (a.launchYear || 0) - (b.launchYear || 0);
@@ -234,25 +318,76 @@ export default function SatelliteListPage() {
       }
       return sortOrder === 'asc' ? comparison : -comparison;
     });
-    return sorted;
-  }, [filteredSatellites, sortBy, sortOrder]);
 
-  const handleFilterChange = (key, value) => {
-    setFilters(prev => ({ ...prev, [key]: value }));
-  };
+    return result;
+  }, [satellites, searchQuery, selectedTypes, selectedOrbits, selectedStatuses, selectedCountries, selectedConstellations, sortBy, sortOrder]);
 
-  const clearFilters = () => {
-    setFilters({
-      type: '',
-      orbitType: '',
-      status: '',
-      countryId: '',
-      constellation: '',
-      search: '',
+  // Paginate the filtered results
+  const paginatedSatellites = useMemo(() => {
+    const startIndex = (currentPage - 1) * pageSize;
+    return filteredAndSortedSatellites.slice(startIndex, startIndex + pageSize);
+  }, [filteredAndSortedSatellites, currentPage, pageSize]);
+
+  // Build active filters array for FilterPanel
+  const activeFilters = useMemo(() => {
+    const filters = [];
+
+    selectedTypes.forEach(type => {
+      filters.push({
+        key: `type-${type}`,
+        label: type,
+        color: 'indigo',
+        onRemove: () => toggleType(type),
+      });
     });
-  };
 
-  const activeFilterCount = Object.values(filters).filter(Boolean).length;
+    selectedOrbits.forEach(orbit => {
+      filters.push({
+        key: `orbit-${orbit}`,
+        label: orbit,
+        color: 'blue',
+        onRemove: () => toggleOrbit(orbit),
+      });
+    });
+
+    selectedStatuses.forEach(status => {
+      filters.push({
+        key: `status-${status}`,
+        label: status,
+        color: 'green',
+        onRemove: () => toggleStatus(status),
+      });
+    });
+
+    selectedCountries.forEach(country => {
+      filters.push({
+        key: `country-${country}`,
+        label: country,
+        color: 'purple',
+        onRemove: () => toggleCountry(country),
+      });
+    });
+
+    selectedConstellations.forEach(constellation => {
+      filters.push({
+        key: `constellation-${constellation}`,
+        label: constellation,
+        color: 'orange',
+        onRemove: () => toggleConstellation(constellation),
+      });
+    });
+
+    if (searchQuery) {
+      filters.push({
+        key: 'search',
+        label: `"${searchQuery}"`,
+        color: 'yellow',
+        onRemove: () => setSearchQuery(''),
+      });
+    }
+
+    return filters;
+  }, [selectedTypes, selectedOrbits, selectedStatuses, selectedCountries, selectedConstellations, searchQuery, toggleType, toggleOrbit, toggleStatus, toggleCountry, toggleConstellation]);
 
   if (loading) {
     return (
@@ -273,224 +408,241 @@ export default function SatelliteListPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Satellites</h1>
-        <p className="text-gray-600 dark:text-gray-400">
-          Explore satellites and space assets from around the world
-        </p>
-      </div>
-
-      {/* Statistics */}
-      <StatisticsCard statistics={statistics} />
-
-      {/* Filters */}
-      <div className="glass-panel p-6 mb-6">
-        <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
-          <h3 className="text-lg font-semibold text-gray-800 dark:text-white">Filters</h3>
-          {activeFilterCount > 0 && (
-            <button
-              onClick={clearFilters}
-              className="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300"
-            >
-              Clear all ({activeFilterCount})
-            </button>
-          )}
+    <div className="min-h-screen py-8">
+      <div className="container mx-auto px-4">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-3">
+            <SatelliteAlt style={{ fontSize: '2.5rem' }} className="text-gray-900 dark:text-white" /> Satellites
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400">
+            Explore satellites and space assets from around the world
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-          {/* Search */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Search</label>
-            <input
-              type="text"
-              value={filters.search}
-              onChange={(e) => handleFilterChange('search', e.target.value)}
-              placeholder="Search satellites..."
-              className="glass-input w-full"
-            />
-          </div>
-
-          {/* Type filter */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Type</label>
-            <select
-              value={filters.type}
-              onChange={(e) => handleFilterChange('type', e.target.value)}
-              className="glass-select w-full"
-            >
-              <option value="">All Types</option>
-              {filterOptions.types.map(type => (
-                <option key={type} value={type}>{type}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Orbit filter */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Orbit</label>
-            <select
-              value={filters.orbitType}
-              onChange={(e) => handleFilterChange('orbitType', e.target.value)}
-              className="glass-select w-full"
-            >
-              <option value="">All Orbits</option>
-              {filterOptions.orbits.map(orbit => (
-                <option key={orbit} value={orbit}>{orbit}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Status filter */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status</label>
-            <select
-              value={filters.status}
-              onChange={(e) => handleFilterChange('status', e.target.value)}
-              className="glass-select w-full"
-            >
-              <option value="">All Statuses</option>
-              {filterOptions.statuses.map(status => (
-                <option key={status} value={status}>{status}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Country filter */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Country</label>
-            <select
-              value={filters.countryId}
-              onChange={(e) => handleFilterChange('countryId', e.target.value)}
-              className="glass-select w-full"
-            >
-              <option value="">All Countries</option>
-              {filterOptions.countries.map(country => (
-                <option key={country} value={country}>{country}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Constellation filter */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Constellation</label>
-            <select
-              value={filters.constellation}
-              onChange={(e) => handleFilterChange('constellation', e.target.value)}
-              className="glass-select w-full"
-            >
-              <option value="">All Constellations</option>
-              {filterOptions.constellations.map(constellation => (
-                <option key={constellation} value={constellation}>{constellation}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* View mode */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">View</label>
-            <div className="flex gap-2">
-              <button
-                onClick={() => setViewMode('grid')}
-                className={`flex-1 ${viewMode === 'grid' ? 'glass-button-primary' : 'glass-button'}`}
-              >
-                Grid
-              </button>
-              <button
-                onClick={() => setViewMode('list')}
-                className={`flex-1 ${viewMode === 'list' ? 'glass-button-primary' : 'glass-button'}`}
-              >
-                List
-              </button>
+        {/* Statistics */}
+        {statistics && (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div className="glass-tinted-indigo p-4 text-center">
+              <p className="text-3xl font-bold text-indigo-600 dark:text-indigo-400">{statistics.total}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Total Satellites</p>
+            </div>
+            <div className="glass-tinted-green p-4 text-center">
+              <p className="text-3xl font-bold text-green-600 dark:text-green-400">{statistics.active}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Active</p>
+            </div>
+            <div className="glass-tinted-purple p-4 text-center">
+              <p className="text-3xl font-bold text-purple-600 dark:text-purple-400">{statistics.byType?.length || 0}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Types</p>
+            </div>
+            <div className="glass-tinted-yellow p-4 text-center">
+              <p className="text-3xl font-bold text-amber-600 dark:text-amber-400">{statistics.byCountry?.length || 0}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Countries</p>
             </div>
           </div>
-        </div>
-      </div>
+        )}
 
-      {/* Results count */}
-      <div className="mb-4 text-gray-600 dark:text-gray-400">
-        Showing {sortedSatellites.length} of {satellites.length} satellites
-      </div>
-
-      {/* Satellite grid/list */}
-      {sortedSatellites.length === 0 ? (
-        <div className="glass-panel p-12 text-center">
-          <p className="text-gray-500 dark:text-gray-400 text-lg">No satellites found matching your criteria</p>
-          <button
-            onClick={clearFilters}
-            className="mt-4 text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300"
-          >
-            Clear filters
-          </button>
-        </div>
-      ) : viewMode === 'grid' ? (
-        <div className="space-y-4">
-          <SortableGridHeader
-            columns={sortColumns}
-            currentSort={sortBy}
-            sortOrder={sortOrder}
-            onSort={handleSort}
+        {/* Search Bar */}
+        <div className="mb-4">
+          <input
+            type="text"
+            placeholder="Search satellites..."
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setCurrentPage(1);
+            }}
+            className="glass-input w-full max-w-md"
           />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {sortedSatellites.map(satellite => (
-              <SatelliteCard key={satellite.id} satellite={satellite} />
+        </div>
+
+        {/* Filters & Controls */}
+        <FilterPanel
+          activeFilters={activeFilters}
+          onClearAll={clearAllFilters}
+          headerActions={
+            <ViewToggle
+              viewMode={viewMode}
+              setViewMode={setViewMode}
+              options={['grid', 'list']}
+            />
+          }
+        >
+          {/* Type Filters */}
+          <FilterSection title="Type">
+            {filterOptions.types.map(type => (
+              <FilterToggle
+                key={type}
+                label={type}
+                active={selectedTypes.includes(type)}
+                onClick={() => toggleType(type)}
+                count={filterCounts.types[type] || 0}
+              />
             ))}
-          </div>
-        </div>
-      ) : (
-        <div className="glass-panel overflow-hidden">
-          <table className="w-full">
-            <thead className="glass-header-gradient">
-              <tr>
-                <SortableHeader
-                  label="Name"
-                  sortKey="name"
-                  currentSort={sortBy}
-                  sortOrder={sortOrder}
-                  onSort={handleSort}
+          </FilterSection>
+
+          {/* Orbit Filters */}
+          <FilterSection title="Orbit">
+            {filterOptions.orbits.map(orbit => (
+              <FilterToggle
+                key={orbit}
+                label={orbit}
+                active={selectedOrbits.includes(orbit)}
+                onClick={() => toggleOrbit(orbit)}
+                count={filterCounts.orbits[orbit] || 0}
+              />
+            ))}
+          </FilterSection>
+
+          {/* Status Filters */}
+          <FilterSection title="Status">
+            {filterOptions.statuses.map(status => (
+              <FilterToggle
+                key={status}
+                label={status}
+                active={selectedStatuses.includes(status)}
+                onClick={() => toggleStatus(status)}
+                count={filterCounts.statuses[status] || 0}
+              />
+            ))}
+          </FilterSection>
+
+          {/* Country Filters */}
+          <FilterSection title="Country">
+            {filterOptions.countries.slice(0, 12).map(country => (
+              <FilterToggle
+                key={country}
+                label={country}
+                active={selectedCountries.includes(country)}
+                onClick={() => toggleCountry(country)}
+                count={filterCounts.countries[country] || 0}
+              />
+            ))}
+          </FilterSection>
+
+          {/* Constellation Filters */}
+          {filterOptions.constellations.length > 0 && (
+            <FilterSection title="Constellation">
+              {filterOptions.constellations.map(constellation => (
+                <FilterToggle
+                  key={constellation}
+                  label={constellation}
+                  active={selectedConstellations.includes(constellation)}
+                  onClick={() => toggleConstellation(constellation)}
+                  count={filterCounts.constellations[constellation] || 0}
                 />
-                <SortableHeader label="Type" sortKey={null} />
-                <SortableHeader label="Orbit" sortKey={null} />
-                <SortableHeader label="Status" sortKey={null} />
-                <SortableHeader label="Country" sortKey={null} />
-                <SortableHeader
-                  label="Launch"
-                  sortKey="launchYear"
-                  currentSort={sortBy}
-                  sortOrder={sortOrder}
-                  onSort={handleSort}
-                />
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200/50 dark:divide-white/[0.08]">
-              {sortedSatellites.map(satellite => (
-                <tr key={satellite.id} className="hover:bg-gray-500/[0.05] dark:hover:bg-white/[0.03] transition-colors">
-                  <td className="px-4 py-3">
-                    <Link to={`/satellites/${satellite.id}`} className="font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300">
-                      {satellite.name}
-                    </Link>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">{satellite.operator}</p>
-                  </td>
-                  <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{satellite.type}</td>
-                  <td className="px-4 py-3">
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium border backdrop-blur-sm ${ORBIT_COLORS[satellite.orbitType] || 'bg-gray-500/15 dark:bg-gray-500/25 text-gray-700 dark:text-gray-300 border-gray-400/20'}`}>
-                      {satellite.orbitType}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium border backdrop-blur-sm ${STATUS_COLORS[satellite.status] || 'bg-gray-500/15 dark:bg-gray-500/25 text-gray-700 dark:text-gray-300 border-gray-400/20'}`}>
-                      {satellite.status}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{satellite.countryId}</td>
-                  <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{satellite.launchYear || '-'}</td>
-                </tr>
               ))}
-            </tbody>
-          </table>
+            </FilterSection>
+          )}
+        </FilterPanel>
+
+        {/* Results count */}
+        <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+          Found {filteredAndSortedSatellites.length} satellites
         </div>
-      )}
+
+        {/* Satellite grid/list */}
+        {filteredAndSortedSatellites.length === 0 ? (
+          <div className="glass-panel p-12 text-center">
+            <SatelliteAlt style={{ fontSize: '3rem' }} className="text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+            <p className="text-gray-500 dark:text-gray-400 text-lg">No satellites found matching your criteria</p>
+            {hasActiveFilters && (
+              <button
+                onClick={clearAllFilters}
+                className="mt-4 px-4 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 transition text-sm font-medium"
+              >
+                Clear all filters
+              </button>
+            )}
+          </div>
+        ) : viewMode === 'grid' ? (
+          <>
+            <div className="space-y-4">
+              <SortableGridHeader
+                columns={sortColumns}
+                currentSort={sortBy}
+                sortOrder={sortOrder}
+                onSort={handleSort}
+              />
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {paginatedSatellites.map(satellite => (
+                  <SatelliteCard key={satellite.id} satellite={satellite} />
+                ))}
+              </div>
+            </div>
+            <Pagination
+              totalItems={filteredAndSortedSatellites.length}
+              currentPage={currentPage}
+              pageSize={pageSize}
+              onPageChange={setCurrentPage}
+              onPageSizeChange={setPageSize}
+              className="mt-6"
+            />
+          </>
+        ) : (
+          <>
+            <div className="glass-panel overflow-hidden">
+              <table className="w-full">
+                <thead className="glass-header-gradient">
+                  <tr>
+                    <SortableHeader
+                      label="Name"
+                      sortKey="name"
+                      currentSort={sortBy}
+                      sortOrder={sortOrder}
+                      onSort={handleSort}
+                    />
+                    <SortableHeader label="Type" sortKey={null} />
+                    <SortableHeader label="Orbit" sortKey={null} />
+                    <SortableHeader label="Status" sortKey={null} />
+                    <SortableHeader label="Country" sortKey={null} />
+                    <SortableHeader
+                      label="Launch"
+                      sortKey="launchYear"
+                      currentSort={sortBy}
+                      sortOrder={sortOrder}
+                      onSort={handleSort}
+                    />
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200/50 dark:divide-white/[0.08]">
+                  {paginatedSatellites.map((satellite, index) => (
+                    <tr key={satellite.id} className={`${index % 2 === 0 ? 'bg-transparent' : 'bg-gray-500/[0.03] dark:bg-white/[0.02]'} hover:bg-gray-500/[0.05] dark:hover:bg-white/[0.03] transition-colors`}>
+                      <td className="px-4 py-3">
+                        <Link to={`/satellites/${satellite.id}`} className="font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300">
+                          {satellite.name}
+                        </Link>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">{satellite.operator}</p>
+                      </td>
+                      <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{satellite.type}</td>
+                      <td className="px-4 py-3">
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium border backdrop-blur-sm ${ORBIT_COLORS[satellite.orbitType] || 'bg-gray-500/15 dark:bg-gray-500/25 text-gray-700 dark:text-gray-300 border-gray-400/20'}`}>
+                          {satellite.orbitType}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium border backdrop-blur-sm ${STATUS_COLORS[satellite.status] || 'bg-gray-500/15 dark:bg-gray-500/25 text-gray-700 dark:text-gray-300 border-gray-400/20'}`}>
+                          {satellite.status}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{satellite.countryId}</td>
+                      <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{satellite.launchYear || '-'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <Pagination
+              totalItems={filteredAndSortedSatellites.length}
+              currentPage={currentPage}
+              pageSize={pageSize}
+              onPageChange={setCurrentPage}
+              onPageSizeChange={setPageSize}
+              className="mt-6"
+            />
+          </>
+        )}
+      </div>
     </div>
   );
 }

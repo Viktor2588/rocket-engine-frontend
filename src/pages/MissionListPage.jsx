@@ -1,10 +1,12 @@
 import { useState, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { useAllMissions, useFilteredMissions, useMissionStatistics } from '../hooks/useMissions';
+import { useAllMissions, useMissionStatistics } from '../hooks/useMissions';
 import MissionCard, { StatusBadge, MissionTypeBadge, DestinationBadge } from '../components/MissionCard';
 import Pagination from '../components/Pagination';
 import SortableHeader, { SortableGridHeader } from '../components/SortableHeader';
 import LoadingSpinner from '../components/LoadingSpinner';
+import ViewToggle from '../components/ViewToggle';
+import { FilterPanel, FilterSection, FilterToggle } from '../components/filters';
 import { MISSION_TYPE_INFO, DESTINATION_INFO } from '../types';
 import {
   Rocket,
@@ -31,26 +33,65 @@ const STATUS_OPTIONS = [
 export default function MissionListPage() {
   const { missions: allMissions, loading, error } = useAllMissions();
   const { stats } = useMissionStatistics();
-  const [viewMode, setViewMode] = useState('grid'); // grid, list, timeline
+  const [viewMode, setViewMode] = useState('grid');
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(25);
 
-  const {
-    missions: filteredMissions,
-    filters,
-    updateFilter,
-    resetFilters,
-    sortBy,
-    setSortBy,
-    sortOrder,
-    setSortOrder
-  } = useFilteredMissions(allMissions);
+  // Multi-select filter states
+  const [selectedStatuses, setSelectedStatuses] = useState([]);
+  const [selectedMissionTypes, setSelectedMissionTypes] = useState([]);
+  const [selectedDestinations, setSelectedDestinations] = useState([]);
+  const [crewedOnly, setCrewedOnly] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Sort states
+  const [sortBy, setSortBy] = useState('launchDate');
+  const [sortOrder, setSortOrder] = useState('desc');
+
+  // Toggle functions for multi-select
+  const toggleStatus = useCallback((status) => {
+    setSelectedStatuses(prev =>
+      prev.includes(status) ? prev.filter(s => s !== status) : [...prev, status]
+    );
+    setCurrentPage(1);
+  }, []);
+
+  const toggleMissionType = useCallback((type) => {
+    setSelectedMissionTypes(prev =>
+      prev.includes(type) ? prev.filter(t => t !== type) : [...prev, type]
+    );
+    setCurrentPage(1);
+  }, []);
+
+  const toggleDestination = useCallback((dest) => {
+    setSelectedDestinations(prev =>
+      prev.includes(dest) ? prev.filter(d => d !== dest) : [...prev, dest]
+    );
+    setCurrentPage(1);
+  }, []);
+
+  const toggleCrewedOnly = useCallback(() => {
+    setCrewedOnly(prev => !prev);
+    setCurrentPage(1);
+  }, []);
+
+  const clearAllFilters = useCallback(() => {
+    setSelectedStatuses([]);
+    setSelectedMissionTypes([]);
+    setSelectedDestinations([]);
+    setCrewedOnly(false);
+    setSearchQuery('');
+    setCurrentPage(1);
+  }, []);
+
+  const hasActiveFilters = selectedStatuses.length > 0 || selectedMissionTypes.length > 0 ||
+    selectedDestinations.length > 0 || crewedOnly || searchQuery;
 
   // Sort handler for table/grid headers
   const handleSort = useCallback((key, order) => {
     setSortBy(key);
     setSortOrder(order);
-  }, [setSortBy, setSortOrder]);
+  }, []);
 
   // Sort columns configuration
   const sortColumns = [
@@ -60,11 +101,155 @@ export default function MissionListPage() {
     { key: 'destination', label: 'Destination' },
   ];
 
+  // Count missions per filter option
+  const filterCounts = useMemo(() => {
+    const counts = {
+      statuses: {},
+      missionTypes: {},
+      destinations: {},
+      crewed: 0,
+    };
+
+    allMissions.forEach(m => {
+      // Status counts
+      if (m.status) {
+        counts.statuses[m.status] = (counts.statuses[m.status] || 0) + 1;
+      }
+      // Mission type counts
+      if (m.missionType) {
+        counts.missionTypes[m.missionType] = (counts.missionTypes[m.missionType] || 0) + 1;
+      }
+      // Destination counts
+      if (m.destination) {
+        counts.destinations[m.destination] = (counts.destinations[m.destination] || 0) + 1;
+      }
+      // Crewed count
+      if (m.crewed) {
+        counts.crewed++;
+      }
+    });
+
+    return counts;
+  }, [allMissions]);
+
+  // Filter and sort missions
+  const filteredAndSortedMissions = useMemo(() => {
+    let result = [...allMissions];
+
+    // Filter by search query
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter(m =>
+        m.name?.toLowerCase().includes(query) ||
+        m.description?.toLowerCase().includes(query)
+      );
+    }
+
+    // Filter by status (OR within category)
+    if (selectedStatuses.length > 0) {
+      result = result.filter(m => selectedStatuses.includes(m.status));
+    }
+
+    // Filter by mission type (OR within category)
+    if (selectedMissionTypes.length > 0) {
+      result = result.filter(m => selectedMissionTypes.includes(m.missionType));
+    }
+
+    // Filter by destination (OR within category)
+    if (selectedDestinations.length > 0) {
+      result = result.filter(m => selectedDestinations.includes(m.destination));
+    }
+
+    // Filter by crewed
+    if (crewedOnly) {
+      result = result.filter(m => m.crewed);
+    }
+
+    // Sort
+    result.sort((a, b) => {
+      let comparison = 0;
+      switch (sortBy) {
+        case 'launchDate':
+          comparison = new Date(a.launchDate || 0) - new Date(b.launchDate || 0);
+          break;
+        case 'name':
+          comparison = (a.name || '').localeCompare(b.name || '');
+          break;
+        case 'status':
+          comparison = (a.status || '').localeCompare(b.status || '');
+          break;
+        case 'destination':
+          comparison = (a.destination || '').localeCompare(b.destination || '');
+          break;
+        default:
+          comparison = 0;
+      }
+      return sortOrder === 'asc' ? comparison : -comparison;
+    });
+
+    return result;
+  }, [allMissions, searchQuery, selectedStatuses, selectedMissionTypes, selectedDestinations, crewedOnly, sortBy, sortOrder]);
+
   // Paginate the filtered results
   const paginatedMissions = useMemo(() => {
     const startIndex = (currentPage - 1) * pageSize;
-    return filteredMissions.slice(startIndex, startIndex + pageSize);
-  }, [filteredMissions, currentPage, pageSize]);
+    return filteredAndSortedMissions.slice(startIndex, startIndex + pageSize);
+  }, [filteredAndSortedMissions, currentPage, pageSize]);
+
+  // Build active filters array for FilterPanel
+  const activeFilters = useMemo(() => {
+    const filters = [];
+
+    selectedStatuses.forEach(status => {
+      const opt = STATUS_OPTIONS.find(s => s.value === status);
+      filters.push({
+        key: `status-${status}`,
+        label: opt?.label || status,
+        color: 'blue',
+        onRemove: () => toggleStatus(status),
+      });
+    });
+
+    selectedMissionTypes.forEach(type => {
+      const info = MISSION_TYPE_INFO[type];
+      filters.push({
+        key: `type-${type}`,
+        label: info?.label || type,
+        color: 'indigo',
+        onRemove: () => toggleMissionType(type),
+      });
+    });
+
+    selectedDestinations.forEach(dest => {
+      const info = DESTINATION_INFO[dest];
+      filters.push({
+        key: `dest-${dest}`,
+        label: info?.label || dest,
+        color: 'purple',
+        onRemove: () => toggleDestination(dest),
+      });
+    });
+
+    if (crewedOnly) {
+      filters.push({
+        key: 'crewed',
+        label: 'Crewed Only',
+        color: 'orange',
+        onRemove: () => setCrewedOnly(false),
+      });
+    }
+
+    if (searchQuery) {
+      filters.push({
+        key: 'search',
+        label: `"${searchQuery}"`,
+        color: 'yellow',
+        onRemove: () => setSearchQuery(''),
+      });
+    }
+
+    return filters;
+  }, [selectedStatuses, selectedMissionTypes, selectedDestinations, crewedOnly, searchQuery, toggleStatus, toggleMissionType, toggleDestination]);
 
   if (loading) {
     return (
@@ -85,15 +270,15 @@ export default function MissionListPage() {
     );
   }
 
-  const hasActiveFilters = filters.status || filters.missionType || filters.destination || filters.crewedOnly || filters.searchQuery;
-
   return (
     <div className="min-h-screen py-8">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Space Missions</h1>
-          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400">
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-3">
+            <Rocket style={{ fontSize: '2.5rem' }} className="text-gray-900 dark:text-white" /> Space Missions
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400">
             Explore humanity's missions to space, from historic firsts to ongoing explorations
           </p>
         </div>
@@ -124,144 +309,105 @@ export default function MissionListPage() {
           </div>
         )}
 
-        {/* Filters and Controls */}
-        <div className="glass-panel p-4 mb-6">
-          <div className="flex flex-col lg:flex-row gap-4">
-            {/* Search */}
-            <div className="flex-1">
-              <input
-                type="text"
-                placeholder="Search missions..."
-                value={filters.searchQuery}
-                onChange={(e) => updateFilter('searchQuery', e.target.value)}
-                className="glass-input w-full"
+        {/* Search Bar */}
+        <div className="mb-4">
+          <input
+            type="text"
+            placeholder="Search missions..."
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setCurrentPage(1);
+            }}
+            className="glass-input w-full max-w-md"
+          />
+        </div>
+
+        {/* Filters & Controls */}
+        <FilterPanel
+          activeFilters={activeFilters}
+          onClearAll={clearAllFilters}
+          headerActions={
+            <ViewToggle
+              viewMode={viewMode}
+              setViewMode={setViewMode}
+              options={['grid', 'list']}
+            />
+          }
+        >
+          {/* Status Filters */}
+          <FilterSection title="Status">
+            {STATUS_OPTIONS.map(status => (
+              <FilterToggle
+                key={status.value}
+                label={status.label}
+                active={selectedStatuses.includes(status.value)}
+                onClick={() => toggleStatus(status.value)}
+                count={filterCounts.statuses[status.value] || 0}
               />
-            </div>
+            ))}
+          </FilterSection>
 
-            {/* Status Filter */}
-            <select
-              value={filters.status || ''}
-              onChange={(e) => updateFilter('status', e.target.value || null)}
-              className="glass-select"
-            >
-              <option value="">All Statuses</option>
-              {STATUS_OPTIONS.map(opt => (
-                <option key={opt.value} value={opt.value}>{opt.label}</option>
-              ))}
-            </select>
+          {/* Mission Type Filters */}
+          <FilterSection title="Mission Type">
+            {Object.entries(MISSION_TYPE_INFO).map(([key, info]) => (
+              <FilterToggle
+                key={key}
+                label={`${info.icon} ${info.label}`}
+                active={selectedMissionTypes.includes(key)}
+                onClick={() => toggleMissionType(key)}
+                count={filterCounts.missionTypes[key] || 0}
+              />
+            ))}
+          </FilterSection>
 
-            {/* Mission Type Filter */}
-            <select
-              value={filters.missionType || ''}
-              onChange={(e) => updateFilter('missionType', e.target.value || null)}
-              className="glass-select"
-            >
-              <option value="">All Types</option>
-              {Object.entries(MISSION_TYPE_INFO).map(([key, info]) => (
-                <option key={key} value={key}>{info.icon} {info.label}</option>
-              ))}
-            </select>
+          {/* Destination Filters */}
+          <FilterSection title="Destination">
+            {Object.entries(DESTINATION_INFO).map(([key, info]) => (
+              <FilterToggle
+                key={key}
+                label={`${info.icon} ${info.label}`}
+                active={selectedDestinations.includes(key)}
+                onClick={() => toggleDestination(key)}
+                count={filterCounts.destinations[key] || 0}
+              />
+            ))}
+          </FilterSection>
 
-            {/* Destination Filter */}
-            <select
-              value={filters.destination || ''}
-              onChange={(e) => updateFilter('destination', e.target.value || null)}
-              className="glass-select"
-            >
-              <option value="">All Destinations</option>
-              {Object.entries(DESTINATION_INFO).map(([key, info]) => (
-                <option key={key} value={key}>{info.icon} {info.label}</option>
-              ))}
-            </select>
-          </div>
+          {/* Crewed Filter */}
+          <FilterSection title="Crew">
+            <FilterToggle
+              label="Crewed Missions"
+              active={crewedOnly}
+              onClick={toggleCrewedOnly}
+              count={filterCounts.crewed}
+            />
+          </FilterSection>
+        </FilterPanel>
 
-          {/* Second row: toggles and view controls */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mt-4 pt-4 border-t border-gray-200/50 dark:border-white/[0.08]">
-            <div className="flex items-center gap-4">
-              {/* Crewed Only Toggle */}
-              <label className="flex items-center gap-2 text-sm cursor-pointer text-gray-700 dark:text-gray-300">
-                <input
-                  type="checkbox"
-                  checked={filters.crewedOnly}
-                  onChange={(e) => updateFilter('crewedOnly', e.target.checked)}
-                  className="rounded text-indigo-600 focus:ring-indigo-500"
-                />
-                <span>Crewed Missions Only</span>
-              </label>
-
-              {/* Reset Filters */}
-              {hasActiveFilters && (
-                <button
-                  onClick={resetFilters}
-                  className="text-sm text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300"
-                >
-                  Clear Filters
-                </button>
-              )}
-            </div>
-
-            <div className="flex items-center gap-4">
-              {/* View Mode */}
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setViewMode('grid')}
-                  className={viewMode === 'grid' ? 'glass-button-primary' : 'glass-button'}
-                >
-                  Grid
-                </button>
-                <button
-                  onClick={() => setViewMode('list')}
-                  className={viewMode === 'list' ? 'glass-button-primary' : 'glass-button'}
-                >
-                  List
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Active filters indicator */}
-          {hasActiveFilters && (
-            <div className="mt-3 flex items-center gap-2 flex-wrap">
-              <span className="text-sm text-gray-500 dark:text-gray-400">Showing {filteredMissions.length} of {allMissions.length} missions:</span>
-              {filters.status && (
-                <span className="px-2 py-1 bg-blue-500/15 dark:bg-blue-500/25 text-blue-700 dark:text-blue-300 rounded-full text-xs border border-blue-400/20 backdrop-blur-sm">
-                  {STATUS_OPTIONS.find(s => s.value === filters.status)?.label}
-                </span>
-              )}
-              {filters.missionType && (
-                <span className="px-2 py-1 bg-gray-500/15 dark:bg-gray-500/25 text-gray-700 dark:text-gray-300 rounded-full text-xs border border-gray-400/20 backdrop-blur-sm">
-                  {MISSION_TYPE_INFO[filters.missionType]?.label}
-                </span>
-              )}
-              {filters.destination && (
-                <span className="px-2 py-1 bg-indigo-500/15 dark:bg-indigo-500/25 text-indigo-700 dark:text-indigo-300 rounded-full text-xs border border-indigo-400/20 backdrop-blur-sm">
-                  {DESTINATION_INFO[filters.destination]?.label}
-                </span>
-              )}
-              {filters.crewedOnly && (
-                <span className="px-2 py-1 bg-purple-500/15 dark:bg-purple-500/25 text-purple-700 dark:text-purple-300 rounded-full text-xs border border-purple-400/20 backdrop-blur-sm">
-                  Crewed Only
-                </span>
-              )}
-              {filters.searchQuery && (
-                <span className="px-2 py-1 bg-yellow-500/15 dark:bg-yellow-500/25 text-yellow-700 dark:text-yellow-300 rounded-full text-xs border border-yellow-400/20 backdrop-blur-sm">
-                  "{filters.searchQuery}"
-                </span>
-              )}
-            </div>
-          )}
+        {/* Results count */}
+        <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+          Found {filteredAndSortedMissions.length} missions
         </div>
 
         {/* Mission List */}
-        {filteredMissions.length === 0 ? (
+        {filteredAndSortedMissions.length === 0 ? (
           <div className="glass-panel p-12 text-center">
-            <div className="mb-4"><Rocket style={{ fontSize: '4rem' }} className="text-indigo-600 dark:text-indigo-400" /></div>
+            <div className="mb-4"><Rocket style={{ fontSize: '4rem' }} className="text-gray-300 dark:text-gray-600 mx-auto" /></div>
             <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">No Missions Found</h3>
             <p className="text-gray-500 dark:text-gray-400">
               {hasActiveFilters
                 ? 'Try adjusting your filters to see more missions.'
                 : 'No missions available at this time.'}
             </p>
+            {hasActiveFilters && (
+              <button
+                onClick={clearAllFilters}
+                className="mt-4 px-4 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 transition text-sm font-medium"
+              >
+                Clear all filters
+              </button>
+            )}
           </div>
         ) : viewMode === 'grid' ? (
           <>
@@ -279,7 +425,7 @@ export default function MissionListPage() {
               </div>
             </div>
             <Pagination
-              totalItems={filteredMissions.length}
+              totalItems={filteredAndSortedMissions.length}
               currentPage={currentPage}
               pageSize={pageSize}
               onPageChange={setCurrentPage}
@@ -326,8 +472,8 @@ export default function MissionListPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200/50 dark:divide-white/[0.08]">
-                {paginatedMissions.map(mission => (
-                  <tr key={mission.id} className="hover:bg-gray-500/[0.05] dark:hover:bg-white/[0.03] transition-colors">
+                {paginatedMissions.map((mission, index) => (
+                  <tr key={mission.id} className={`${index % 2 === 0 ? 'bg-transparent' : 'bg-gray-500/[0.03] dark:bg-white/[0.02]'} hover:bg-gray-500/[0.05] dark:hover:bg-white/[0.03] transition-colors`}>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <Link
                         to={`/missions/${mission.id}`}
@@ -363,7 +509,7 @@ export default function MissionListPage() {
               </table>
             </div>
             <Pagination
-              totalItems={filteredMissions.length}
+              totalItems={filteredAndSortedMissions.length}
               currentPage={currentPage}
               pageSize={pageSize}
               onPageChange={setCurrentPage}

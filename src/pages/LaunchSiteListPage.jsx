@@ -1,8 +1,10 @@
 import { useState, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { useLaunchSites, useFilteredLaunchSites, useLaunchSiteStatistics } from '../hooks/useLaunchSites';
+import { useLaunchSites, useLaunchSiteStatistics } from '../hooks/useLaunchSites';
 import SortableHeader, { SortableGridHeader } from '../components/SortableHeader';
 import LoadingSpinner from '../components/LoadingSpinner';
+import ViewToggle from '../components/ViewToggle';
+import { FilterPanel, FilterSection, FilterToggle } from '../components/filters';
 import {
   ComposableMap,
   Geographies,
@@ -19,6 +21,7 @@ import {
   Public,
   AcUnit,
   FlightLand,
+  Search,
 } from '@mui/icons-material';
 
 // World TopoJSON URL
@@ -317,37 +320,126 @@ export default function LaunchSiteListPage() {
   const { statistics } = useLaunchSiteStatistics();
   const [viewMode, setViewMode] = useState('grid');
   const [hoveredSite, setHoveredSite] = useState(null);
-  const [filters, setFilters] = useState({
-    status: '',
-    countryId: '',
-    region: '',
-    humanRated: undefined,
-    polarCapable: undefined,
-    geoCapable: undefined,
-    search: '',
-  });
+
+  // Multi-select filter states
+  const [selectedStatuses, setSelectedStatuses] = useState([]);
+  const [selectedCountries, setSelectedCountries] = useState([]);
+  const [selectedRegions, setSelectedRegions] = useState([]);
+  const [selectedCapabilities, setSelectedCapabilities] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+
   const [sortBy, setSortBy] = useState('name');
   const [sortOrder, setSortOrder] = useState('asc');
 
-  const filteredSites = useFilteredLaunchSites(launchSites, filters);
-
-  // Sort handler for table/grid headers
-  const handleSort = useCallback((key, order) => {
-    setSortBy(key);
-    setSortOrder(order);
+  // Toggle functions
+  const toggleStatus = useCallback((status) => {
+    setSelectedStatuses(prev =>
+      prev.includes(status) ? prev.filter(s => s !== status) : [...prev, status]
+    );
   }, []);
 
-  // Sort columns configuration
-  const sortColumns = [
-    { key: 'name', label: 'Name' },
-    { key: 'totalLaunches', label: 'Launches' },
-    { key: 'successRate', label: 'Success Rate' },
-    { key: 'established', label: 'Established' },
-  ];
+  const toggleCountry = useCallback((country) => {
+    setSelectedCountries(prev =>
+      prev.includes(country) ? prev.filter(c => c !== country) : [...prev, country]
+    );
+  }, []);
 
-  // Sort the filtered sites
-  const sortedSites = useMemo(() => {
-    const sorted = [...filteredSites].sort((a, b) => {
+  const toggleRegion = useCallback((region) => {
+    setSelectedRegions(prev =>
+      prev.includes(region) ? prev.filter(r => r !== region) : [...prev, region]
+    );
+  }, []);
+
+  const toggleCapability = useCallback((capability) => {
+    setSelectedCapabilities(prev =>
+      prev.includes(capability) ? prev.filter(c => c !== capability) : [...prev, capability]
+    );
+  }, []);
+
+  // Calculate filter counts
+  const filterCounts = useMemo(() => {
+    const counts = {
+      statuses: {},
+      countries: {},
+      regions: {},
+      capabilities: { humanRated: 0, geoCapable: 0, polarCapable: 0, hasLanding: 0 }
+    };
+
+    launchSites.forEach(site => {
+      if (site.status) counts.statuses[site.status] = (counts.statuses[site.status] || 0) + 1;
+      if (site.countryId) counts.countries[site.countryId] = (counts.countries[site.countryId] || 0) + 1;
+      if (site.region) counts.regions[site.region] = (counts.regions[site.region] || 0) + 1;
+      if (site.humanRated) counts.capabilities.humanRated++;
+      if (site.geoCapable) counts.capabilities.geoCapable++;
+      if (site.polarCapable) counts.capabilities.polarCapable++;
+      if (site.hasLanding) counts.capabilities.hasLanding++;
+    });
+
+    return counts;
+  }, [launchSites]);
+
+  // Get unique values for filters
+  const uniqueStatuses = useMemo(() =>
+    [...new Set(launchSites.map(s => s.status).filter(Boolean))].sort(),
+    [launchSites]
+  );
+
+  const uniqueCountries = useMemo(() =>
+    [...new Set(launchSites.map(s => s.countryId).filter(Boolean))].sort(),
+    [launchSites]
+  );
+
+  const uniqueRegions = useMemo(() =>
+    [...new Set(launchSites.map(s => s.region).filter(Boolean))].sort(),
+    [launchSites]
+  );
+
+  // Filter and sort logic
+  const filteredAndSorted = useMemo(() => {
+    let result = [...launchSites];
+
+    // Apply search filter
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter(site =>
+        site.name?.toLowerCase().includes(query) ||
+        site.operator?.toLowerCase().includes(query) ||
+        site.countryId?.toLowerCase().includes(query)
+      );
+    }
+
+    // Apply status filter
+    if (selectedStatuses.length > 0) {
+      result = result.filter(site => selectedStatuses.includes(site.status));
+    }
+
+    // Apply country filter
+    if (selectedCountries.length > 0) {
+      result = result.filter(site => selectedCountries.includes(site.countryId));
+    }
+
+    // Apply region filter
+    if (selectedRegions.length > 0) {
+      result = result.filter(site => selectedRegions.includes(site.region));
+    }
+
+    // Apply capability filters
+    if (selectedCapabilities.length > 0) {
+      result = result.filter(site => {
+        return selectedCapabilities.every(cap => {
+          switch (cap) {
+            case 'humanRated': return site.humanRated;
+            case 'geoCapable': return site.geoCapable;
+            case 'polarCapable': return site.polarCapable;
+            case 'hasLanding': return site.hasLanding;
+            default: return true;
+          }
+        });
+      });
+    }
+
+    // Sort
+    result.sort((a, b) => {
       let comparison = 0;
       switch (sortBy) {
         case 'name':
@@ -367,23 +459,95 @@ export default function LaunchSiteListPage() {
       }
       return sortOrder === 'asc' ? comparison : -comparison;
     });
-    return sorted;
-  }, [filteredSites, sortBy, sortOrder]);
 
-  // Get unique values for filters
-  const uniqueCountries = useMemo(() =>
-    [...new Set(launchSites.map(s => s.countryId).filter(Boolean))].sort(),
-    [launchSites]
-  );
+    return result;
+  }, [launchSites, searchQuery, selectedStatuses, selectedCountries, selectedRegions, selectedCapabilities, sortBy, sortOrder]);
 
-  const uniqueRegions = useMemo(() =>
-    [...new Set(launchSites.map(s => s.region).filter(Boolean))].sort(),
-    [launchSites]
-  );
+  // Build active filters array
+  const activeFilters = useMemo(() => {
+    const filters = [];
 
-  const handleFilterChange = (key, value) => {
-    setFilters(prev => ({ ...prev, [key]: value }));
-  };
+    if (searchQuery) {
+      filters.push({
+        key: 'search',
+        label: `Search: "${searchQuery}"`,
+        color: 'indigo',
+        onRemove: () => setSearchQuery('')
+      });
+    }
+
+    selectedStatuses.forEach(status => {
+      filters.push({
+        key: `status-${status}`,
+        label: status,
+        color: status === 'Active' ? 'green' : status === 'Inactive' ? 'orange' : 'blue',
+        onRemove: () => toggleStatus(status)
+      });
+    });
+
+    selectedCountries.forEach(country => {
+      filters.push({
+        key: `country-${country}`,
+        label: country,
+        color: 'purple',
+        onRemove: () => toggleCountry(country)
+      });
+    });
+
+    selectedRegions.forEach(region => {
+      filters.push({
+        key: `region-${region}`,
+        label: region,
+        color: 'cyan',
+        onRemove: () => toggleRegion(region)
+      });
+    });
+
+    selectedCapabilities.forEach(cap => {
+      const labels = {
+        humanRated: 'Human Rated',
+        geoCapable: 'GEO Capable',
+        polarCapable: 'Polar Capable',
+        hasLanding: 'Landing'
+      };
+      const colors = {
+        humanRated: 'purple',
+        geoCapable: 'blue',
+        polarCapable: 'cyan',
+        hasLanding: 'green'
+      };
+      filters.push({
+        key: `cap-${cap}`,
+        label: labels[cap],
+        color: colors[cap],
+        onRemove: () => toggleCapability(cap)
+      });
+    });
+
+    return filters;
+  }, [searchQuery, selectedStatuses, selectedCountries, selectedRegions, selectedCapabilities, toggleStatus, toggleCountry, toggleRegion, toggleCapability]);
+
+  const clearAllFilters = useCallback(() => {
+    setSearchQuery('');
+    setSelectedStatuses([]);
+    setSelectedCountries([]);
+    setSelectedRegions([]);
+    setSelectedCapabilities([]);
+  }, []);
+
+  // Sort handler for table/grid headers
+  const handleSort = useCallback((key, order) => {
+    setSortBy(key);
+    setSortOrder(order);
+  }, []);
+
+  // Sort columns configuration
+  const sortColumns = [
+    { key: 'name', label: 'Name' },
+    { key: 'totalLaunches', label: 'Launches' },
+    { key: 'successRate', label: 'Success Rate' },
+    { key: 'established', label: 'Established' },
+  ];
 
   if (loading) {
     return (
@@ -445,132 +609,128 @@ export default function LaunchSiteListPage() {
           </div>
         )}
 
-        {/* World Map */}
-        <div className="mb-6">
-          <LaunchSiteWorldMap
-            launchSites={launchSites}
-            onSiteHover={setHoveredSite}
-            hoveredSite={hoveredSite}
-            onSiteClick={(site) => window.location.href = `/launch-sites/${site.id}`}
-          />
-        </div>
+        {/* World Map - shown in map view or always visible */}
+        {viewMode === 'map' && (
+          <div className="mb-6">
+            <LaunchSiteWorldMap
+              launchSites={filteredAndSorted}
+              onSiteHover={setHoveredSite}
+              hoveredSite={hoveredSite}
+              onSiteClick={(site) => window.location.href = `/launch-sites/${site.id}`}
+            />
+          </div>
+        )}
 
-        {/* Filters */}
-        <div className="glass-panel p-4 mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {/* Search */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Search</label>
+        {/* Filter Panel */}
+        <FilterPanel
+          activeFilters={activeFilters}
+          onClearAll={clearAllFilters}
+          headerActions={
+            <div className="flex items-center gap-3">
+              <ViewToggle
+                viewMode={viewMode}
+                setViewMode={setViewMode}
+                options={['grid', 'table', 'map']}
+              />
+            </div>
+          }
+        >
+          {/* Search */}
+          <FilterSection title="Search">
+            <div className="relative w-full max-w-md">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" style={{ fontSize: '1.25rem' }} />
               <input
                 type="text"
                 placeholder="Search launch sites..."
-                value={filters.search}
-                onChange={(e) => handleFilterChange('search', e.target.value)}
-                className="glass-input w-full"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="glass-input pl-10 w-full"
               />
             </div>
+          </FilterSection>
 
-            {/* Status Filter */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status</label>
-              <select
-                value={filters.status}
-                onChange={(e) => handleFilterChange('status', e.target.value)}
-                className="glass-select w-full"
-              >
-                <option value="">All Status</option>
-                <option value="Active">Active</option>
-                <option value="Inactive">Inactive</option>
-                <option value="Under Construction">Under Construction</option>
-              </select>
-            </div>
-
-            {/* Country Filter */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Country</label>
-              <select
-                value={filters.countryId}
-                onChange={(e) => handleFilterChange('countryId', e.target.value)}
-                className="glass-select w-full"
-              >
-                <option value="">All Countries</option>
-                {uniqueCountries.map(country => (
-                  <option key={country} value={country}>{country}</option>
-                ))}
-              </select>
-            </div>
-
-            {/* Region Filter */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Region</label>
-              <select
-                value={filters.region}
-                onChange={(e) => handleFilterChange('region', e.target.value)}
-                className="glass-select w-full"
-              >
-                <option value="">All Regions</option>
-                {uniqueRegions.map(region => (
-                  <option key={region} value={region}>{region}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          {/* Capability Filters */}
-          <div className="flex flex-wrap gap-4 mt-4">
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={filters.humanRated === true}
-                onChange={(e) => handleFilterChange('humanRated', e.target.checked ? true : undefined)}
-                className="rounded text-indigo-600 focus:ring-indigo-500 bg-white/50 dark:bg-white/10 border-gray-300/50 dark:border-white/20"
+          {/* Status */}
+          <FilterSection title="Status">
+            {uniqueStatuses.map(status => (
+              <FilterToggle
+                key={status}
+                label={status}
+                active={selectedStatuses.includes(status)}
+                onClick={() => toggleStatus(status)}
+                count={filterCounts.statuses[status]}
               />
-              <span className="text-sm text-gray-700 dark:text-gray-300">Human Rated</span>
-            </label>
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={filters.geoCapable === true}
-                onChange={(e) => handleFilterChange('geoCapable', e.target.checked ? true : undefined)}
-                className="rounded text-indigo-600 focus:ring-indigo-500 bg-white/50 dark:bg-white/10 border-gray-300/50 dark:border-white/20"
-              />
-              <span className="text-sm text-gray-700 dark:text-gray-300">GEO Capable</span>
-            </label>
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={filters.polarCapable === true}
-                onChange={(e) => handleFilterChange('polarCapable', e.target.checked ? true : undefined)}
-                className="rounded text-indigo-600 focus:ring-indigo-500 bg-white/50 dark:bg-white/10 border-gray-300/50 dark:border-white/20"
-              />
-              <span className="text-sm text-gray-700 dark:text-gray-300">Polar Capable</span>
-            </label>
-          </div>
-        </div>
+            ))}
+          </FilterSection>
 
-        {/* Results count and View Controls */}
+          {/* Regions */}
+          <FilterSection title="Region">
+            {uniqueRegions.map(region => (
+              <FilterToggle
+                key={region}
+                label={region}
+                active={selectedRegions.includes(region)}
+                onClick={() => toggleRegion(region)}
+                count={filterCounts.regions[region]}
+              />
+            ))}
+          </FilterSection>
+
+          {/* Countries - limit to first 12 */}
+          <FilterSection title="Country">
+            {uniqueCountries.slice(0, 12).map(country => (
+              <FilterToggle
+                key={country}
+                label={country}
+                active={selectedCountries.includes(country)}
+                onClick={() => toggleCountry(country)}
+                count={filterCounts.countries[country]}
+              />
+            ))}
+            {uniqueCountries.length > 12 && (
+              <span className="text-xs text-gray-500 dark:text-gray-400 self-center">
+                +{uniqueCountries.length - 12} more
+              </span>
+            )}
+          </FilterSection>
+
+          {/* Capabilities */}
+          <FilterSection title="Capabilities">
+            <FilterToggle
+              label="Human Rated"
+              active={selectedCapabilities.includes('humanRated')}
+              onClick={() => toggleCapability('humanRated')}
+              count={filterCounts.capabilities.humanRated}
+            />
+            <FilterToggle
+              label="GEO Capable"
+              active={selectedCapabilities.includes('geoCapable')}
+              onClick={() => toggleCapability('geoCapable')}
+              count={filterCounts.capabilities.geoCapable}
+            />
+            <FilterToggle
+              label="Polar Capable"
+              active={selectedCapabilities.includes('polarCapable')}
+              onClick={() => toggleCapability('polarCapable')}
+              count={filterCounts.capabilities.polarCapable}
+            />
+            <FilterToggle
+              label="Landing"
+              active={selectedCapabilities.includes('hasLanding')}
+              onClick={() => toggleCapability('hasLanding')}
+              count={filterCounts.capabilities.hasLanding}
+            />
+          </FilterSection>
+        </FilterPanel>
+
+        {/* Results count */}
         <div className="flex items-center justify-between mb-4">
           <div className="text-sm text-gray-600 dark:text-gray-400">
-            Showing {sortedSites.length} of {launchSites.length} launch sites
-          </div>
-          <div className="flex gap-2">
-            <button
-              onClick={() => setViewMode('grid')}
-              className={viewMode === 'grid' ? 'glass-button-primary' : 'glass-button'}
-            >
-              Grid
-            </button>
-            <button
-              onClick={() => setViewMode('list')}
-              className={viewMode === 'list' ? 'glass-button-primary' : 'glass-button'}
-            >
-              List
-            </button>
+            Showing {filteredAndSorted.length} of {launchSites.length} launch sites
           </div>
         </div>
 
-        {/* Launch Sites Grid/List */}
-        {viewMode === 'grid' ? (
+        {/* Launch Sites Grid/Table/Map */}
+        {viewMode === 'grid' && (
           <div className="space-y-4">
             <SortableGridHeader
               columns={sortColumns}
@@ -579,12 +739,14 @@ export default function LaunchSiteListPage() {
               onSort={handleSort}
             />
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {sortedSites.map(site => (
+              {filteredAndSorted.map(site => (
                 <LaunchSiteCard key={site.id} site={site} />
               ))}
             </div>
           </div>
-        ) : (
+        )}
+
+        {viewMode === 'table' && (
           <div className="glass-panel overflow-hidden">
             <table className="w-full">
               <thead className="glass-header-gradient">
@@ -597,6 +759,7 @@ export default function LaunchSiteListPage() {
                     onSort={handleSort}
                   />
                   <SortableHeader label="Country" sortKey={null} />
+                  <SortableHeader label="Region" sortKey={null} />
                   <SortableHeader label="Status" sortKey={null} />
                   <SortableHeader
                     label="Launches"
@@ -618,7 +781,7 @@ export default function LaunchSiteListPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200/50 dark:divide-white/[0.08]">
-                {sortedSites.map((site, index) => {
+                {filteredAndSorted.map((site, index) => {
                   const statusClass = STATUS_COLORS[site.status?.replace(' ', '_')] || STATUS_COLORS.Active;
                   return (
                     <tr key={site.id} className={`${index % 2 === 0 ? 'bg-transparent' : 'bg-gray-500/[0.03] dark:bg-white/[0.02]'} hover:bg-gray-500/[0.05] dark:hover:bg-white/[0.03] transition-colors`}>
@@ -629,6 +792,7 @@ export default function LaunchSiteListPage() {
                         <div className="text-xs text-gray-500 dark:text-gray-400">{site.operator}</div>
                       </td>
                       <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{site.countryId}</td>
+                      <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{site.region}</td>
                       <td className="px-4 py-3">
                         <span className={statusClass}>
                           {site.status}
@@ -652,9 +816,9 @@ export default function LaunchSiteListPage() {
           </div>
         )}
 
-        {sortedSites.length === 0 && (
+        {filteredAndSorted.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-500 dark:text-gray-400 dark:text-gray-400">No launch sites found matching your filters.</p>
+            <p className="text-gray-500 dark:text-gray-400">No launch sites found matching your filters.</p>
           </div>
         )}
       </div>
